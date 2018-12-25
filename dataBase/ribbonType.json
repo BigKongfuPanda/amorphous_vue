@@ -1,0 +1,50 @@
+// 带材材质 
+// 常用 1K107B, AD25, ND25, FN200, FN035
+// 试验料 FN080, FN100, FCNC020, FCNC010, FCN020, 152
+
+[
+  {
+    "ribbonTypeId": 1,
+    "ribbonTypeName": "1k107B"
+  },
+  {
+    "ribbonTypeId": 2,
+    "ribbonTypeName": "AD25"
+  },
+  {
+    "ribbonTypeId": 3,
+    "ribbonTypeName": "ND25"
+  },
+  {
+    "ribbonTypeId": 4,
+    "ribbonTypeName": "FN200"
+  },
+  {
+    "ribbonTypeId": 5,
+    "ribbonTypeName": "FN035"
+  },
+  {
+    "ribbonTypeId": 6,
+    "ribbonTypeName": "FN080"
+  },
+  {
+    "ribbonTypeId": 7,
+    "ribbonTypeName": "FN100"
+  },
+  {
+    "ribbonTypeId": 8,
+    "ribbonTypeName": "FCNC020"
+  },
+  {
+    "ribbonTypeId": 9,
+    "ribbonTypeName": "FCNC010"
+  },
+  {
+    "ribbonTypeId": 10,
+    "ribbonTypeName": "FCN020"
+  },
+  {
+    "ribbonTypeId": 11,
+    "ribbonTypeName": "152"
+  }
+]

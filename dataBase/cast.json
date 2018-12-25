@@ -1,0 +1,38 @@
+[
+  {
+    "castId": 6,
+    "furnace": "06-20181120-01/01",
+    "ribbonTypeId": 1,
+    "ribbonTypeName": "1k107B",
+    "ribbonWidth": 30,
+    "list": [
+      {
+        "nozzleSize": "30*0.25",//喷嘴规格
+        "caster": "苏连国",//喷带手
+        "heatCupNum": 1,//加热杯数量
+        "nozzleNum": 1,//喷嘴数量
+        "treatCoolRoller": "车",//冷却辊处理方式 车、修
+        "meltFurnace": "A",//冶炼炉炉号
+        "tundish": 10,//在线包号
+        "tundishCar": 1,//在线包车号
+        "ReceiveMeltTime": "2018-12-12 12:12:00",//接钢时间
+        "tundishTemperatureWithoutMelt": 1370,//接钢前包温
+        "tundishTemperatureWithMelt": 1340,//接钢后包温
+        "installNozzleTime": "2018-12-12 12:12:00",//装杯时间
+        "castTimeStart": "2018-12-12 12:12:00",//喷带开始时间
+        "pressure": 18,//开包压力
+        "tundishTemperatureCasting": 1370,//喷带时包温
+        "coolRollerTemperatureBeforeCast" : "32/32",//喷带开始时冷却辊进出水水温
+        "coolRollerTemperatureAfterCast" : "32/35",//喷带结束时冷却辊进出水水温
+        "castLocation": "左",//喷带位置
+        "coilTimes": 3,//抓取次数
+        "castTimeEnd": "2018-12-12 12:12:00",//喷带结束时间
+        "describe": "喷带结果描述",//喷带过程和结果描述
+        "meltOutWeight": 50,//放钢重量,kg
+        "rawWeight": 180,//大盘毛重，kg
+        "isChangeTundish": "是",//是否换包
+        "remark": "备注"
+      }
+    ]
+  }
+]

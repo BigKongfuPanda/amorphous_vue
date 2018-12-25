@@ -42,7 +42,13 @@ export default {
     login() {
       this.refs['ruleForm'].validte((valid) => {
         if(valid) {
-          this.$http('POST', urlmap.login, )
+          this.$http('POST', urlmap.login, this.form).then(data => {
+            if(data.status != 0) {
+              return 
+            }
+          }).catch(err => {
+
+          })
         }
       });
     }

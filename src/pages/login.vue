@@ -1,7 +1,10 @@
 <template>
   <div class="login_bg">
-    <div class="form">
-      <el-form :model="form" :rules="rules" ref="ruleForm" label-width="100px">
+    <div class="login_form">
+      <el-form :model="form" :rules="rules" ref="ruleForm" label-width="80px" label-position="top">
+        <el-row class="login_hd">
+          <h3>生产数据管理系统</h3>
+        </el-row>
         <el-form-item label="用户名" prop="username">
           <el-input v-model="form.username"></el-input>
         </el-form-item>
@@ -9,7 +12,7 @@
           <el-input v-model="form.password" type="password"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="login">登录</el-button>
+          <el-button type="primary" @click="login" class="login_btn" >登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -24,7 +27,8 @@ export default {
     return {
       form: {
         username: '',
-        password: ''
+        password: '',
+        disabled: false
       },
       rules: {
         username: [
@@ -42,12 +46,15 @@ export default {
     login() {
       this.refs['ruleForm'].validte((valid) => {
         if(valid) {
+          this.disabled = true;
           this.$http('POST', urlmap.login, this.form).then(data => {
             if(data.status != 0) {
               return 
             }
           }).catch(err => {
 
+          }).finally(() => {
+            this.disabled = false;
           })
         }
       });
@@ -65,6 +72,26 @@ export default {
     bottom: 0;
     background: url('../assets/login-1.jpeg') no-repeat left top;
     background-size: 100% 100%;
+  }
+  .login_form {
+    background-color: #fff;
+    width: 300px;
+    padding: 20px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+  }
+  .login_hd {
+    text-align: center;
+    h3 {
+      font-size: 22px;
+      margin: 10px 0;
+    }
+  }
+  .login_btn {
+    width: 100%;
   }
 </style>
 

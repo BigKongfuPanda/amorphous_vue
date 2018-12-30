@@ -12,4 +12,10 @@ export default {
 
 <style lang="scss">
   // @import './style/common.scss';
+  .el-submenu .el-menu-item {
+    min-width: 0;
+  }
+  .el-menu {
+    border: none;
+  }
 </style>

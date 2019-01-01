@@ -14,30 +14,30 @@
             <i class="el-icon-location"></i>
             <span>生产计划</span>
           </template>
-          <el-menu-item index="1-1">6号机组</el-menu-item>
-          <el-menu-item index="1-2">7号机组</el-menu-item>
-          <el-menu-item index="1-3">8号机组</el-menu-item>
-          <el-menu-item index="1-4">9号机组</el-menu-item>
+          <router-link to="/plan/6"><el-menu-item index="1-1">6号机组</el-menu-item></router-link>
+          <router-link to="/plan/7"><el-menu-item index="1-2">7号机组</el-menu-item></router-link>
+          <router-link to="/plan/8"><el-menu-item index="1-3">8号机组</el-menu-item></router-link>
+          <router-link to="/plan/9"><el-menu-item index="1-4">9号机组</el-menu-item></router-link>
         </el-submenu>
         <el-submenu index="2">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>化钢记录</span>
           </template>
-          <el-menu-item index="2-1">6号机组</el-menu-item>
-          <el-menu-item index="2-2">7号机组</el-menu-item>
-          <el-menu-item index="2-3">8号机组</el-menu-item>
-          <el-menu-item index="2-4">9号机组</el-menu-item>
+          <router-link to="/melt/6"><el-menu-item index="2-1">6号机组</el-menu-item></router-link>
+          <router-link to="/melt/7"><el-menu-item index="2-2">7号机组</el-menu-item></router-link>
+          <router-link to="/melt/8"><el-menu-item index="2-3">8号机组</el-menu-item></router-link>
+          <router-link to="/melt/9"><el-menu-item index="2-4">9号机组</el-menu-item></router-link>
         </el-submenu>
         <el-submenu index="3">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>喷带记录</span>
           </template>
-          <el-menu-item index="3-1">6号机组</el-menu-item>
-          <el-menu-item index="3-2">7号机组</el-menu-item>
-          <el-menu-item index="3-3">8号机组</el-menu-item>
-          <el-menu-item index="3-4">9号机组</el-menu-item>
+          <router-link to="/cast/6"><el-menu-item index="3-1">6号机组</el-menu-item></router-link>
+          <router-link to="/cast/7"><el-menu-item index="3-2">7号机组</el-menu-item></router-link>
+          <router-link to="/cast/8"><el-menu-item index="3-3">8号机组</el-menu-item></router-link>
+          <router-link to="/cast/9"><el-menu-item index="3-4">9号机组</el-menu-item></router-link>
         </el-submenu>
       </el-menu>
     </el-aside>
@@ -48,7 +48,6 @@
           <label>当前用户：<span style="margin-right: 20px">admin</span></label>
           <el-button type="primary">退出登录</el-button>
         </div>
-        
       </el-header>
       <el-main class="main">
         <router-view></router-view>
@@ -91,6 +90,11 @@ export default {
   .signout {
     margin-top: 10px;
     float: right;
+  }
+  .menu_link {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
   }
 </style>  
 

@@ -5,7 +5,7 @@
     "ribbonTypeId": 1,
     "ribbonTypeName": "1k107B",
     "ribbonWidth": 30,
-    "list": [
+    "record": [
       {
         "nozzleSize": "30*0.25",//喷嘴规格
         "caster": "苏连国",//喷带手
@@ -27,12 +27,12 @@
         "castLocation": "左",//喷带位置
         "coilTimes": 3,//抓取次数
         "castTimeEnd": "2018-12-12 12:12:00",//喷带结束时间
-        "describe": "喷带结果描述",//喷带过程和结果描述
-        "meltOutWeight": 50,//放钢重量,kg
-        "rawWeight": 180,//大盘毛重，kg
-        "isChangeTundish": "是",//是否换包
-        "remark": "备注"
+        "describe": "喷带结果描述"//喷带过程和结果描述
       }
-    ]
+    ],
+    "meltOutWeight": 50,//放钢重量,kg
+    "rawWeight": 180,//大盘毛重，kg
+    "isChangeTundish": "是",//是否换包
+    "remark": "备注"
   }
 ]

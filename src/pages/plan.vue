@@ -21,7 +21,7 @@
         <el-button type="primary" icon="el-icon-plus" @click="createPlan">新增生产计划</el-button>
       </el-col>
       <el-table :data=tableData stripe style="width: 100%">
-        <el-table-colum prop></el-table-colum>
+        <el-table-column prop></el-table-column>
       </el-table>
     </div>
     

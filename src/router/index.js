@@ -9,7 +9,7 @@ function _import (path) {
 
 import Layout from '@/pages/layout.vue';
 import Login from '@/pages/login.vue';
-import Plan from '@/pages/plan.vue';
+import Plan from '@/pages/plan/plan.vue';
 import Melt from '@/pages/melt.vue';
 import Cast from '@/pages/cast.vue';
 

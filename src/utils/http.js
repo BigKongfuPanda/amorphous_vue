@@ -13,6 +13,7 @@ require('promise.prototype.finally').shim();
  * @param  {object}   param     传的参数，没有则传空对象
  */
 function http(method, url, param) {
+    method = method.toLowerCase();
     param = param && typeof param === 'object' ? param : {};
     const config = {
         url: url,
@@ -26,7 +27,7 @@ function http(method, url, param) {
     };
 
     // post请求时需要设定Content-Type
-    if (method === 'post') {
+    if (method === 'post' || method === 'put' || method === 'delete') {
         config.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
         config.data = param;
     } else if (method === 'get') {

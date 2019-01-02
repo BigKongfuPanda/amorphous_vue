@@ -12,6 +12,9 @@ export default {
 
 <style lang="scss">
   // @import './style/common.scss';
+  .text_danger {
+    color: #DB2023;
+  }
   .el-submenu .el-menu-item {
     min-width: 0;
   }
@@ -29,5 +32,8 @@ export default {
     margin-top: 10px;
     min-height: 500px;
     padding: 10px;
+  }
+  .table_hd {
+    margin-bottom: 10px;
   }
 </style>

@@ -33,26 +33,28 @@ export default {
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur'},
-          { min: 6, max: 10, message: '长度在 6 到 10 个字符', trigger: 'blur' }
+          { min: 0, max: 20, message: '长度在 0 到 20 个字符', trigger: 'blur' }
         ],
         password: [
           { required: true, message: '请输入用户名', trigger: 'blur'},
-          { min: 6, max: 10, message: '长度在 6 到 10 个字符', trigger: 'blur' }
+          { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
     login() {
-      this.refs['ruleForm'].validte((valid) => {
+      this.$refs['ruleForm'].validate((valid) => {
         if(valid) {
           this.disabled = true;
-          this.$http('POST', urlmap.login, this.form).then(data => {
+          this.$http('POST', urlmap.login, this.form).then(res => {
+            const data = res.data;
             if(data.status != 0) {
-              return 
+              return this.$alert(data.message, { confirmButtonText: '确定' });
             }
+            this.$router.push({ path: '/plan/6'});
           }).catch(err => {
-
+            this.$alert(err.message, { confirmButtonText: '确定' });
           }).finally(() => {
             this.disabled = false;
           })

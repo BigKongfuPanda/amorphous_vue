@@ -1,11 +1,28 @@
 import es6Promise from 'es6-promise';
 import axios from 'axios';
 import qs from 'qs';
+import { MessageBox } from 'element-ui';
 
 es6Promise.polyfill();
 require('promise.prototype.finally').shim();
 
 // import store from '../store/store';
+
+// Add a response interceptor
+axios.interceptors.response.use(function (response) {
+    // Do something with response data
+    const _data = response.data;
+
+    if(_data.status != 0) {
+        return MessageBox.alert(_data.message, '系统提示', { confirmButtonText: '确定' });
+    }
+    return _data.data || {};
+}, function (error) {
+    // Do something with response error
+    MessageBox.alert(error.message, '系统提示', { confirmButtonText: '确定' });
+    return Promise.reject(error);
+});
+
 /**
  * 封装axios的通用请求
  * @param  {string}   method     get\post\put\delete
@@ -34,7 +51,8 @@ function http(method, url, param) {
         config.params = param;
     }
 
-    // axios.defaults.baseURL = store.
+    // axios.defaults.baseURL = store
+
     return axios(config);
 }
 

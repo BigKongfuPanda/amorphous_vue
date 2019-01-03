@@ -55,6 +55,14 @@ export default {
     background-color: #fff;
     padding: 0 20px;
   }
+  .search_bar {
+    background-color: #fff;
+    padding: 10px 20px;
+    margin-top: 10px;
+    .el-form-item {
+      margin-bottom: 0;
+    }
+  }
   .main_bd {
     background-color: #fff;
     margin-top: 10px;
@@ -72,5 +80,28 @@ export default {
     p:first-of-type {
       margin-bottom: 5px;
     }
+  }
+  .el-dialog__header {
+    background: #8093FF;
+    .el-dialog__title {
+      color: #fff;
+    }
+  }
+  .dialog_field {
+    .el-form-item__label {
+      width: 100px;
+    }
+    .el-input {
+      width: 170px;
+    } 
+  }
+  .orign_field {
+    width: 100%;
+    .el-form-item__content {
+      width: 480px;
+    }
+    .el-input {
+      width: 100%;
+    } 
   }
 </style>

@@ -44,33 +44,36 @@
         <el-table-column prop="rawWeight" label="大盘毛重" align="center" width="80px"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="edit(scope.row)">修改</el-button>
-            <el-button size="mini" type="danger" @click="del(scope.row)">删除</el-button>
+            <el-button size="mini" type="primary" @click="editPlan(scope.row)">修改</el-button>
+            <el-button size="mini" type="danger" @click="delPlan(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="table_tip">
         <p>1. 文件编号：{{tableData[0] && tableData[0].fileNumber}}</p>
-        <p>2. 计划喷带12炉，如果有富余时间喷带按照当天最后一炉规定的要求生产。</p>
+        <p>2. {{tableData[0] && tableData[0].remark}}</p>
       </div>
     </div>
-    <create-form :isCreateVisible="isCreateVisible" :close="closeCreateFormHandler"></create-form>
+    <dialog-form v-if="dialogVisible" :dialogData="{ formType, dialogVisible, rowData}" @close="closeHandler" @handle="submitHandler"></dialog-form>
   </div>
 </template>
 
 <script>
 import { dateFormat, dateTimeFormat } from '@/utils/common';
 import urlmap from '@/utils/urlmap';
-import createForm from './components/createForm';
+import dialogForm from './components/dialogForm';
+
 export default {
   name: 'plan',
-  components: { createForm },
+  components: { dialogForm },
   data() {
     return {
       searchForm: {
         date: dateFormat(new Date())
       },
-      isCreateVisible: false,
+      dialogVisible: false,
+      formType: 'create',
+      rowData: {},
       tableData: [],
       loading: true
     }
@@ -90,9 +93,11 @@ export default {
     }
   },
   methods: {
-    closeCreateFormHandler() {
-      console.log(222);
-      this.isCreateVisible = false;
+    closeHandler() {
+      this.dialogVisible = false;
+    },
+    submitHandler() {
+
     },
     clickSearch() {
       this.getTableData();
@@ -102,25 +107,24 @@ export default {
         castId: 6,
         date: this.searchForm.date
       };
-      this.$http('get', urlmap.queryPlan, params).then(res => {
-        const data = res.data;
-        if(data.status != 0) {
-          return this.$alert(data.message, { confirmButtonText: '确定' });
-        }
-        this.tableData = data.data.list;
+      this.$http('get', urlmap.queryPlan, params).then(data => {
+        this.tableData = data.list;
       }).catch((err) => {
-        this.$alert(err.message, { confirmButtonText: '确定' });
+        console.log(err);
       }).finally(() => {
         this.loading = false;
       });
     },
     createPlan() {
-      this.isCreateVisible = true;
+      this.formType = 'create';
+      this.dialogVisible = true;
     },
-    edit() {
-
+    editPlan(row) {
+      this.dialogVisible = true;
+      this.rowData = row;
+      this.formType = 'edit';
     },
-    del(row) {
+    delPlan(row) {
       const furnace = row.furnace;
       this.$confirm(`确定要删除 ${furnace} 吗？`, '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'})
       .then(() => {
@@ -148,13 +152,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .search_bar {
-    background-color: #fff;
-    padding: 10px 20px;
-    margin-top: 10px;
-    .el-form-item {
-      margin-bottom: 0;
-    }
-  }
+  
 </style>
 

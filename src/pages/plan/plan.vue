@@ -38,9 +38,9 @@
             <span class="text_danger">{{scope.row.laminationFactor}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="furnace" label="制带炉号" align="center" width="160px"></el-table-column>
+        <el-table-column prop="furnace" label="制带炉号" align="center" width="150px"></el-table-column>
         <el-table-column prop="alloyWeight" label="单炉投入" align="center" width="80px"></el-table-column>
-        <el-table-column prop="castTime" label="制带时间" align="center" width="100px"></el-table-column>
+        <el-table-column prop="castTime" label="制带时间" align="center" width="110px"></el-table-column>
         <el-table-column prop="rawWeight" label="大盘毛重" align="center" width="80px"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
@@ -54,7 +54,7 @@
         <p>2. {{tableData[0] && tableData[0].remark}}</p>
       </div>
     </div>
-    <dialog-form v-if="dialogVisible" :dialogData="{ formType, dialogVisible, rowData}" @close="closeHandler" @handle="submitHandler"></dialog-form>
+    <dialog-form v-if="dialogVisible" :dialogData="{ formType, dialogVisible, rowData}" @close="closeHandler" @submit="submitHandler"></dialog-form>
   </div>
 </template>
 
@@ -96,8 +96,9 @@ export default {
     closeHandler() {
       this.dialogVisible = false;
     },
-    submitHandler() {
-
+    submitHandler(data) {
+      this.dialogVisible = false;
+      this.getTableData();
     },
     clickSearch() {
       this.getTableData();
@@ -125,10 +126,10 @@ export default {
       this.formType = 'edit';
     },
     delPlan(row) {
-      const furnace = row.furnace;
+      const { _id, furnace } = row;
       this.$confirm(`确定要删除 ${furnace} 吗？`, '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'})
       .then(() => {
-        this.$http('delete', urlmap.delPlan, {furnace}).then(res => {
+        this.$http('delete', urlmap.delPlan, {_id}).then(res => {
           const data = res.data;
           if(data.status != 0) {
             return this.$message({

@@ -1,2 +1,60 @@
 // 表单校验规则
 
+// 正整数
+export const integer = (rule, value, callback) => {
+  console.log(rule);
+  const reg = /^[1-9]\d*$/;
+  if(!reg.test(value)) {
+    callback(new Error('请输入正整数'))
+  } else {
+    callback();
+  }
+};
+
+// 小于，默认是 99999999
+export const ltNumber = (max = 99999999) => {
+
+  return (rule, value, callback) => {
+    if (typeof value !== 'number') {
+      value = Number(value);
+    }
+  
+    if(value <= max) {
+      callback();      
+    } else {
+      callback(new Error(`请输入不大于${max}的数值`))
+    }
+  };
+};
+
+// 大于，默认是 0
+export const gtNumber = (min = 0) => {
+
+  return (rule, value, callback) => {
+    if (typeof value !== 'number') {
+      value = Number(value);
+    }
+  
+    if(value >= min) {
+      callback();
+    } else {
+      callback(new Error(`请输入不小于${min}的数值`))
+    }
+  };
+};
+
+// 介于 默认：[0, 99999999]
+export const Range = (min = 0, max = 99999999) => {
+
+  return (rule, value, callback) => {
+    if (typeof value !== 'number') {
+      value = Number(value);
+    }
+  
+    if(value >= min && value <= max) {
+      callback();      
+    } else {
+      callback(new Error(`请输入${min} - ${max}之间的数值`))
+    }
+  };
+};

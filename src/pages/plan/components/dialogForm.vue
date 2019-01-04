@@ -6,7 +6,9 @@
   :close-on-press-escape="false" 
   @close="closeDialog"
   :center="true"
-  width="950px">
+  width="950px"
+  v-loading="loading"
+  element-loading-text="拼命加载中">
     <el-form :model="formData" :rules="rules" ref="form" label-width="100px;" style="width:100%" @submit.native.prevent inline>
       <el-row :gutter="20">
         <el-col :span="8">
@@ -102,12 +104,15 @@
     </el-form>
     <div slot="footer">
       <el-button @click="closeDialog">取消</el-button>
-      <el-button type="primary" @click="submit">确定</el-button>
+      <el-button type="primary" @click="submitForm">确定</el-button>
     </div>
   </el-dialog>  
 </template>
 
 <script>
+import { integer, ltNumber } from '@/utils/validate';
+import urlmap from '@/utils/urlmap';
+
 const ribbonTypeList = [
   {
     "ribbonTypeId": 1,
@@ -182,8 +187,22 @@ export default {
     }
   },
   data() {
+    const checkFurnance = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('炉号不能为空'));
+      }
+
+      const reg = /^0[1-9]-[0-9]{8}-[0-9]{2}$/;
+      if (reg.test(value)) {
+        callback();
+      } else {
+        callback(new Error('炉号格式错误'));
+      }
+    };
+
     return {
       visible: false,
+      loading: false,
       formData: {},
       ribbonTypeList: ribbonTypeList,
       rules: {
@@ -193,9 +212,30 @@ export default {
         ribbonTypeId: [{ required: true, message: '请选择材质', trigger: 'blur' }],
         ribbonWidth: [
           { required: true, message: '请填写带宽', trigger: 'blur' },
-          { type: 'number', message: '带宽必须为数字', trigger: 'blur' }
+          { validator: integer, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
         ],
-        castId: [{ required: true, message: '请选择机组', trigger: 'blur' }],
+        client: [{ max: 50, message: '最多50位字符', trigger: 'blur' }],
+        thickness: [
+          { required: true, message: '请填写带厚', trigger: 'blur' },
+          { max: 50, message: '最多50位字符', trigger: 'blur' },
+        ],
+        laminationFactor: [
+          { required: true, message: '请填写叠片系数', trigger: 'blur' },
+          { max: 50, message: '最多50位字符', trigger: 'blur' }
+        ],
+        furnace: [
+          { required: true, message: '请填写炉号', trigger: 'blur' },
+          { max: 20, message: '最多20位字符', trigger: 'blur' },
+          { validator: checkFurnance, trigger: 'blur'}
+        ],
+        alloyWeight: [
+          { validator: integer, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }   
+        ],
+        castTime: [{ max: 50, message: '最多50位字符', trigger: 'blur' }],
+        remark: [{ max: 100, message: '最多100位字符', trigger: 'blur' }],
+        fileNumber: [{ max: 50, message: '最多50位字符', trigger: 'blur' }]
       }
     }
   },
@@ -210,10 +250,34 @@ export default {
     closeDialog() {
       this.$emit('close');
     },
-    submit() {
+    submitForm() {
       console.log(this.formData);
       this.$refs.form.validate((valid) => {
         if (valid) {
+          this.loading = true;
+          this.formData.ribbonTypeName = this.ribbonTypeList && this.ribbonTypeList.find(item => {
+            return item.ribbonTypeId === this.formData.ribbonTypeId;
+          }).ribbonTypeName;
+          
+          if (this.dialogData.formType === 'create') {
+            // 新增生产记录
+            this.$http('post', urlmap.addPlan, this.formData).then(data => {
+              this.$emit('submit', this.formData);
+            }).catch(err => {
+              console.log(err);
+            }).finally(() => {
+              this.loading = false;
+            });
+          } else {
+            // 更新生产记录
+            this.$http('put', urlmap.addPlan, this.formData).then(data => {
+              this.$emit('submit', this.formData);
+            }).catch(err => {
+              console.log(err);
+            }).finally(() => {
+              this.loading = false;
+            });
+          }
           
         } else {
           return false;

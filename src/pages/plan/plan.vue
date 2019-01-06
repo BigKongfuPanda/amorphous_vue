@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right" class="crumb">
       <el-breadcrumb-item>生产计划</el-breadcrumb-item>
-      <el-breadcrumb-item>6号机组</el-breadcrumb-item>
+      <el-breadcrumb-item>{{castId}}号机组</el-breadcrumb-item>
     </el-breadcrumb>
     <el-form class="search_bar" :model="searchForm">
       <el-form-item label="排产日期：">
@@ -75,8 +75,16 @@ export default {
       formType: 'create',
       rowData: {},
       tableData: [],
-      loading: true
+      loading: true,
+      castId: 6
     }
+  },
+  // 动态路由匹配
+  beforeRouteUpdate(to, from, next) {
+    console.log(to);
+    this.castId = to.params.castId;
+    this.getTableData();
+    next();
   },
   created() {
     this.getTableData();
@@ -105,7 +113,7 @@ export default {
     },
     getTableData() {
       const params = {
-        castId: 6,
+        castId: this.castId,
         date: this.searchForm.date
       };
       this.$http('get', urlmap.queryPlan, params).then(data => {

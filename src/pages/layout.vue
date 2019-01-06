@@ -39,6 +39,13 @@
           <router-link to="/cast/8"><el-menu-item index="3-3">8号机组</el-menu-item></router-link>
           <router-link to="/cast/9"><el-menu-item index="3-4">9号机组</el-menu-item></router-link>
         </el-submenu>
+        <el-submenu index="4">
+          <template slot="title">
+            <i class="el-icon-location"></i>
+            <span>带材牌号管理</span>
+          </template>
+          <router-link to="/ribbon"><el-menu-item index="4-1">带材牌号列表</el-menu-item></router-link>
+        </el-submenu>
       </el-menu>
     </el-aside>
     <el-container>

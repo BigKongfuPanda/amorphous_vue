@@ -1,6 +1,6 @@
 <template>
   <el-dialog 
-  :title="this.dialogData.formType === 'create' ? '新增生产记录' : '修改生产记录'" 
+  :title="this.dialogData.formType === 'create' ? `新增生产记录-${$route.params.castId}号机组` : `修改生产记录-${$route.params.castId}号机组`" 
   :visible.sync="dialogData.dialogVisible" 
   :close-on-click-modal="false"
   :close-on-press-escape="false" 
@@ -18,7 +18,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="机组" prop="castId" class="dialog_field">
-            <el-select v-model="formData.castId" placeholder="请选择">
+            <el-select v-model="formData.castId" placeholder="请选择" disabled>
               <el-option label="6号机组" :value="6"></el-option>
               <el-option label="7号机组" :value="7"></el-option>
               <el-option label="8号机组" :value="8"></el-option>
@@ -112,6 +112,7 @@
 <script>
 import { integer, ltNumber } from '@/utils/validate';
 import urlmap from '@/utils/urlmap';
+import { mapState, mapActions } from 'vuex';
 
 const ribbonTypeList = [
   {
@@ -165,7 +166,7 @@ const formConfig = {
   castId: 6,
   team: '',
   taskOrder: '',
-  ribbonTypeId: 1,
+  ribbonTypeId: '',
   ribbonTypeName: '',
   ribbonWidth: 30,
   client: '',
@@ -204,7 +205,7 @@ export default {
       visible: false,
       loading: false,
       formData: {},
-      ribbonTypeList: ribbonTypeList,
+      // ribbonTypeList: ribbonTypeList,
       rules: {
         date: [{ required: true, message: '请选择日期', trigger: 'blur' }],
         castId: [{ required: true, message: '请选择机组', trigger: 'blur' }],
@@ -239,14 +240,23 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState([
+      'ribbonTypeList'
+    ])
+  },
   created () {
     if (this.dialogData.formType === 'create') {
-      this.formData = Object.assign({}, formConfig);
+      this.formData = Object.assign({}, formConfig, { castId: Number(this.$route.params.castId) });
     } else {
       this.formData = Object.assign(this.formData, this.dialogData.rowData);
     }
+    this.getRibbonTypeList();
   },
   methods: {
+    ...mapActions([
+      'getRibbonTypeList'
+    ]),
     closeDialog() {
       this.$emit('close');
     },
@@ -258,7 +268,7 @@ export default {
           this.formData.ribbonTypeName = this.ribbonTypeList && this.ribbonTypeList.find(item => {
             return item.ribbonTypeId === this.formData.ribbonTypeId;
           }).ribbonTypeName;
-          
+
           if (this.dialogData.formType === 'create') {
             // 新增生产记录
             this.$http('post', urlmap.addPlan, this.formData).then(data => {
@@ -270,7 +280,7 @@ export default {
             });
           } else {
             // 更新生产记录
-            this.$http('put', urlmap.addPlan, this.formData).then(data => {
+            this.$http('put', urlmap.updatePlan, this.formData).then(data => {
               this.$emit('submit', this.formData);
             }).catch(err => {
               console.log(err);

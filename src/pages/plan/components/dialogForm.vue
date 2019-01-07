@@ -1,6 +1,6 @@
 <template>
   <el-dialog 
-  :title="this.dialogData.formType === 'create' ? `新增生产记录-${$route.params.castId}号机组` : `修改生产记录-${$route.params.castId}号机组`" 
+  :title="dialogData.formType === 'create' ? `新增生产计划-${$route.params.castId}号机组` : `修改生产计划-${$route.params.castId}号机组`" 
   :visible.sync="dialogData.dialogVisible" 
   :close-on-click-modal="false"
   :close-on-press-escape="false" 
@@ -104,7 +104,7 @@
     </el-form>
     <div slot="footer">
       <el-button @click="closeDialog">取消</el-button>
-      <el-button type="primary" @click="submitForm">确定</el-button>
+      <el-button type="primary" @click="submitForm">提交</el-button>
     </div>
   </el-dialog>  
 </template>
@@ -113,53 +113,6 @@
 import { integer, ltNumber } from '@/utils/validate';
 import urlmap from '@/utils/urlmap';
 import { mapState, mapActions } from 'vuex';
-
-const ribbonTypeList = [
-  {
-    "ribbonTypeId": 1,
-    "ribbonTypeName": "1k107B"
-  },
-  {
-    "ribbonTypeId": 2,
-    "ribbonTypeName": "AD25"
-  },
-  {
-    "ribbonTypeId": 3,
-    "ribbonTypeName": "ND25"
-  },
-  {
-    "ribbonTypeId": 4,
-    "ribbonTypeName": "FN200"
-  },
-  {
-    "ribbonTypeId": 5,
-    "ribbonTypeName": "FN035"
-  },
-  {
-    "ribbonTypeId": 6,
-    "ribbonTypeName": "FN080"
-  },
-  {
-    "ribbonTypeId": 7,
-    "ribbonTypeName": "FN100"
-  },
-  {
-    "ribbonTypeId": 8,
-    "ribbonTypeName": "FCNC020"
-  },
-  {
-    "ribbonTypeId": 9,
-    "ribbonTypeName": "FCNC010"
-  },
-  {
-    "ribbonTypeId": 10,
-    "ribbonTypeName": "FCN020"
-  },
-  {
-    "ribbonTypeId": 11,
-    "ribbonTypeName": "152"
-  }
-];
 
 const formConfig = {
   date: '',
@@ -205,7 +158,6 @@ export default {
       visible: false,
       loading: false,
       formData: {},
-      // ribbonTypeList: ribbonTypeList,
       rules: {
         date: [{ required: true, message: '请选择日期', trigger: 'blur' }],
         castId: [{ required: true, message: '请选择机组', trigger: 'blur' }],
@@ -261,7 +213,6 @@ export default {
       this.$emit('close');
     },
     submitForm() {
-      console.log(this.formData);
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.loading = true;

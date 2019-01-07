@@ -12,7 +12,7 @@ import Login from '@/pages/login.vue';
 import Plan from '@/pages/plan/plan.vue';
 import Melt from '@/pages/melt.vue';
 import Cast from '@/pages/cast.vue';
-import Ribbon from '@/pages/ribbon.vue';
+import Ribbon from '@/pages/ribbon/ribbon.vue';
 
 export default new Router({
   routes: [

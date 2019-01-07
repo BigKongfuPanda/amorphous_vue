@@ -137,21 +137,10 @@ export default {
       const { _id, furnace } = row;
       this.$confirm(`确定要删除 ${furnace} 吗？`, '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'})
       .then(() => {
-        this.$http('delete', urlmap.delPlan, {_id}).then(res => {
-          const data = res.data;
-          if(data.status != 0) {
-            return this.$message({
-              message: '删除失败',
-              type: 'error'
-            });
-          }
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          });
+        this.$http('delete', urlmap.delPlan, {_id}).then(data => {
           this.getTableData();
         }).catch(err => {
-          this.$alert(err.message, { confirmButtonText: '确定' });
+          console.log(err);
         });
       })
       .catch(() => {});

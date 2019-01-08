@@ -157,7 +157,24 @@ export default {
     return {
       visible: false,
       loading: false,
-      formData: {},
+      formData: {
+        date: '',
+        castId: 6,
+        team: '',
+        taskOrder: '',
+        ribbonTypeId: '',
+        ribbonTypeName: '',
+        ribbonWidth: 30,
+        client: '',
+        thickness: '',
+        laminationFactor: '',
+        furnace: '',
+        alloyWeight: 230,
+        castTime: '',
+        rawWeight: '',
+        remark: '',
+        fileNumber: ''
+      },
       rules: {
         date: [{ required: true, message: '请选择日期', trigger: 'blur' }],
         castId: [{ required: true, message: '请选择机组', trigger: 'blur' }],
@@ -220,26 +237,15 @@ export default {
             return item.ribbonTypeId === this.formData.ribbonTypeId;
           }).ribbonTypeName;
 
-          if (this.dialogData.formType === 'create') {
-            // 新增生产记录
-            this.$http('post', urlmap.addPlan, this.formData).then(data => {
-              this.$emit('submit', this.formData);
-            }).catch(err => {
-              console.log(err);
-            }).finally(() => {
-              this.loading = false;
-            });
-          } else {
-            // 更新生产记录
-            this.$http('put', urlmap.updatePlan, this.formData).then(data => {
-              this.$emit('submit', this.formData);
-            }).catch(err => {
-              console.log(err);
-            }).finally(() => {
-              this.loading = false;
-            });
-          }
-          
+          const { method, url } = this.dialogData.formType === 'create' ? { method: 'post', url: urlmap.addPlan } : { method: 'put', url: urlmap.updatePlan } ;
+
+          this.$http(method, url, this.formData).then(data => {
+            this.$emit('submit');
+          }).catch(err => {
+            console.log(err);
+          }).finally(() => {
+            this.loading = false;
+          });    
         } else {
           return false;
         }

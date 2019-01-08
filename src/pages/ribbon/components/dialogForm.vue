@@ -36,7 +36,10 @@ export default {
   },
   data () {
     return {
-      formData: {},
+      formData: {
+        ribbonTypeId: '',
+        ribbonTypeName: ''
+      },
       rules: {
         ribbonTypeName: [
           { required: true, message: '请填写带材牌号', trigger: 'blur' },
@@ -62,7 +65,8 @@ export default {
         if (valid) {
           this.loading = true;
 
-          const { method, url } = this.dialogData.formType === 'create' ? { method: 'post', url: urlmap.addRibbonType } : { method: 'put', url: urlmap.updatePlan } ;
+          const { method, url } = this.dialogData.formType === 'create' ? { method: 'post', url: urlmap.addRibbonType } : { method: 'put', url: urlmap.updateRibbonType } ;
+
           this.$http(method, url, this.formData).then(data => {
             this.$emit('submit');
           }).catch(err => {

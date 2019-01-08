@@ -47,14 +47,10 @@ export default {
       this.$refs['ruleForm'].validate((valid) => {
         if(valid) {
           this.disabled = true;
-          this.$http('POST', urlmap.login, this.form).then(res => {
-            const data = res.data;
-            if(data.status != 0) {
-              return this.$alert(data.message, { confirmButtonText: '确定' });
-            }
+          this.$http('POST', urlmap.login, this.form).then(data => {
             this.$router.push({ path: '/plan/6'});
           }).catch(err => {
-            this.$alert(err.message, { confirmButtonText: '确定' });
+            console.log(err);
           }).finally(() => {
             this.disabled = false;
           })

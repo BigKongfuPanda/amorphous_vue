@@ -24,7 +24,7 @@ export default new Router({
     {
       path: '/',
       component: Layout,
-      redirect: 'plan',
+      redirect: '/login',
       children: [
         {
           path: 'plan/:castId',

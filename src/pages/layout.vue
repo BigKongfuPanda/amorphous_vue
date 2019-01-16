@@ -39,6 +39,13 @@
           <router-link to="/cast/8"><el-menu-item index="3-3">8号机组</el-menu-item></router-link>
           <router-link to="/cast/9"><el-menu-item index="3-4">9号机组</el-menu-item></router-link>
         </el-submenu>
+        <el-submenu index="4">
+          <template slot="title">
+            <i class="el-icon-location"></i>
+            <span>带材牌号管理</span>
+          </template>
+          <router-link to="/ribbon"><el-menu-item index="4-1">带材牌号列表</el-menu-item></router-link>
+        </el-submenu>
       </el-menu>
     </el-aside>
     <el-container>
@@ -46,7 +53,7 @@
         <div class="logo"></div>
         <div class="signout">
           <label>当前用户：<span style="margin-right: 20px">admin</span></label>
-          <el-button type="primary">退出登录</el-button>
+          <el-button type="primary" @click="signout" :disabled="isDisabled">退出登录</el-button>
         </div>
       </el-header>
       <el-main class="main">
@@ -57,14 +64,26 @@
 </template>
 
 <script>
+import urlmap from '@/utils/urlmap';
+import { debounce } from '@/utils/common';
+
 export default {
   name: 'layout',
+  data () {
+    return {
+      isDisabled: false
+    }
+  },
   methods: {
-    handleOpen() {
-
-    },
-    handleClose() {
-
+    signout() {
+      this.isDisabled = true;
+      this.$http('POST', urlmap.signout, {}).then(data => {
+        this.$router.push({ path: '/login'});
+      }).catch(err => {
+        console.log(err);
+      }).finally(() => {
+        this.isDisabled = false;
+      });
     }
   }
 }
@@ -96,6 +115,4 @@ export default {
     width: 100%;
     height: 100%;
   }
-</style>  
-
-
+</style>

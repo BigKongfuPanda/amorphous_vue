@@ -12,6 +12,7 @@ import Login from '@/pages/login.vue';
 import Plan from '@/pages/plan/plan.vue';
 import Melt from '@/pages/melt.vue';
 import Cast from '@/pages/cast.vue';
+import Ribbon from '@/pages/ribbon/ribbon.vue';
 
 export default new Router({
   routes: [
@@ -23,7 +24,7 @@ export default new Router({
     {
       path: '/',
       component: Layout,
-      redirect: 'plan',
+      redirect: '/login',
       children: [
         {
           path: 'plan/:castId',
@@ -42,6 +43,12 @@ export default new Router({
           name: 'cast',
           component: Cast,
           meta: { title: '喷带记录表', icon: 'cast' }
+        },
+        {
+          path: 'ribbon',
+          name: 'ribbon',
+          component: Ribbon,
+          meta: { title: '带材牌号管理', icon: 'ribbon' }
         }
       ]
     }

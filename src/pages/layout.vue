@@ -46,6 +46,13 @@
           </template>
           <router-link to="/ribbon"><el-menu-item index="4-1">带材牌号列表</el-menu-item></router-link>
         </el-submenu>
+        <el-submenu index="5">
+          <template slot="title">
+            <i class="el-icon-location"></i>
+            <span>账号管理</span>
+          </template>
+          <router-link to="/user"><el-menu-item index="5-1">用户列表</el-menu-item></router-link>
+        </el-submenu>
       </el-menu>
     </el-aside>
     <el-container>

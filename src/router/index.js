@@ -13,6 +13,7 @@ import Plan from '@/pages/plan/plan.vue';
 import Melt from '@/pages/melt.vue';
 import Cast from '@/pages/cast.vue';
 import Ribbon from '@/pages/ribbon/ribbon.vue';
+import User from '@/pages/user/user.vue';
 
 export default new Router({
   routes: [
@@ -49,6 +50,12 @@ export default new Router({
           name: 'ribbon',
           component: Ribbon,
           meta: { title: '带材牌号管理', icon: 'ribbon' }
+        },
+        {
+          path: 'user',
+          name: 'user',
+          component: User,
+          meta: { title: '用户管理', icon: 'user' }
         }
       ]
     }

@@ -8,5 +8,9 @@ export default {
   queryRibbonType: 'api/ribbonType',
   addRibbonType: 'api/ribbonType',
   updateRibbonType: 'api/ribbonType',
-  delRibbonType: 'api/ribbonType'
+  delRibbonType: 'api/ribbonType',
+  queryUser: 'api/user',
+  addUser: 'api/user',
+  updateUser: 'api/user',
+  delUser: 'api/user',
 };

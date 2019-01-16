@@ -1,6 +1,6 @@
 [
   {
-    "userId": 1, // 1- 超级管理员, 2-管理员, 3-重卷，4-检测，5-库房， 6- 6号机组，7-七号机组，8-8好几组，9-九号机组
+    "roleId": 1, // 1- 超级管理员 super, 2-普通管理员 admin, 3-重卷 chongjuan，4-检测 jiance，5-库房 kufang， 6- 6号机组 liuhaojizu，7-七号机组 qihaojizu，8-8号机组 bahaojizu，9-九号机组 jiuhaojizu
     "username": "changzhang",
     "password": 123456
   }

@@ -48,6 +48,8 @@ export default {
         if(valid) {
           this.disabled = true;
           this.$http('POST', urlmap.login, this.form).then(data => {
+            const userinfo = JSON.stringify({username: this.form.username, roleId: data.roleId});
+            localStorage.setItem('userinfo', userinfo);
             this.$router.push({ path: '/plan/6'});
           }).catch(err => {
             console.log(err);

@@ -11,6 +11,6 @@ export default {
   delRibbonType: 'api/ribbonType',
   queryUser: 'api/user',
   addUser: 'api/user',
-  updateUser: 'api/user',
+  updatePassword: 'api/user',
   delUser: 'api/user',
 };

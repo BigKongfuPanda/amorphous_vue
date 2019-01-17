@@ -49,7 +49,7 @@ const roleList = [
   { id: 7, name: '7号机组' },
   { id: 8, name: '8号机组' },
   { id: 9, name: '9号机组' }
-]
+];
 
 export default {
   props: {

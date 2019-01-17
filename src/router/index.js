@@ -14,6 +14,10 @@ import Melt from '@/pages/melt.vue';
 import Cast from '@/pages/cast.vue';
 import Ribbon from '@/pages/ribbon/ribbon.vue';
 import User from '@/pages/user/user.vue';
+import Roll from '@/pages/roll/roll.vue';
+import Measure from '@/pages/measure/measure.vue';
+import Storage from '@/pages/storage/storage.vue';
+import Data from '@/pages/data/data.vue';
 
 export default new Router({
   routes: [
@@ -56,6 +60,30 @@ export default new Router({
           name: 'user',
           component: User,
           meta: { title: '用户管理', icon: 'user' }
+        },
+        {
+          path: 'roll/:castId',
+          name: 'roll',
+          component: Roll,
+          meta: { title: '重卷记录表', icon: 'roll' }
+        },
+        {
+          path: 'measure/:castId',
+          name: 'measure',
+          component: Measure,
+          meta: { title: '检测记录表', icon: 'measure' }
+        },
+        {
+          path: 'storage/:castId',
+          name: 'storage',
+          component: Storage,
+          meta: { title: '库房记录表', icon: 'storage' }
+        },
+        {
+          path: 'data/:castId',
+          name: 'data',
+          component: Data,
+          meta: { title: '统计中心', icon: 'data' }
         }
       ]
     }

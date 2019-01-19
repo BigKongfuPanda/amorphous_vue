@@ -123,17 +123,14 @@
             <i class="el-icon-location"></i>
             <span>数据统计</span>
           </template>
-          <router-link to="/data/6">
-            <el-menu-item index="7-1">6号机组</el-menu-item>
+          <router-link to="/data/statisticsWeiht">
+            <el-menu-item index="7-1">大盘毛重统计表</el-menu-item>
           </router-link>
-          <router-link to="/data/7">
-            <el-menu-item index="7-2">7号机组</el-menu-item>
+          <router-link to="/data/statisticsStorage">
+            <el-menu-item index="7-2">带材库存统计表</el-menu-item>
           </router-link>
-          <router-link to="/data/8">
-            <el-menu-item index="7-3">8号机组</el-menu-item>
-          </router-link>
-          <router-link to="/data/9">
-            <el-menu-item index="7-4">9号机组</el-menu-item>
+          <router-link to="/data/statisticsOder">
+            <el-menu-item index="7-3">订单统计表</el-menu-item>
           </router-link>
         </el-submenu>
         <el-submenu index="8" v-if="roleId === 1 || roleId === 2">

@@ -17,7 +17,9 @@ import User from '@/pages/user/user.vue';
 import Roll from '@/pages/roll/roll.vue';
 import Measure from '@/pages/measure/measure.vue';
 import Storage from '@/pages/storage/storage.vue';
-import Data from '@/pages/data/data.vue';
+import StatisticsWeiht from '@/pages/statisticsWeiht/statisticsWeiht.vue';
+import StatisticsStorage from '@/pages/statisticsStorage/statisticsStorage.vue';
+import StatisticsOder from '@/pages/statisticsOder/statisticsOder.vue';
 
 export default new Router({
   routes: [
@@ -80,10 +82,29 @@ export default new Router({
           meta: { title: '库房记录表', icon: 'storage' }
         },
         {
-          path: 'data/:castId',
-          name: 'data',
-          component: Data,
-          meta: { title: '统计中心', icon: 'data' }
+          path: '/data',
+          redirect: '/data/statisticsWeiht',
+          meta: { title: '统计中心', icon: 'data' },
+          children: [
+            {
+              path: 'statisticsWeiht',
+              name: 'statisticsWeiht',
+              component: StatisticsWeiht,
+              meta: { title: '大盘毛重统计表', icon: 'statisticsWeiht' }
+            },
+            {
+              path: 'statisticsStorage',
+              name: 'statisticsStorage',
+              component: StatisticsStorage,
+              meta: { title: '带材库存统计表', icon: 'statisticsStorage' }
+            },
+            {
+              path: 'statisticsOder',
+              name: 'statisticsOder',
+              component: StatisticsOder,
+              meta: { title: '订单统计表', icon: 'statisticsOder' }
+            }
+          ]
         }
       ]
     }

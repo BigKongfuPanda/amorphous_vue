@@ -13,4 +13,8 @@ export default {
   addUser: 'api/user',
   updatePassword: 'api/user',
   delUser: 'api/user',
+  queryMelt: 'api/melt',
+  addMelt: 'api/melt',
+  updateMelt: 'api/melt',
+  delMelt: 'api/melt',
 };

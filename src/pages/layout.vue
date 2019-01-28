@@ -3,7 +3,7 @@
     <el-aside width="180px" style="background-color: #304156;">
       <div class="aside_title"></div>
       <el-menu
-        default-active="1-1"
+        :default-active="$route.path"
         mode="vertical"
         :unique-opened="true"
         text-color="#fff"
@@ -16,16 +16,16 @@
             <span>生产计划</span>
           </template>
           <router-link to="/plan/6">
-            <el-menu-item index="1-1">6号机组</el-menu-item>
+            <el-menu-item index="/plan/6">6号机组</el-menu-item>
           </router-link>
           <router-link to="/plan/7">
-            <el-menu-item index="1-2">7号机组</el-menu-item>
+            <el-menu-item index="/plan/7">7号机组</el-menu-item>
           </router-link>
           <router-link to="/plan/8">
-            <el-menu-item index="1-3">8号机组</el-menu-item>
+            <el-menu-item index="/plan/8">8号机组</el-menu-item>
           </router-link>
           <router-link to="/plan/9">
-            <el-menu-item index="1-4">9号机组</el-menu-item>
+            <el-menu-item index="/plan/9">9号机组</el-menu-item>
           </router-link>
         </el-submenu>
         <el-submenu index="2">
@@ -34,16 +34,16 @@
             <span>化钢记录</span>
           </template>
           <router-link to="/melt/6">
-            <el-menu-item index="2-1">6号机组</el-menu-item>
+            <el-menu-item index="/melt/6">6号机组</el-menu-item>
           </router-link>
           <router-link to="/melt/7">
-            <el-menu-item index="2-2">7号机组</el-menu-item>
+            <el-menu-item index="/melt/7">7号机组</el-menu-item>
           </router-link>
           <router-link to="/melt/8">
-            <el-menu-item index="2-3">8号机组</el-menu-item>
+            <el-menu-item index="/melt/8">8号机组</el-menu-item>
           </router-link>
           <router-link to="/melt/9">
-            <el-menu-item index="2-4">9号机组</el-menu-item>
+            <el-menu-item index="/melt/9">9号机组</el-menu-item>
           </router-link>
         </el-submenu>
         <el-submenu index="3">
@@ -52,16 +52,16 @@
             <span>喷带记录</span>
           </template>
           <router-link to="/cast/6">
-            <el-menu-item index="3-1">6号机组</el-menu-item>
+            <el-menu-item index="/cast/6">6号机组</el-menu-item>
           </router-link>
           <router-link to="/cast/7">
-            <el-menu-item index="3-2">7号机组</el-menu-item>
+            <el-menu-item index="/cast/7">7号机组</el-menu-item>
           </router-link>
           <router-link to="/cast/8">
-            <el-menu-item index="3-3">8号机组</el-menu-item>
+            <el-menu-item index="/cast/8">8号机组</el-menu-item>
           </router-link>
           <router-link to="/cast/9">
-            <el-menu-item index="3-4">9号机组</el-menu-item>
+            <el-menu-item index="/cast/9">9号机组</el-menu-item>
           </router-link>
         </el-submenu>
         <el-submenu index="4">
@@ -70,16 +70,16 @@
             <span>重卷记录</span>
           </template>
           <router-link to="/roll/6">
-            <el-menu-item index="4-1">6号机组</el-menu-item>
+            <el-menu-item index="/roll/6">6号机组</el-menu-item>
           </router-link>
           <router-link to="/roll/7">
-            <el-menu-item index="4-2">7号机组</el-menu-item>
+            <el-menu-item index="/roll/7">7号机组</el-menu-item>
           </router-link>
           <router-link to="/roll/8">
-            <el-menu-item index="4-3">8号机组</el-menu-item>
+            <el-menu-item index="/roll/8">8号机组</el-menu-item>
           </router-link>
           <router-link to="/roll/9">
-            <el-menu-item index="4-4">9号机组</el-menu-item>
+            <el-menu-item index="/roll/9">9号机组</el-menu-item>
           </router-link>
         </el-submenu>
         <el-submenu index="5">
@@ -88,16 +88,16 @@
             <span>检测记录</span>
           </template>
           <router-link to="/measure/6">
-            <el-menu-item index="5-1">6号机组</el-menu-item>
+            <el-menu-item index="/measure/6">6号机组</el-menu-item>
           </router-link>
           <router-link to="/measure/7">
-            <el-menu-item index="5-2">7号机组</el-menu-item>
+            <el-menu-item index="/measure/7">7号机组</el-menu-item>
           </router-link>
           <router-link to="/measure/8">
-            <el-menu-item index="5-3">8号机组</el-menu-item>
+            <el-menu-item index="/measure/8">8号机组</el-menu-item>
           </router-link>
           <router-link to="/measure/9">
-            <el-menu-item index="5-4">9号机组</el-menu-item>
+            <el-menu-item index="/measure/9">9号机组</el-menu-item>
           </router-link>
         </el-submenu>
         <el-submenu index="6">
@@ -106,16 +106,16 @@
             <span>库房记录</span>
           </template>
           <router-link to="/storage/6">
-            <el-menu-item index="6-1">6号机组</el-menu-item>
+            <el-menu-item index="/storage/6">6号机组</el-menu-item>
           </router-link>
           <router-link to="/storage/7">
-            <el-menu-item index="6-2">7号机组</el-menu-item>
+            <el-menu-item index="/storage/7">7号机组</el-menu-item>
           </router-link>
           <router-link to="/storage/8">
-            <el-menu-item index="6-3">8号机组</el-menu-item>
+            <el-menu-item index="/storage/8">8号机组</el-menu-item>
           </router-link>
           <router-link to="/storage/9">
-            <el-menu-item index="6-4">9号机组</el-menu-item>
+            <el-menu-item index="/storage/9">9号机组</el-menu-item>
           </router-link>
         </el-submenu>
         <el-submenu index="7">
@@ -124,13 +124,13 @@
             <span>数据统计</span>
           </template>
           <router-link to="/data/statisticsWeiht">
-            <el-menu-item index="7-1">大盘毛重统计表</el-menu-item>
+            <el-menu-item index="/data/statisticsWeiht">大盘毛重统计表</el-menu-item>
           </router-link>
           <router-link to="/data/statisticsStorage">
-            <el-menu-item index="7-2">带材库存统计表</el-menu-item>
+            <el-menu-item index="/data/statisticsStorage">带材库存统计表</el-menu-item>
           </router-link>
           <router-link to="/data/statisticsOder">
-            <el-menu-item index="7-3">订单统计表</el-menu-item>
+            <el-menu-item index="/data/statisticsOder">订单统计表</el-menu-item>
           </router-link>
         </el-submenu>
         <el-submenu index="8" v-if="roleId === 1 || roleId === 2">
@@ -139,7 +139,7 @@
             <span>带材牌号管理</span>
           </template>
           <router-link to="/ribbon">
-            <el-menu-item index="8-1">带材牌号列表</el-menu-item>
+            <el-menu-item index="/ribbon">带材牌号列表</el-menu-item>
           </router-link>
         </el-submenu>
         <el-submenu index="9" v-if="roleId === 1">
@@ -148,7 +148,7 @@
             <span>账号管理</span>
           </template>
           <router-link to="/user">
-            <el-menu-item index="9-1">用户列表</el-menu-item>
+            <el-menu-item index="/user">用户列表</el-menu-item>
           </router-link>
         </el-submenu>
       </el-menu>
@@ -258,6 +258,7 @@ export default {
     const userinfo = JSON.parse(localStorage.getItem("userinfo"));
     this.username = userinfo.username;
     this.roleId = userinfo.roleId;
+    console.log(this.$route.path);
   },
   methods: {
     signout() {

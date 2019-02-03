@@ -2,10 +2,19 @@
 
 // 正整数
 export const integer = (rule, value, callback) => {
-  console.log(rule);
   const reg = /^[1-9]\d*$/;
   if(!reg.test(value)) {
     callback(new Error('请输入正整数'))
+  } else {
+    callback();
+  }
+};
+
+// 自然数 0, 1, 2, ...
+export const number = (rule, value, callback) => {
+  const reg = /^(0|[1-9]\d*)$/;
+  if(!reg.test(value)) {
+    callback(new Error('请输入自然数, 0,1,2,3...'))
   } else {
     callback();
   }
@@ -57,4 +66,17 @@ export const Range = (min = 0, max = 99999999) => {
       callback(new Error(`请输入${min} - ${max}之间的数值`))
     }
   };
+};
+
+export const checkFurnace = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error('炉号不能为空'));
+  }
+
+  const reg = /^0[1-9]-[0-9]{8}-[0-9]{2}\/[0-9]{2}$/;
+  if (reg.test(value)) {
+    callback();
+  } else {
+    callback(new Error('炉号格式错误'));
+  }
 };

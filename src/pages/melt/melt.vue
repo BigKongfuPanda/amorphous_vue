@@ -9,6 +9,7 @@
         <el-date-picker
           v-model="searchForm.date"
           type="daterange"
+          :clearable="false"
           start-placeholder="开始日期"
           end-placeholder="结束日期">
         </el-date-picker>
@@ -18,6 +19,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
+        <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
     <div class="main_bd">
@@ -25,7 +27,7 @@
         <el-button type="primary" icon="el-icon-plus" @click="createMelt">创建化钢记录</el-button>
       </el-col>
       <el-table :data="tableData" stripe border style="width:100%" v-loading="loading"> 
-        <el-table-column prop="createdAt" label="冶炼日期" align="center" width="100px" :formatter="dateFormat"></el-table-column>
+        <el-table-column prop="createdAt" label="冶炼日期" align="center" width="110px" :formatter="dateFormat"></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="80px"></el-table-column>
         <el-table-column prop="furnace" label="冶炼炉号" align="center" width="170px"></el-table-column>
         <el-table-column prop="bucket" label="桶号" align="center" width="50px"></el-table-column>
@@ -46,8 +48,8 @@
         <el-table-column prop="alloyTotalWeight" label="总重量(kg)" align="center" width="100px"></el-table-column>
         <el-table-column prop="alloyOutWeight" label="放钢重量(kg)" align="center" width="110px"></el-table-column>
         <el-table-column prop="alloyFixWeight" label="修正重量(kg)" align="center" width="110px"></el-table-column>
-        <el-table-column prop="updatedAt" label="更新时间" align="center" width="160px" :formatter="dateTimeFormat"></el-table-column>
         <el-table-column prop="remark" label="备注" align="center" width="100px" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="updatedAt" label="更新时间" align="center" width="170px" :formatter="dateTimeFormat"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="edit(scope.row)">修改</el-button>
@@ -56,15 +58,20 @@
         </el-table-column>
       </el-table>
     </div>
+    <dialog-form v-if="dialogVisible" :dialogData="{ formType, dialogVisible, rowData }" @close="closeHandler" @submit="submitHandler"></dialog-form>
   </div>
 </template>
 
 <script>
 import urlmap from '@/utils/urlmap';
 import { dateFormat, dateTimeFormat } from '@/utils/common';
+import dialogForm from './components/dialogForm.vue';
 
 export default {
   name: 'melt',
+  components: {
+    dialogForm
+  },
   data () {
     return {
       castId: 6,
@@ -73,7 +80,10 @@ export default {
         date: []
       },
       loading: false,
-      tableData: []
+      tableData: [],
+      dialogVisible: false,
+      formType: 'create',
+      rowData: {}
     }
   },
   // 动态路由匹配
@@ -95,6 +105,10 @@ export default {
     clickSearch() {
       this.getTableData();
     },
+    reset() {
+      this.searchForm = { melter: '', date: [] };
+      this.getTableData();
+    },
     getTableData() {
       const params = {
         castId: this.castId,
@@ -111,13 +125,34 @@ export default {
       });
     },
     createMelt() {
-
+      this.dialogVisible = true;
+      this.formType = 'create';
     },
-    edit() {
-
+    edit(row) {
+      this.rowData = row;
+      this.dialogVisible = true;
+      this.formType = 'edit';
     },
-    del() {
-
+    del(row) {
+      const { _id, furnace } = row;
+      this.$confirm(`确定删除 ${furnace} 吗？`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http('delete', urlmap.delMelt, {_id}).then(data => {
+          this.getTableData();
+        }).catch(error => {
+          console.log(error);
+        });
+      }).catch(() => {});
+    },
+    closeHandler() {
+      this.dialogVisible = false;
+    },
+    submitHandler() {
+      this.dialogVisible = false;
+      this.getTableData();
     }
   }
 }

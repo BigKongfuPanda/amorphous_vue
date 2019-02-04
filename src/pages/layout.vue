@@ -258,7 +258,6 @@ export default {
     const userinfo = JSON.parse(localStorage.getItem("userinfo"));
     this.username = userinfo.username;
     this.roleId = userinfo.roleId;
-    console.log(this.$route.path);
   },
   methods: {
     signout() {

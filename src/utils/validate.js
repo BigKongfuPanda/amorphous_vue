@@ -1,10 +1,20 @@
 // 表单校验规则
 
-// 正整数
+// 整数
 export const integer = (rule, value, callback) => {
+  const reg = /^(0|-?[1-9]\d*)$/;
+  if(!reg.test(value)) {
+    callback(new Error('请输入整数, 如 -2,-1,0,1,2,...'))
+  } else {
+    callback();
+  }
+};
+
+// 正整数
+export const positiveInteger = (rule, value, callback) => {
   const reg = /^[1-9]\d*$/;
   if(!reg.test(value)) {
-    callback(new Error('请输入正整数'))
+    callback(new Error('请输入正整数, 如 1,2,3,...'))
   } else {
     callback();
   }
@@ -14,7 +24,7 @@ export const integer = (rule, value, callback) => {
 export const number = (rule, value, callback) => {
   const reg = /^(0|[1-9]\d*)$/;
   if(!reg.test(value)) {
-    callback(new Error('请输入自然数, 0,1,2,3...'))
+    callback(new Error('请输入自然数, 如 0,1,2,3,...'))
   } else {
     callback();
   }

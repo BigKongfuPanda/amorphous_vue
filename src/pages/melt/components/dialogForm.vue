@@ -123,8 +123,13 @@
             <el-input v-model="formData.alloyOutWeight"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="16">
-          <el-form-item label="备注" prop="remark" class="dialog_field orign_field">
+        <el-col :span="8">
+          <el-form-item label="修正重量" prop="alloyFixWeight" class="dialog_field">
+            <el-input v-model="formData.alloyFixWeight"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="备注" prop="remark" class="dialog_field">
             <el-input v-model="formData.remark"></el-input>
           </el-form-item>
         </el-col>
@@ -138,7 +143,7 @@
 </template>
 
 <script>
-import { integer, ltNumber, checkFurnace, number } from '@/utils/validate';
+import { integer, positiveInteger, ltNumber, checkFurnace, number } from '@/utils/validate';
 import urlmap from '@/utils/urlmap';
 import { mapState, mapActions } from 'vuex';
 
@@ -167,7 +172,7 @@ const formConfig = {
   "alloyTotalWeight": 0,//总重量
   "alloyOutWeight": 0,//放钢重量
   "alloyFixWeight": 0,// 总重量修正
-  "remark":  "备注",
+  "remark":  "",
   "createdAt": "", //创建时间
   "updatedAt": "" //更新时间
 };
@@ -202,7 +207,7 @@ export default {
         "alloyTotalWeight": 0,//总重量
         "alloyOutWeight": 0,//放钢重量
         "alloyFixWeight": 0,// 总重量修正
-        "remark":  "备注",
+        "remark":  "",
         "createdAt": "", //创建时间
         "updatedAt": "" //更新时间
       },
@@ -274,6 +279,10 @@ export default {
           { validator: number, trigger: 'blur' },
           { validator: ltNumber(99999), trigger: 'blur' }
         ],
+        alloyFixWeight: [
+          { validator: integer, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
+        ],
         remark: [
           { max: 100, message: '最多100位字符', trigger: 'blur' }
         ]
@@ -316,7 +325,7 @@ export default {
           }).ribbonTypeName;
 
           // 总重量
-          this.formData.alloyTotalWeight = parseInt(this.formData.newAlloyWeight) + parseInt(this.formData.oldAlloyWeight) + parseInt(this.formData.mixAlloyWeight) + parseInt(this.formData.highNbWeight);
+          this.formData.alloyTotalWeight = parseInt(this.formData.newAlloyWeight) + parseInt(this.formData.oldAlloyWeight) + parseInt(this.formData.mixAlloyWeight) + parseInt(this.formData.highNbWeight) + parseInt(this.formData.alloyFixWeight);
 
           const { method, url } = this.dialogData.formType === 'create' ? { method: 'POST', url: urlmap.addMelt } : { method: 'PUT', url: urlmap.updateMelt };
 

@@ -9,6 +9,7 @@
         <el-date-picker
           v-model="searchForm.date"
           type="daterange"
+          :default-time="['00:00:00', '23:59:59']"
           :clearable="false"
           start-placeholder="开始日期"
           end-placeholder="结束日期">
@@ -57,6 +58,13 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        background
+        layout="total,prev,pager,next"
+        :total="pageConfig.total"
+        :current-page.sync="pageConfig.current"
+        :page-size="pageConfig.pageSize"
+        @current-change="handleCurrentChange"></el-pagination>
     </div>
     <dialog-form v-if="dialogVisible" :dialogData="{ formType, dialogVisible, rowData }" @close="closeHandler" @submit="submitHandler"></dialog-form>
   </div>
@@ -83,7 +91,12 @@ export default {
       tableData: [],
       dialogVisible: false,
       formType: 'create',
-      rowData: {}
+      rowData: {},
+      pageConfig: {
+        total: 1,
+        current: 1,
+        pageSize: 10
+      }
     }
   },
   // 动态路由匹配
@@ -103,20 +116,31 @@ export default {
       return dateTimeFormat(row.updatedAt);
     },
     clickSearch() {
-      this.getTableData();
+      // 重置当前页码为1
+      const params = {
+        current: 1
+      };
+      this.pageConfig.current = 1;
+      this.getTableData(params);
     },
     reset() {
       this.searchForm = { melter: '', date: [] };
-      this.getTableData();
-    },
-    getTableData() {
       const params = {
+        current: 1
+      };
+      this.pageConfig.current = 1;
+      this.getTableData(params);
+    },
+    getTableData(params = {}) {
+      const _params = {
         castId: this.castId,
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
         melter: this.searchForm.melter
       };
+      Object.assign(params, _params);
       this.$http('get', urlmap.queryMelt, params).then(data => {
+        this.pageConfig.total = data.count;
         this.tableData = data.list;
       }).catch((err) => {
         console.log(err);
@@ -153,6 +177,12 @@ export default {
     submitHandler() {
       this.dialogVisible = false;
       this.getTableData();
+    },
+    handleCurrentChange(val) {
+      const params = {
+        current: val
+      };
+      this.getTableData(params);
     }
   }
 }

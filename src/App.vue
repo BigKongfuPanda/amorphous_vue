@@ -95,6 +95,12 @@ export default {
       width: 170px;
     } 
   }
+  .el-dialog__headerbtn .el-dialog__close {
+    color: #fff;
+    &:hover{
+      color: #DB2023;
+    }
+  }
   .orign_field {
     width: 100%;
     .el-form-item__content {

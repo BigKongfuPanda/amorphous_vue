@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import { integer, ltNumber } from '@/utils/validate';
+import { positiveInteger, ltNumber } from '@/utils/validate';
 import urlmap from '@/utils/urlmap';
 import { mapState, mapActions } from 'vuex';
 
@@ -182,7 +182,7 @@ export default {
         ribbonTypeId: [{ required: true, message: '请选择材质', trigger: 'blur' }],
         ribbonWidth: [
           { required: true, message: '请填写带宽', trigger: 'blur' },
-          { validator: integer, trigger: 'blur' },
+          { validator: positiveInteger, trigger: 'blur' },
           { validator: ltNumber(99999), trigger: 'blur' }
         ],
         client: [{ max: 50, message: '最多50位字符', trigger: 'blur' }],
@@ -200,7 +200,7 @@ export default {
           { validator: checkFurnance, trigger: 'blur'}
         ],
         alloyWeight: [
-          { validator: integer, trigger: 'blur' },
+          { validator: positiveInteger, trigger: 'blur' },
           { validator: ltNumber(99999), trigger: 'blur' }   
         ],
         castTime: [{ max: 50, message: '最多50位字符', trigger: 'blur' }],

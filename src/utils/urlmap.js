@@ -17,4 +17,8 @@ export default {
   addMelt: 'api/melt',
   updateMelt: 'api/melt',
   delMelt: 'api/melt',
+  queryCast: 'api/cast',
+  addCast: 'api/cast',
+  updateCast: 'api/cast',
+  delCast: 'api/cast'
 };

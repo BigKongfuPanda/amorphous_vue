@@ -30,10 +30,10 @@
       <el-table :data="tableData" stripe border style="width:100%" v-loading="loading"> 
         <el-table-column prop="createdAt" label="冶炼日期" align="center" width="110px" :formatter="dateFormat"></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="80px"></el-table-column>
-        <el-table-column prop="furnace" label="冶炼炉号" align="center" width="170px"></el-table-column>
+        <el-table-column prop="furnace" label="炉号" align="center" width="170px"></el-table-column>
         <el-table-column prop="bucket" label="桶号" align="center" width="50px"></el-table-column>
         <el-table-column prop="melter" label="化钢人" align="center" width="70px"></el-table-column>
-        <el-table-column prop="meltFurnace" label="冶炼炉号" align="center" width="80px"></el-table-column>
+        <el-table-column prop="meltFurnace" label="冶炼炉" align="center" width="80px"></el-table-column>
         <el-table-column prop="newAlloyNumber" label="新料炉号" align="center" width="150px"></el-table-column>
         <el-table-column prop="newAlloyWeight" label="新料重量(kg)" align="center" width="110px"></el-table-column>
         <el-table-column prop="oldAlloyNumber" label="加工料炉号" align="center" width="150px"></el-table-column>

@@ -27,33 +27,14 @@
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-plus" @click="add">创建喷带记录</el-button>
       </el-col>
-      <el-table :data="tableData" stripe border style="width:100%" v-loading="loading">
-        <el-table-column type="expand" label="展开">
-          <template slot-scope="props">
-            <el-table
-            :data="props.row.record" stripe border style="width:100%">
-              <el-table-column label="开包次数" type="index"></el-table-column>
-              <el-table-column prop="nozzleSize" label="喷嘴规格" align="center" width="150px"></el-table-column>
-              <el-table-column prop="treatCoolRoller" label="车修铜辊" align="center" width="120px"></el-table-column>
-              <el-table-column prop="coolRollerThickness" label="铜套厚度" align="center" width="150px"></el-table-column>
-              <el-table-column prop="ReceiveMeltTime" label="接钢时间" align="center" width="120px"></el-table-column>
-              <el-table-column prop="tundishTemperatureWithoutMelt" label="接钢前包温/℃" align="center" width="120px"></el-table-column>
-              <el-table-column prop="tundishTemperatureWithMelt" label="接钢后包温/℃" align="center" width="120px"></el-table-column>
-              <el-table-column prop="installNozzleTime" label="装杯时间" align="center" width="150px"></el-table-column>
-              <el-table-column prop="castTimeStart" label="开包时间" align="center" width="60px"></el-table-column>
-              <el-table-column prop="pressure" label="开包压力" align="center" width="60px"></el-table-column>
-              <el-table-column prop="tundishTemperatureCasting" label="开包温度/℃" align="center" width="60px"></el-table-column>
-              <el-table-column prop="coolRollerTemperatureBeforeCast" label="喷带前水温/℃" align="center" width="70px"></el-table-column>
-              <el-table-column prop="coolRollerTemperatureAfterCast" label="喷带后水温/℃" align="center" width="70px"></el-table-column>
-              <el-table-column prop="castLocation" label="喷带位置" align="center" width="70px"></el-table-column>
-              <el-table-column prop="coilTimes" label="抓取次数" align="center" width="100px"></el-table-column>
-              <el-table-column prop="castTimeEnd" label="喷带完成时间" align="center" width="110px"></el-table-column>
-              <el-table-column prop="describe" label="喷带结果描述" align="center" width="110px"></el-table-column>
-            </el-table>
+      <el-table :data="tableData" stripe border style="width:100%" v-loading="loading" :span-method="objectSpanMethod">
+        <el-table-column label="操作" align="center" width="150px">
+          <template slot-scope="scope">
+            <el-button size="mini" type="primary" @click="edit(scope.row)">修改</el-button>
+            <el-button size="mini" type="danger" @click="del(scope.row)">删除</el-button>
           </template>
         </el-table-column>
-
-        
+        <el-table-column prop="updatedAt" label="更新时间" align="center" width="170px" :formatter="dateTimeFormat"></el-table-column>
         <el-table-column prop="createdAt" label="喷带日期" align="center" width="110px" :formatter="dateFormat"></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="80px"></el-table-column>
         <el-table-column prop="ribbonWidth" label="带宽" align="center" width="170px"></el-table-column>
@@ -67,13 +48,22 @@
         <el-table-column prop="meltOutWeight" label="放钢重量(kg)" align="center" width="150px"></el-table-column>
         <el-table-column prop="rawWeight" label="大盘毛重(kg)" align="center" width="150px"></el-table-column>
         <el-table-column prop="remark" label="备注" align="center" width="100px" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="updatedAt" label="更新时间" align="center" width="170px" :formatter="dateTimeFormat"></el-table-column>
-        <el-table-column label="操作" align="center" width="150px">
-          <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="edit(scope.row)">修改</el-button>
-            <el-button size="mini" type="danger" @click="del(scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
+        <el-table-column prop="nozzleSize" label="喷嘴规格" align="center" width="150px"></el-table-column>
+        <el-table-column prop="treatCoolRoller" label="车修铜辊" align="center" width="120px"></el-table-column>
+        <el-table-column prop="coolRollerThickness" label="铜套厚度" align="center" width="150px"></el-table-column>
+        <el-table-column prop="ReceiveMeltTime" label="接钢时间" align="center" width="120px"></el-table-column>
+        <el-table-column prop="tundishTemperatureWithoutMelt" label="接钢前包温/℃" align="center" width="120px"></el-table-column>
+        <el-table-column prop="tundishTemperatureWithMelt" label="接钢后包温/℃" align="center" width="120px"></el-table-column>
+        <el-table-column prop="installNozzleTime" label="装杯时间" align="center" width="150px"></el-table-column>
+        <el-table-column prop="castTimeStart" label="开包时间" align="center" width="60px"></el-table-column>
+        <el-table-column prop="pressure" label="开包压力" align="center" width="60px"></el-table-column>
+        <el-table-column prop="tundishTemperatureCasting" label="开包温度/℃" align="center" width="60px"></el-table-column>
+        <el-table-column prop="coolRollerTemperatureBeforeCast" label="喷带前水温/℃" align="center" width="70px"></el-table-column>
+        <el-table-column prop="coolRollerTemperatureAfterCast" label="喷带后水温/℃" align="center" width="70px"></el-table-column>
+        <el-table-column prop="castLocation" label="喷带位置" align="center" width="70px"></el-table-column>
+        <el-table-column prop="coilTimes" label="抓取次数" align="center" width="100px"></el-table-column>
+        <el-table-column prop="castTimeEnd" label="喷带完成时间" align="center" width="110px"></el-table-column>
+        <el-table-column prop="describe" label="喷带结果描述" align="center" width="110px"></el-table-column>
       </el-table>
       <el-pagination
         background
@@ -131,6 +121,16 @@ export default {
     },
     dateTimeFormat(row, column) {
       return dateTimeFormat(row.updatedAt);
+    },
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      console.log(columnIndex);
+      const _rowspan = row.record && row.record.length + 1;
+      if (columnIndex <= 13) {
+        return {
+          rowspan: _rowspan,
+          colspan: 1
+        };
+      }
     },
     clickSearch() {
       // 重置当前页码为1

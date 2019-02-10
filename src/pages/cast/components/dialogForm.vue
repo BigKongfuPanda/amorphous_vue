@@ -1,71 +1,108 @@
 <template>
   <el-dialog
-  :title="dialogData.formType === 'create' ? `新增化钢记录-${$route.params.castId}号机组` : `修改化钢记录-${$route.params.castId}号机组`"
+  :title="dialogData.formType === 'add' ? `新增喷带记录-${$route.params.castId}号机组` : `修改喷带记录-${$route.params.castId}号机组`"
   :visible.sync="dialogData.dialogVisible"
   :close-on-click-modal="false"
   :close-on-press-escape="false" 
   @close="closeDialog"
   :center="true"
-  width="950px"
+  width="1200px"
   v-loading="loading"
   element-loading-text="拼命加载中">
-    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="100%" @submit.native.prevent inline>
+    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="100%" @submit.native.prevent>
       <el-row :gutter="20">
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="材质" prop="ribbonTypeId" class="dialog_field">
             <el-select v-model="formData.ribbonTypeId" placeholder="请选择">
               <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeId" :label="item.ribbonTypeName"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
+          <el-form-item label="带宽" prop="ribbonWidth" class="dialog_field">
+            <el-input v-model="formData.ribbonWidth"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
           <el-form-item label="制带炉号" prop="furnace" class="dialog_field">
             <el-input v-model="formData.furnace"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="桶号" prop="bucket" class="dialog_field">
-            <el-input v-model="formData.bucket"></el-input>
+        <el-col :span="6">
+          <el-form-item label="喷带手" prop="caster" class="dialog_field">
+            <el-input v-model="formData.caster"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="8">
-          <el-form-item label="熔炼人" prop="melter" class="dialog_field">
-            <el-input v-model="formData.melter"></el-input>
+        <el-col :span="6">
+          <el-form-item label="在线包号" prop="tundish" class="dialog_field">
+            <el-input v-model="formData.tundish"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="冶炼炉炉号" prop="meltFurnace" class="dialog_field">
-            <el-select v-model="formData.meltFurnace">
-              <el-option label="A炉" value="A"></el-option>
-              <el-option label="B炉" value="B"></el-option>
+        <el-col :span="6">
+          <el-form-item label="包车编号" prop="tundishCar" class="dialog_field">
+            <el-select v-model="formData.tundishCar">
+              <el-option label="#1" value="1"></el-option>
+              <el-option label="#2" value="2"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="新料批号" prop="newAlloyNumber" class="dialog_field">
-            <el-input v-model="formData.newAlloyNumber"></el-input>
+        <el-col :span="6">
+          <el-form-item label="是否换包" prop="isChangeTundish" class="dialog_field">
+            <el-select v-model="formData.isChangeTundish">
+              <el-option label="是" value="1"></el-option>
+              <el-option label="否" value="0"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="喷嘴杯个数" prop="nozzleNum" class="dialog_field">
+            <el-input v-model="formData.nozzleNum"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="8">
-          <el-form-item label="新料重量" prop="newAlloyWeight" class="dialog_field">
-            <el-input v-model="formData.newAlloyWeight"></el-input>
+        <el-col :span="6">
+          <el-form-item label="加热杯个数" prop="heatCupNum" class="dialog_field">
+            <el-input v-model="formData.heatCupNum"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="加工料批号" prop="oldAlloyNumber" class="dialog_field">
-            <el-input v-model="formData.oldAlloyNumber"></el-input>
+        <el-col :span="6">
+          <el-form-item label="放钢重量" prop="meltOutWeight" class="dialog_field">
+            <el-input v-model="formData.meltOutWeight"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="加工料重量" prop="oldAlloyWeight" class="dialog_field">
-            <el-input v-model="formData.oldAlloyWeight"></el-input>
+        <el-col :span="6">
+          <el-form-item label="大盘毛重" prop="rawWeight" class="dialog_field">
+            <el-input v-model="formData.rawWeight"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="备注" prop="remark" class="dialog_field">
+            <el-input v-model="formData.remark"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <el-form-item label="开包次数" prop="castTimes">
+            <el-select v-model="formData.castTimes">
+              <el-option label="1" :value="1"></el-option>
+              <el-option label="2" :value="2"></el-option>
+              <el-option label="3" :value="3"></el-option>
+              <el-option label="4" :value="4"></el-option>
+              <el-option label="5" :value="5"></el-option>
+              <el-option label="6" :value="6"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <section class="cast_detail" v-for="i in formData.castTimes" :key="i">
+        <h3 class="cast_hd">第{{i}}次开包</h3>
+
+      </section>
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item label="回炉锭批号" prop="mixAlloyNumber" class="dialog_field">
@@ -134,6 +171,8 @@
           </el-form-item>
         </el-col>
       </el-row>
+
+
     </el-form>
     <div slot="footer">
       <el-button @click="closeDialog">取消</el-button>
@@ -148,6 +187,7 @@ import urlmap from '@/utils/urlmap';
 import { mapState, mapActions } from 'vuex';
 
 const formConfig = {
+  castTimes: 1, //开包次数，默认为1
   "date": "", //冶炼日期
   "castId": 6,// 机组编号
   "furnace": "",// 制带炉号  06-20181120-01/01
@@ -183,6 +223,7 @@ export default {
       visible: false,
       loading: false,
       formData: {
+        castTimes: 1, //开包次数，默认为1
         "date": "", //冶炼日期
         "castId": 6,// 机组编号
         "furnace": "",// 制带炉号  06-20181120-01/01
@@ -301,7 +342,7 @@ export default {
     ])
   },
   created() {
-    if (this.dialogData.formType === 'create') {
+    if (this.dialogData.formType === 'add') {
       this.formData = Object.assign({}, formConfig, {castId: Number(this.$route.params.castId)});
     } else {
       this.formData = Object.assign(this.formData, this.dialogData.rowData);
@@ -327,7 +368,7 @@ export default {
           // 总重量
           this.formData.alloyTotalWeight = parseInt(this.formData.newAlloyWeight) + parseInt(this.formData.oldAlloyWeight) + parseInt(this.formData.mixAlloyWeight) + parseInt(this.formData.highNbWeight) + parseInt(this.formData.alloyFixWeight);
 
-          const { method, url } = this.dialogData.formType === 'create' ? { method: 'POST', url: urlmap.addMelt } : { method: 'PUT', url: urlmap.updateMelt };
+          const { method, url } = this.dialogData.formType === 'add' ? { method: 'POST', url: urlmap.addMelt } : { method: 'PUT', url: urlmap.updateMelt };
 
           this.$http(method, url, this.formData).then(data => {
             this.$emit('submit');
@@ -345,4 +386,17 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
+.cast_detail {
+  border-top: 1px solid #dcdfe6;
+  position: relative;
+  padding: 10px 0;
+  .cast_hd {
+    position: absolute;
+    left: 50%;
+    top: -10px;
+    transform: translateX(-50%);
+    background-color: #fff;
+    padding: 0 10px;
+  }
+}
 </style>

@@ -188,6 +188,7 @@ import { mapState, mapActions } from 'vuex';
 
 const formConfig = {
   castTimes: 1, //开包次数，默认为1
+  
   "date": "", //冶炼日期
   "castId": 6,// 机组编号
   "furnace": "",// 制带炉号  06-20181120-01/01

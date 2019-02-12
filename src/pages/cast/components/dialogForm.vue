@@ -99,79 +99,78 @@
         </el-col>
       </el-row>
 
-      <section class="cast_detail" v-for="i in formData.castTimes" :key="i">
-        <h3 class="cast_hd">第{{i}}次开包</h3>
-
+      <section class="cast_detail" v-for="(item, index) in formData.record" :key="item.ReceiveMeltTime">
+        <h3 class="cast_hd">第{{index+1}}次开包</h3>
+        <el-row :gutter="20">
+          <el-col :span="6">
+            <el-form-item label="喷嘴规格" prop="nozzleSize" class="dialog_field">
+              <el-input v-model="item.nozzleSize"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="车修铜辊" prop="treatCoolRoller" class="dialog_field">
+              <el-select v-model="item.treatCoolRoller" placeholder="">
+                <el-option label="车" value="车"></el-option>
+                <el-option label="修" value="修"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="铜套厚度" prop="coolRollerThickness" class="dialog_field">
+              <el-input v-model="item.coolRollerThickness"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="接钢时间" prop="ReceiveMeltTime" class="dialog_field">
+              <el-input v-model="item.ReceiveMeltTime"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="6">
+            <el-form-item label="接钢前包温" prop="tundishTemperatureWithoutMelt" class="dialog_field">
+              <el-input v-model="item.tundishTemperatureWithoutMelt"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="接钢后包温" prop="tundishTemperatureWithMelt" class="dialog_field">
+              <el-input v-model="item.tundishTemperatureWithMelt"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="装杯时间" prop="installNozzleTime" class="dialog_field">
+              <el-input v-model="item.installNozzleTime"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="开包时间" prop="castTimeStart" class="dialog_field">
+              <el-input v-model="item.castTimeStart"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="6">
+            <el-form-item label="开包压力" prop="pressure" class="dialog_field">
+              <el-input v-model="item.pressure"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="开包温度" prop="tundishTemperatureCasting" class="dialog_field">
+              <el-input v-model="item.tundishTemperatureCasting"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="喷带前水温" prop="coolRollerTemperatureBeforeCast" class="dialog_field">
+              <el-input v-model="item.coolRollerTemperatureBeforeCast"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="喷带后水温" prop="coolRollerTemperatureAfterCast" class="dialog_field">
+              <el-input v-model="item.coolRollerTemperatureAfterCast"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </section>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-form-item label="回炉锭批号" prop="mixAlloyNumber" class="dialog_field">
-            <el-input v-model="formData.mixAlloyNumber"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="回炉锭重量" prop="mixAlloyWeight" class="dialog_field">
-            <el-input v-model="formData.mixAlloyWeight"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="高铌料批号" prop="highNbNumber" class="dialog_field">
-            <el-input v-model="formData.highNbNumber"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-form-item label="高铌料重量" prop="highNbWeight" class="dialog_field">
-            <el-input v-model="formData.highNbWeight"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="硅" prop="Si" class="dialog_field">
-            <el-input v-model="formData.Si"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="镍" prop="Ni" class="dialog_field">
-            <el-input v-model="formData.Ni"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-form-item label="铜" prop="Cu" class="dialog_field">
-            <el-input v-model="formData.Cu"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="硼铁" prop="BFe" class="dialog_field">
-            <el-input v-model="formData.BFe"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="铌铁" prop="NbFe" class="dialog_field">
-            <el-input v-model="formData.NbFe"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-form-item label="放钢重量" prop="alloyOutWeight" class="dialog_field">
-            <el-input v-model="formData.alloyOutWeight"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="修正重量" prop="alloyFixWeight" class="dialog_field">
-            <el-input v-model="formData.alloyFixWeight"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="备注" prop="remark" class="dialog_field">
-            <el-input v-model="formData.remark"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-
 
     </el-form>
     <div slot="footer">
@@ -188,7 +187,27 @@ import { mapState, mapActions } from 'vuex';
 
 const formConfig = {
   castTimes: 1, //开包次数，默认为1
-  
+  record: [
+    {
+      "nozzleSize": "30*0.25", //喷嘴规格
+      "nozzleNum": 1, //喷嘴数量
+      "heatCupNum": 1, //加热杯数量
+      "treatCoolRoller": "左", //冷却辊处理方式 左中右
+      "ReceiveMeltTime": "22:00", //接钢时间
+      "tundishTemperatureWithoutMelt": 1350, //接钢前温度 摄氏度
+      "tundishTemperatureWithMelt": 1330, // 接钢后包温 摄氏度
+      "installNozzleTime": "22:10", //装杯时间
+      "castTimeStart": "22:50", //喷带开始时间
+      "pressure": 18, //开包压力
+      "tundishTemperatureCasting": 1350, //喷带开始时包温 摄氏度
+      "coolRollerTemperatureBeforeCast": "32-32", //喷带开始时冷却辊进出水水温
+      "coolRollerTemperatureAfterCast": "32-35", //喷带结束时冷却辊进出水水温
+      "castLocation": "左", //喷带位置
+      "coilTimes": 3, //抓取次数
+      "castTimeEnd": "23:30", // 喷带结束时间
+      "describe": "抓取3次完" //喷带过程描述
+    }
+  ],
   "date": "", //冶炼日期
   "castId": 6,// 机组编号
   "furnace": "",// 制带炉号  06-20181120-01/01
@@ -225,6 +244,27 @@ export default {
       loading: false,
       formData: {
         castTimes: 1, //开包次数，默认为1
+        record: [
+          {
+            "nozzleSize": "30*0.25", //喷嘴规格
+            "nozzleNum": 1, //喷嘴数量
+            "heatCupNum": 1, //加热杯数量
+            "treatCoolRoller": "左", //冷却辊处理方式 左中右
+            "ReceiveMeltTime": "22:00", //接钢时间
+            "tundishTemperatureWithoutMelt": 1350, //接钢前温度 摄氏度
+            "tundishTemperatureWithMelt": 1330, // 接钢后包温 摄氏度
+            "installNozzleTime": "22:10", //装杯时间
+            "castTimeStart": "22:50", //喷带开始时间
+            "pressure": 18, //开包压力
+            "tundishTemperatureCasting": 1350, //喷带开始时包温 摄氏度
+            "coolRollerTemperatureBeforeCast": "32-32", //喷带开始时冷却辊进出水水温
+            "coolRollerTemperatureAfterCast": "32-35", //喷带结束时冷却辊进出水水温
+            "castLocation": "左", //喷带位置
+            "coilTimes": 3, //抓取次数
+            "castTimeEnd": "23:30", // 喷带结束时间
+            "describe": "抓取3次完" //喷带过程描述
+          }
+        ],
         "date": "", //冶炼日期
         "castId": 6,// 机组编号
         "furnace": "",// 制带炉号  06-20181120-01/01

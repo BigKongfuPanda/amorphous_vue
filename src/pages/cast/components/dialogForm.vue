@@ -51,8 +51,8 @@
         <el-col :span="6">
           <el-form-item label="是否换包" prop="isChangeTundish" class="dialog_field">
             <el-select v-model="formData.isChangeTundish">
-              <el-option label="是" value="1"></el-option>
-              <el-option label="否" value="0"></el-option>
+              <el-option label="是" :value="1"></el-option>
+              <el-option label="否" :value="0"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -87,7 +87,7 @@
       <el-row :gutter="20">
         <el-col :span="6">
           <el-form-item label="开包次数" prop="castTimes">
-            <el-select v-model="formData.castTimes">
+            <el-select v-model="formData.castTimes" @change="castTimesChangeHandler">
               <el-option label="1" :value="1"></el-option>
               <el-option label="2" :value="2"></el-option>
               <el-option label="3" :value="3"></el-option>
@@ -98,8 +98,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-
-      <section class="cast_detail" v-for="(item, index) in formData.record" :key="item.ReceiveMeltTime">
+      <section class="cast_detail" v-for="(item, index) in formData.record" :key="index">
         <h3 class="cast_hd">第{{index+1}}次开包</h3>
         <el-row :gutter="20">
           <el-col :span="6">
@@ -170,6 +169,32 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row :gutter="20">
+          <el-col :span="6">
+            <el-form-item label="喷带位置" prop="castLocation" class="dialog_field">
+              <el-select v-model="item.castLocation" placeholder="">
+                <el-option label="左" value="左"></el-option>
+                <el-option label="中" value="中"></el-option>
+                <el-option label="右" value="右"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="抓取次数" prop="coilTimes" class="dialog_field">
+              <el-input v-model="item.coilTimes"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="喷带完成时间" prop="castTimeEnd" class="dialog_field">
+              <el-input v-model="item.castTimeEnd"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="喷带结果描述" prop="describe" class="dialog_field">
+              <el-input v-model="item.describe"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </section>
 
     </el-form>
@@ -185,56 +210,48 @@ import { integer, positiveInteger, ltNumber, checkFurnace, number } from '@/util
 import urlmap from '@/utils/urlmap';
 import { mapState, mapActions } from 'vuex';
 
+const defaultCastDetail = {
+  "nozzleSize": "30*0.25", //喷嘴规格
+  "nozzleNum": 1, //喷嘴数量
+  "heatCupNum": 1, //加热杯数量
+  "treatCoolRoller": "左", //冷却辊处理方式 左中右
+  "coolRollerThickness": 40, //铜套厚度
+  "ReceiveMeltTime": "", //接钢时间
+  "tundishTemperatureWithoutMelt": 1350, //接钢前温度 摄氏度
+  "tundishTemperatureWithMelt": 1330, // 接钢后包温 摄氏度
+  "installNozzleTime": "", //装杯时间
+  "castTimeStart": "", //喷带开始时间
+  "pressure": 18, //开包压力
+  "tundishTemperatureCasting": 1350, //喷带开始时包温 摄氏度
+  "coolRollerTemperatureBeforeCast": "32-32", //喷带开始时冷却辊进出水水温
+  "coolRollerTemperatureAfterCast": "32-35", //喷带结束时冷却辊进出水水温
+  "castLocation": "左", //喷带位置
+  "coilTimes": 1, //抓取次数
+  "castTimeEnd": "", // 喷带结束时间
+  "describe": "抓取1次完" //喷带过程描述
+};
+
 const formConfig = {
-  castTimes: 1, //开包次数，默认为1
-  record: [
-    {
-      "nozzleSize": "30*0.25", //喷嘴规格
-      "nozzleNum": 1, //喷嘴数量
-      "heatCupNum": 1, //加热杯数量
-      "treatCoolRoller": "左", //冷却辊处理方式 左中右
-      "ReceiveMeltTime": "22:00", //接钢时间
-      "tundishTemperatureWithoutMelt": 1350, //接钢前温度 摄氏度
-      "tundishTemperatureWithMelt": 1330, // 接钢后包温 摄氏度
-      "installNozzleTime": "22:10", //装杯时间
-      "castTimeStart": "22:50", //喷带开始时间
-      "pressure": 18, //开包压力
-      "tundishTemperatureCasting": 1350, //喷带开始时包温 摄氏度
-      "coolRollerTemperatureBeforeCast": "32-32", //喷带开始时冷却辊进出水水温
-      "coolRollerTemperatureAfterCast": "32-35", //喷带结束时冷却辊进出水水温
-      "castLocation": "左", //喷带位置
-      "coilTimes": 3, //抓取次数
-      "castTimeEnd": "23:30", // 喷带结束时间
-      "describe": "抓取3次完" //喷带过程描述
-    }
-  ],
-  "date": "", //冶炼日期
+  "castTimes": 1, //开包次数，默认为1
   "castId": 6,// 机组编号
   "furnace": "",// 制带炉号  06-20181120-01/01
+  "caster": '', //喷带手
+  "ribbonWidth": 30, //带宽
   "ribbonTypeId": '',//材质id
   "ribbonTypeName": "", //材质名称
-  "bucket": '',// 配料桶号
-  "melter": "",// 熔炼人
-  "meltFurnace": "",// 冶炼炉炉号 A 或 B
-  "newAlloyNumber": "",// 新料炉号 新B-2018-12-12
-  "newAlloyWeight": 0,// 新料重量
-  "oldAlloyNumber": "",// 加工料炉号 加B-2018-12-12
-  "oldAlloyWeight": 0,//加工料重量
-  "mixAlloyNumber": "",// 回炉锭炉号 加B-2018-12-12
-  "mixAlloyWeight": 0,// 回炉锭重量
-  "highNbNumber": "",// 高铌料炉号 加B-2018-12-12
-  "highNbWeight": 0,// 高铌料重量
-  "Si": 0,//硅重量
-  "Ni": 0,// 镍重量
-  "Cu": 0,//铜重量
-  "BFe": 0,//硼铁重量
-  "NbFe": 0,//铌铁重量
-  "alloyTotalWeight": 0,//总重量
-  "alloyOutWeight": 0,//放钢重量
-  "alloyFixWeight": 0,// 总重量修正
-  "remark":  "",
+  "nozzleNum": 1, //喷嘴个数
+  "heatCupNum": 1, //加热杯个数
+  "tundishCar": '', //包车
+  "tundish": '', //在线包包号
+  "isChangeTundish": '', //是否换包 1-是 0-否
+  "meltOutWeight": 0, //放钢重量
+  "rawWeight": 0, //大盘毛重
+  "remark": '备注', //备注
   "createdAt": "", //创建时间
-  "updatedAt": "" //更新时间
+  "updatedAt": "", //更新时间
+  record: [
+    defaultCastDetail
+  ]
 };
 
 export default {
@@ -243,72 +260,94 @@ export default {
       visible: false,
       loading: false,
       formData: {
-        castTimes: 1, //开包次数，默认为1
+        "castTimes": 1, //开包次数，默认为1
+        "castId": 6,// 机组编号
+        "furnace": "",// 制带炉号  06-20181120-01/01
+        "caster": '', //喷带手
+        "ribbonWidth": 30, //带宽
+        "ribbonTypeId": '',//材质id
+        "ribbonTypeName": "", //材质名称
+        "nozzleNum": 1, //喷嘴个数
+        "heatCupNum": 1, //加热杯个数
+        "tundishCar": '', //包车
+        "tundish": '', //在线包包号
+        "isChangeTundish": '', //是否换包 1-是 0-否
+        "meltOutWeight": 0, //放钢重量
+        "rawWeight": 0, //大盘毛重
+        "remark": '备注', //备注
+        "createdAt": "", //创建时间
+        "updatedAt": "", //更新时间
         record: [
           {
             "nozzleSize": "30*0.25", //喷嘴规格
             "nozzleNum": 1, //喷嘴数量
             "heatCupNum": 1, //加热杯数量
             "treatCoolRoller": "左", //冷却辊处理方式 左中右
-            "ReceiveMeltTime": "22:00", //接钢时间
+            "coolRollerThickness": 40, //铜套厚度
+            "ReceiveMeltTime": "", //接钢时间
             "tundishTemperatureWithoutMelt": 1350, //接钢前温度 摄氏度
             "tundishTemperatureWithMelt": 1330, // 接钢后包温 摄氏度
-            "installNozzleTime": "22:10", //装杯时间
-            "castTimeStart": "22:50", //喷带开始时间
+            "installNozzleTime": "", //装杯时间
+            "castTimeStart": "", //喷带开始时间
             "pressure": 18, //开包压力
             "tundishTemperatureCasting": 1350, //喷带开始时包温 摄氏度
             "coolRollerTemperatureBeforeCast": "32-32", //喷带开始时冷却辊进出水水温
             "coolRollerTemperatureAfterCast": "32-35", //喷带结束时冷却辊进出水水温
             "castLocation": "左", //喷带位置
-            "coilTimes": 3, //抓取次数
-            "castTimeEnd": "23:30", // 喷带结束时间
-            "describe": "抓取3次完" //喷带过程描述
+            "coilTimes": 1, //抓取次数
+            "castTimeEnd": "", // 喷带结束时间
+            "describe": "抓取1次完" //喷带过程描述
           }
-        ],
-        "date": "", //冶炼日期
-        "castId": 6,// 机组编号
-        "furnace": "",// 制带炉号  06-20181120-01/01
-        "ribbonTypeId": '',//材质id
-        "ribbonTypeName": "", //材质名称
-        "bucket": '',// 配料桶号
-        "melter": "",// 熔炼人
-        "meltFurnace": "",// 冶炼炉炉号 A 或 B
-        "newAlloyNumber": "",// 新料炉号 新B-2018-12-12
-        "newAlloyWeight": 0,// 新料重量
-        "oldAlloyNumber": "",// 加工料炉号 加B-2018-12-12
-        "oldAlloyWeight": 0,//加工料重量
-        "mixAlloyNumber": "",// 回炉锭炉号 加B-2018-12-12
-        "mixAlloyWeight": 0,// 回炉锭重量
-        "highNbNumber": "",// 高铌料炉号 加B-2018-12-12
-        "highNbWeight": 0,// 高铌料重量
-        "Si": 0,//硅重量
-        "Ni": 0,// 镍重量
-        "Cu": 0,//铜重量
-        "BFe": 0,//硼铁重量
-        "NbFe": 0,//铌铁重量
-        "alloyTotalWeight": 0,//总重量
-        "alloyOutWeight": 0,//放钢重量
-        "alloyFixWeight": 0,// 总重量修正
-        "remark":  "",
-        "createdAt": "", //创建时间
-        "updatedAt": "" //更新时间
+        ]
       },
       rules: {
         ribbonTypeId: [{ required: true, message: '请选择材质', trigger: 'blur' }],
+        ribbonWidth: [
+          { required: true, message: '请填写带宽', trigger: 'blur' },
+          { validator: positiveInteger, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
+        ],
         furnace: [
           { required: true, message: '请填写炉号', trigger: 'blur' },
           { max: 20, message: '最多20位字符', trigger: 'blur' },
           { validator: checkFurnace, trigger: 'blur'}
         ],
-        bucket: [
-          { required: true, message: '请填写桶号', trigger: 'blur' },
-          { max: 2, message: '最多2位字符', trigger: 'blur' }
-        ],
-        melter: [
+        caster: [
           { required: true, message: '请填写熔炼人姓名', trigger: 'blur' },
           { max: 10, message: '最多10位字符', trigger: 'blur' }
         ],
-        meltFurnace: [{ required: true, message: '请选择材质', trigger: 'blur' }],
+        tundish: [
+          { required: true, message: '请填写在线包号', trigger: 'blur' },
+          { validator: number, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
+        ],
+        tundishCar: [{ required: true, message: '请选择包车编号', trigger: 'blur' }],
+        isChangeTundish: [{ required: true, message: '请选择是否换包', trigger: 'blur' }],
+        nozzleNum: [
+          { required: true, message: '请填写喷嘴杯个数', trigger: 'blur' },
+          { validator: number, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
+        ],
+        heatCupNum: [
+          { required: true, message: '请填写加热杯个数', trigger: 'blur' },
+          { validator: number, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
+        ],
+        meltOutWeight: [
+          { required: true, message: '请填写放钢重量', trigger: 'blur' },
+          { validator: number, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
+        ],
+        rawWeight: [
+          { required: true, message: '请填写大盘毛重', trigger: 'blur' },
+          { validator: number, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
+        ],
+        remark: [
+          { max: 50, message: '最多50位字符', trigger: 'blur' }
+        ],
+        castTimes: [{ required: true, message: '请选择开包次数', trigger: 'blur' }],
+
         newAlloyNumber: [
           { max: 20, message: '最多20位字符', trigger: 'blur' }
         ],
@@ -387,6 +426,7 @@ export default {
       this.formData = Object.assign({}, formConfig, {castId: Number(this.$route.params.castId)});
     } else {
       this.formData = Object.assign(this.formData, this.dialogData.rowData);
+      this.formData.castTimes = this.formData.record.length;
     }
     this.getRibbonTypeList();
   },
@@ -397,6 +437,18 @@ export default {
     ]),
     closeDialog() {
       this.$emit('close');
+    },
+    castTimesChangeHandler(val) { // 开包次数的改变
+      const _length = this.formData.record.length;
+      if (val > _length) {
+        for(let i = 0; i < val - _length; i++) {
+          this.formData.record.push(defaultCastDetail);
+        }
+      } else if (val < _length) {
+        for(let i = 0; i < _length - val; i++) {
+          this.formData.record.pop();
+        }
+      }
     },
     submitForm() {
       this.$refs.form.validate((valid) => {
@@ -427,6 +479,10 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
+/deep/ .el-dialog__body {
+  height: 500px;
+  overflow: auto;
+}
 .cast_detail {
   border-top: 1px solid #dcdfe6;
   position: relative;

@@ -32,7 +32,6 @@ export const number = (rule, value, callback) => {
 
 // 小于，默认是 99999999
 export const ltNumber = (max = 99999999) => {
-
   return (rule, value, callback) => {
     if (typeof value !== 'number') {
       value = Number(value);
@@ -48,7 +47,6 @@ export const ltNumber = (max = 99999999) => {
 
 // 大于，默认是 0
 export const gtNumber = (min = 0) => {
-
   return (rule, value, callback) => {
     if (typeof value !== 'number') {
       value = Number(value);
@@ -64,7 +62,6 @@ export const gtNumber = (min = 0) => {
 
 // 介于 默认：[0, 99999999]
 export const Range = (min = 0, max = 99999999) => {
-
   return (rule, value, callback) => {
     if (typeof value !== 'number') {
       value = Number(value);

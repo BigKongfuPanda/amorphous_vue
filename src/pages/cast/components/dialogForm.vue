@@ -102,26 +102,26 @@
         <h3 class="cast_hd">第{{index+1}}次开包</h3>
         <el-row :gutter="20">
           <el-col :span="6">
-            <el-form-item label="喷嘴规格" prop="nozzleSize" class="dialog_field">
-              <el-input v-model="item.nozzleSize"></el-input>
+            <el-form-item label="喷嘴规格" class="dialog_field" :prop="'record.' + index + '.nozzleSize'" :rules="[{ required: true, message: '请填写喷嘴规格，格式 30*0.25', trigger: 'blur' }, { max: 10, message: '最多10位字符', trigger: 'blur' }]">
+              <el-input v-model="item.nozzleSize" placeholder="格式：30*0.25"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="车修铜辊" prop="treatCoolRoller" class="dialog_field">
-              <el-select v-model="item.treatCoolRoller" placeholder="">
+            <el-form-item label="车修铜辊" class="dialog_field" :prop="'record.' + index + '.treatCoolRoller'" :rules="[{ required: true, message: '请选择车修方式', trigger: 'blur' }]">
+              <el-select v-model="item.treatCoolRoller" placeholder="请选择">
                 <el-option label="车" value="车"></el-option>
                 <el-option label="修" value="修"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="铜套厚度" prop="coolRollerThickness" class="dialog_field">
+            <el-form-item label="铜套厚度" class="dialog_field" :prop="'record.' + index + '.coolRollerThickness'" :rules="[{ required: true, message: '请填写铜套厚度，单位 mm', trigger: 'blur' }, { validator: number, trigger: 'blur' }, { validator: ltNumber(99999), trigger: 'blur' }]">
               <el-input v-model="item.coolRollerThickness"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="接钢时间" prop="ReceiveMeltTime" class="dialog_field">
-              <el-input v-model="item.ReceiveMeltTime"></el-input>
+              <el-input v-model="item.ReceiveMeltTime" placeholder="格式：08:30"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -138,12 +138,12 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="装杯时间" prop="installNozzleTime" class="dialog_field">
-              <el-input v-model="item.installNozzleTime"></el-input>
+              <el-input v-model="item.installNozzleTime" placeholder="格式：08:40"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="开包时间" prop="castTimeStart" class="dialog_field">
-              <el-input v-model="item.castTimeStart"></el-input>
+              <el-input v-model="item.castTimeStart" placeholder="格式：09:20"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -160,12 +160,12 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="喷带前水温" prop="coolRollerTemperatureBeforeCast" class="dialog_field">
-              <el-input v-model="item.coolRollerTemperatureBeforeCast"></el-input>
+              <el-input v-model="item.coolRollerTemperatureBeforeCast" placeholder="格式：32-32"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="喷带后水温" prop="coolRollerTemperatureAfterCast" class="dialog_field">
-              <el-input v-model="item.coolRollerTemperatureAfterCast"></el-input>
+              <el-input v-model="item.coolRollerTemperatureAfterCast" placeholder="格式：32-35"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -185,12 +185,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="喷带完成时间" prop="castTimeEnd" class="dialog_field">
-              <el-input v-model="item.castTimeEnd"></el-input>
+            <el-form-item label="完成时间" prop="castTimeEnd" class="dialog_field">
+              <el-input v-model="item.castTimeEnd" placeholder="格式：10:30"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="喷带结果描述" prop="describe" class="dialog_field">
+            <el-form-item label="结果描述" prop="describe" class="dialog_field">
               <el-input v-model="item.describe"></el-input>
             </el-form-item>
           </el-col>
@@ -214,7 +214,7 @@ const defaultCastDetail = {
   "nozzleSize": "30*0.25", //喷嘴规格
   "nozzleNum": 1, //喷嘴数量
   "heatCupNum": 1, //加热杯数量
-  "treatCoolRoller": "左", //冷却辊处理方式 左中右
+  "treatCoolRoller": "", //冷却辊处理方式 车，修
   "coolRollerThickness": 40, //铜套厚度
   "ReceiveMeltTime": "", //接钢时间
   "tundishTemperatureWithoutMelt": 1350, //接钢前温度 摄氏度
@@ -282,7 +282,7 @@ export default {
             "nozzleSize": "30*0.25", //喷嘴规格
             "nozzleNum": 1, //喷嘴数量
             "heatCupNum": 1, //加热杯数量
-            "treatCoolRoller": "左", //冷却辊处理方式 左中右
+            "treatCoolRoller": "", //冷却辊处理方式 车、修
             "coolRollerThickness": 40, //铜套厚度
             "ReceiveMeltTime": "", //接钢时间
             "tundishTemperatureWithoutMelt": 1350, //接钢前温度 摄氏度
@@ -348,63 +348,72 @@ export default {
         ],
         castTimes: [{ required: true, message: '请选择开包次数', trigger: 'blur' }],
 
-        newAlloyNumber: [
+        nozzleSize: [
+          { required: true, message: '请填写喷嘴规格，格式 30*0.25', trigger: 'blur' },
+          { max: 10, message: '最多10位字符', trigger: 'blur' }
+        ],
+        treatCoolRoller: [
+          { required: true, message: '请选择车修方式', trigger: 'blur' },
+        ],
+        coolRollerThickness: [
+          { required: true, message: '请填写铜套厚度，单位 mm', trigger: 'blur' },
+          { validator: number, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
+        ],
+        ReceiveMeltTime: [
+          { required: true, message: '请填写接钢时间，格式 08:30', trigger: 'blur' },
+          { max: 10, message: '最多10位字符', trigger: 'blur' }
+        ],
+        tundishTemperatureWithoutMelt: [
+          { required: true, message: '请填写接钢前包温', trigger: 'blur' },
+          { validator: number, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
+        ],
+        tundishTemperatureWithMelt: [
+          { required: true, message: '请填写接钢后包温', trigger: 'blur' },
+          { validator: number, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
+        ],
+        installNozzleTime: [
+          { required: true, message: '请填写装杯时间，格式 08:40', trigger: 'blur' },
+          { max: 10, message: '最多10位字符', trigger: 'blur' }
+        ],
+        castTimeStart: [
+          { required: true, message: '请填写开包时间，格式 08:40', trigger: 'blur' },
+          { max: 10, message: '最多10位字符', trigger: 'blur' }
+        ],
+        pressure: [
+          { required: true, message: '请填写开包压力', trigger: 'blur' },
+          { validator: number, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
+        ],
+        tundishTemperatureCasting: [
+          { required: true, message: '请填写开包温度', trigger: 'blur' },
+          { validator: number, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
+        ],
+        coolRollerTemperatureBeforeCast: [
+          { required: true, message: '请填写喷带前水温', trigger: 'blur' },
           { max: 20, message: '最多20位字符', trigger: 'blur' }
         ],
-        newAlloyWeight: [
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        oldAlloyNumber: [
+        coolRollerTemperatureAfterCast: [
+          { required: true, message: '请填写喷带后水温', trigger: 'blur' },
           { max: 20, message: '最多20位字符', trigger: 'blur' }
         ],
-        oldAlloyWeight: [
+        castLocation: [
+          { required: true, message: '请选择喷带位置', trigger: 'blur' }
+        ],
+        coilTimes: [
+          { required: true, message: '请填写抓取次数', trigger: 'blur' },
           { validator: number, trigger: 'blur' },
           { validator: ltNumber(99999), trigger: 'blur' }
         ],
-        mixAlloyNumber: [
-          { max: 20, message: '最多20位字符', trigger: 'blur' }
+        castTimeEnd: [
+          { required: true, message: '请填写喷带完成时间，格式 10:30', trigger: 'blur' },
+          { max: 10, message: '最多10位字符', trigger: 'blur' }
         ],
-        mixAlloyWeight: [
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        highNbNumber: [
-          { max: 20, message: '最多20位字符', trigger: 'blur' }
-        ],
-        highNbWeight: [
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        Si: [
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        Ni: [
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        Cu: [
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        BFe: [
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        NbFe: [
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        alloyOutWeight: [
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        alloyFixWeight: [
-          { validator: integer, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        remark: [
+        describe: [
+          { required: true, message: '请填写喷带结果描述', trigger: 'blur' },
           { max: 100, message: '最多100位字符', trigger: 'blur' }
         ]
       }

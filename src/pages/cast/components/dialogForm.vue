@@ -115,63 +115,63 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="铜套厚度" class="dialog_field" :prop="'record.' + index + '.coolRollerThickness'" :rules="[{ required: true, message: '请填写铜套厚度，单位 mm', trigger: 'blur' }, { validator: number, trigger: 'blur' }, { validator: ltNumber(99999), trigger: 'blur' }]">
+            <el-form-item label="铜套厚度" class="dialog_field" :prop="'record.' + index + '.coolRollerThickness'" :rules="[{ required: true, message: '请填写铜套厚度，单位 mm', trigger: 'blur' }, { pattern: /^(0|[1-9]\d{0,8})$/, message: '请输入9位以内自然数, 如 0,1,2,3,...', trigger: 'blur' }]">
               <el-input v-model="item.coolRollerThickness"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="接钢时间" prop="ReceiveMeltTime" class="dialog_field">
+            <el-form-item label="接钢时间" class="dialog_field" :prop="'record.' + index + '.ReceiveMeltTime'" :rules="[{ required: true, message: '请填写接钢时间，格式 08:30', trigger: 'blur' },{ max: 10, message: '最多10位字符', trigger: 'blur' }]">
               <el-input v-model="item.ReceiveMeltTime" placeholder="格式：08:30"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="6">
-            <el-form-item label="接钢前包温" prop="tundishTemperatureWithoutMelt" class="dialog_field">
+            <el-form-item label="接钢前包温" class="dialog_field" :prop="'record.' + index + '.tundishTemperatureWithoutMelt'" :rules="[{ required: true, message: '请填写接钢前包温', trigger: 'blur' }, { pattern: /^[1-9]\d{0,8}$/, message: '请输入9位以内正整数, 如 1350,...', trigger: 'blur' }]">
               <el-input v-model="item.tundishTemperatureWithoutMelt"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="接钢后包温" prop="tundishTemperatureWithMelt" class="dialog_field">
+            <el-form-item label="接钢后包温" class="dialog_field" :prop="'record.' + index + '.tundishTemperatureWithMelt'" :rules="[{ required: true, message: '请填写接钢后包温', trigger: 'blur' }, { pattern: /^[1-9]\d{0,8}$/, message: '请输入9位以内正整数, 如 1350,...', trigger: 'blur' }]">
               <el-input v-model="item.tundishTemperatureWithMelt"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="装杯时间" prop="installNozzleTime" class="dialog_field">
+            <el-form-item label="装杯时间" class="dialog_field" :prop="'record.' + index + '.installNozzleTime'" :rules="[{ required: true, message: '请填写装杯时间，格式 08:40', trigger: 'blur' },{ max: 10, message: '最多10位字符', trigger: 'blur' }]">
               <el-input v-model="item.installNozzleTime" placeholder="格式：08:40"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="开包时间" prop="castTimeStart" class="dialog_field">
+            <el-form-item label="开包时间" class="dialog_field" :prop="'record.' + index + '.castTimeStart'" :rules="[{ required: true, message: '请填写开包时间，格式 08:40', trigger: 'blur' },{ max: 10, message: '最多10位字符', trigger: 'blur' }]">
               <el-input v-model="item.castTimeStart" placeholder="格式：09:20"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="6">
-            <el-form-item label="开包压力" prop="pressure" class="dialog_field">
+            <el-form-item label="开包压力" class="dialog_field" :prop="'record.' + index + '.pressure'" :rules="[{ required: true, message: '请填写开包压力', trigger: 'blur' }, { pattern: /^[1-9]\d{0,8}$/, message: '请输入9位以内正整数, 如 18,...', trigger: 'blur' }]">
               <el-input v-model="item.pressure"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="开包温度" prop="tundishTemperatureCasting" class="dialog_field">
+            <el-form-item label="开包温度" class="dialog_field" :prop="'record.' + index + '.tundishTemperatureCasting'" :rules="[{ required: true, message: '请填写开包温度', trigger: 'blur' }, { pattern: /^[1-9]\d{0,8}$/, message: '请输入9位以内正整数, 如 1350,...', trigger: 'blur' }]">
               <el-input v-model="item.tundishTemperatureCasting"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="喷带前水温" prop="coolRollerTemperatureBeforeCast" class="dialog_field">
+            <el-form-item label="喷带前水温" class="dialog_field" :prop="'record.' + index + '.coolRollerTemperatureBeforeCast'" :rules="[{ required: true, message: '请填写水温', trigger: 'blur' }, { pattern: /^(\d+|\d+\.\d{1,2})-(\d+|\d+\.\d{1,2})$/, message: '格式错误, 如 32.50-32.50', trigger: 'blur' }]">
               <el-input v-model="item.coolRollerTemperatureBeforeCast" placeholder="格式：32-32"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="喷带后水温" prop="coolRollerTemperatureAfterCast" class="dialog_field">
+            <el-form-item label="喷带后水温" prop="" class="dialog_field" :prop="'record.' + index + '.coolRollerTemperatureAfterCast'" :rules="[{ required: true, message: '请填写水温', trigger: 'blur' }, { pattern: /^(\d+|\d+\.\d{1,2})-(\d+|\d+\.\d{1,2})$/, message: '格式错误, 如 32.50-33.80', trigger: 'blur' }]">
               <el-input v-model="item.coolRollerTemperatureAfterCast" placeholder="格式：32-35"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="6">
-            <el-form-item label="喷带位置" prop="castLocation" class="dialog_field">
+            <el-form-item label="喷带位置" class="dialog_field" :prop="'record.' + index + '.castLocation'" :rules="[{ required: true, message: '请选择喷带位置', trigger: 'blur' }]">
               <el-select v-model="item.castLocation" placeholder="">
                 <el-option label="左" value="左"></el-option>
                 <el-option label="中" value="中"></el-option>
@@ -180,17 +180,17 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="抓取次数" prop="coilTimes" class="dialog_field">
+            <el-form-item label="抓取次数" class="dialog_field" :prop="'record.' + index + '.coilTimes'" :rules="[{ required: true, message: '请填写抓取次数', trigger: 'blur' }, { pattern: /^[1-9]$/, message: '请输入9以内正整数, 如 3,...', trigger: 'blur' }]">
               <el-input v-model="item.coilTimes"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="完成时间" prop="castTimeEnd" class="dialog_field">
+            <el-form-item label="完成时间" class="dialog_field" :prop="'record.' + index + '.castTimeEnd'" :rules="[{ required: true, message: '请填写完成时间，格式 08:40', trigger: 'blur' },{ max: 10, message: '最多10位字符', trigger: 'blur' }]">
               <el-input v-model="item.castTimeEnd" placeholder="格式：10:30"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="结果描述" prop="describe" class="dialog_field">
+            <el-form-item label="结果描述" class="dialog_field" :prop="'record.' + index + '.describe'" :rules="[{ required: true, message: '请填写结果描述', trigger: 'blur' },{ max: 100, message: '最多100位字符', trigger: 'blur' }]">
               <el-input v-model="item.describe"></el-input>
             </el-form-item>
           </el-col>
@@ -209,6 +209,7 @@
 import { integer, positiveInteger, ltNumber, checkFurnace, number } from '@/utils/validate';
 import urlmap from '@/utils/urlmap';
 import { mapState, mapActions } from 'vuex';
+import { cloneDeep } from 'lodash';
 
 const defaultCastDetail = {
   "nozzleSize": "30*0.25", //喷嘴规格
@@ -346,76 +347,7 @@ export default {
         remark: [
           { max: 50, message: '最多50位字符', trigger: 'blur' }
         ],
-        castTimes: [{ required: true, message: '请选择开包次数', trigger: 'blur' }],
-
-        nozzleSize: [
-          { required: true, message: '请填写喷嘴规格，格式 30*0.25', trigger: 'blur' },
-          { max: 10, message: '最多10位字符', trigger: 'blur' }
-        ],
-        treatCoolRoller: [
-          { required: true, message: '请选择车修方式', trigger: 'blur' },
-        ],
-        coolRollerThickness: [
-          { required: true, message: '请填写铜套厚度，单位 mm', trigger: 'blur' },
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        ReceiveMeltTime: [
-          { required: true, message: '请填写接钢时间，格式 08:30', trigger: 'blur' },
-          { max: 10, message: '最多10位字符', trigger: 'blur' }
-        ],
-        tundishTemperatureWithoutMelt: [
-          { required: true, message: '请填写接钢前包温', trigger: 'blur' },
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        tundishTemperatureWithMelt: [
-          { required: true, message: '请填写接钢后包温', trigger: 'blur' },
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        installNozzleTime: [
-          { required: true, message: '请填写装杯时间，格式 08:40', trigger: 'blur' },
-          { max: 10, message: '最多10位字符', trigger: 'blur' }
-        ],
-        castTimeStart: [
-          { required: true, message: '请填写开包时间，格式 08:40', trigger: 'blur' },
-          { max: 10, message: '最多10位字符', trigger: 'blur' }
-        ],
-        pressure: [
-          { required: true, message: '请填写开包压力', trigger: 'blur' },
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        tundishTemperatureCasting: [
-          { required: true, message: '请填写开包温度', trigger: 'blur' },
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        coolRollerTemperatureBeforeCast: [
-          { required: true, message: '请填写喷带前水温', trigger: 'blur' },
-          { max: 20, message: '最多20位字符', trigger: 'blur' }
-        ],
-        coolRollerTemperatureAfterCast: [
-          { required: true, message: '请填写喷带后水温', trigger: 'blur' },
-          { max: 20, message: '最多20位字符', trigger: 'blur' }
-        ],
-        castLocation: [
-          { required: true, message: '请选择喷带位置', trigger: 'blur' }
-        ],
-        coilTimes: [
-          { required: true, message: '请填写抓取次数', trigger: 'blur' },
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
-        ],
-        castTimeEnd: [
-          { required: true, message: '请填写喷带完成时间，格式 10:30', trigger: 'blur' },
-          { max: 10, message: '最多10位字符', trigger: 'blur' }
-        ],
-        describe: [
-          { required: true, message: '请填写喷带结果描述', trigger: 'blur' },
-          { max: 100, message: '最多100位字符', trigger: 'blur' }
-        ]
+        castTimes: [{ required: true, message: '请选择开包次数', trigger: 'blur' }]
       }
     };
   },
@@ -450,8 +382,9 @@ export default {
     castTimesChangeHandler(val) { // 开包次数的改变
       const _length = this.formData.record.length;
       if (val > _length) {
+        const clone = cloneDeep(defaultCastDetail);
         for(let i = 0; i < val - _length; i++) {
-          this.formData.record.push(defaultCastDetail);
+          this.formData.record.push(clone);
         }
       } else if (val < _length) {
         for(let i = 0; i < _length - val; i++) {
@@ -467,10 +400,9 @@ export default {
             return item.ribbonTypeId === this.formData.ribbonTypeId;
           }).ribbonTypeName;
 
-          // 总重量
-          this.formData.alloyTotalWeight = parseInt(this.formData.newAlloyWeight) + parseInt(this.formData.oldAlloyWeight) + parseInt(this.formData.mixAlloyWeight) + parseInt(this.formData.highNbWeight) + parseInt(this.formData.alloyFixWeight);
+          this.formData.recordJson = JSON.stringify(this.formData.record);
 
-          const { method, url } = this.dialogData.formType === 'add' ? { method: 'POST', url: urlmap.addMelt } : { method: 'PUT', url: urlmap.updateMelt };
+          const { method, url } = this.dialogData.formType === 'add' ? { method: 'POST', url: urlmap.addCast } : { method: 'PUT', url: urlmap.updateCast };
 
           this.$http(method, url, this.formData).then(data => {
             this.$emit('submit');
@@ -495,7 +427,7 @@ export default {
 .cast_detail {
   border-top: 1px solid #dcdfe6;
   position: relative;
-  padding: 10px 0;
+  padding: 20px 0 10px;
   .cast_hd {
     position: absolute;
     left: 50%;

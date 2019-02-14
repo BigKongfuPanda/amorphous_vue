@@ -176,6 +176,7 @@ export default {
     },
     submitHandler() {
       this.dialogVisible = false;
+      this.pageConfig.current = 1;
       this.getTableData();
     },
     handleCurrentChange(val) {

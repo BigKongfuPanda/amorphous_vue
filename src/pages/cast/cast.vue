@@ -49,7 +49,7 @@
               <el-table-column prop="castLocation" label="喷带位置" align="center" width="80px"></el-table-column>
               <el-table-column prop="coilTimes" label="抓取次数" align="center" width="80px"></el-table-column>
               <el-table-column prop="castTimeEnd" label="喷带完成时间" align="center" width="110px"></el-table-column>
-              <el-table-column prop="describe" label="喷带结果描述" align="center" width="110px"></el-table-column>
+              <el-table-column prop="describe" label="喷带结果描述" align="center" width="110px" :show-overflow-tooltip="true"></el-table-column>
             </el-table>
           </template>
         </el-table-column>
@@ -71,7 +71,7 @@
         <el-table-column prop="heatCupNum" label="加热杯个数" align="center" width="100px"></el-table-column>
         <el-table-column prop="meltOutWeight" label="放钢重量(kg)" align="center" width="110px"></el-table-column>
         <el-table-column prop="rawWeight" label="大盘毛重(kg)" align="center" width="110px"></el-table-column>
-        <el-table-column prop="remark" label="备注" align="center" width="100px" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="remark" label="备注" align="center" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="updatedAt" label="更新时间" align="center" width="170px" :formatter="dateTimeFormat"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
@@ -198,6 +198,7 @@ export default {
     },
     submitHandler() {
       this.dialogVisible = false;
+      this.pageConfig.current = 1;
       this.getTableData();
     },
     handleCurrentChange(val) {

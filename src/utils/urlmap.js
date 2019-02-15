@@ -20,5 +20,9 @@ export default {
   queryCast: 'api/cast',
   addCast: 'api/cast',
   updateCast: 'api/cast',
-  delCast: 'api/cast'
+  delCast: 'api/cast',
+  queryMeasure: 'api/measure',
+  addMeasure: 'api/measure',
+  updateMeasure: 'api/measure',
+  delMeasure: 'api/measure'
 };

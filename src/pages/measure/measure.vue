@@ -350,7 +350,9 @@ export default {
       row.ribbenTotalLevel = row.laminationLevel === '不合格' ? '不合格' : row.ribbenThicknessLevel + row.laminationLevel + row.ribbenToughnessLevel + row.appearenceLevel;
 
       // 是否入库 不合格不能入库，端面有问题的不能入库，不满足入库规则的不能入库
-      row.isStored = row.ribbenTotalLevel === '不合格' ? '否' : '是';
+      if (row.ribbenTotalLevel === '不合格') {
+        row.isStored = '否';
+      }
 
       // 发送请求，更新当前的数据
       this.$http('PUT', urlmap.updateMeasure, row).then(data => {

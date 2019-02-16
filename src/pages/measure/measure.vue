@@ -192,7 +192,7 @@
         <el-table-column prop="storageRule" label="入库规则" align="center" width="90px" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="isStored" label="是否入库" align="center" width="90px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+            <div v-if="scope.row.isEditing === false" :class="scope.row.isStored === '否' ? 'text_danger' : '' ">
               {{ scope.row.isStored }}
             </div>
             <div v-else>
@@ -200,6 +200,16 @@
                 <el-option label="是" value="是"></el-option>
                 <el-option label="否" value="否"></el-option>
               </el-select>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="unStoreReason" label="不入库原因" align="center" width="100px" :show-overflow-tooltip="true">
+          <template slot-scope="scope">
+            <div v-if="scope.row.isEditing === false" class="text_danger">
+              {{ scope.row.unStoreReason }}
+            </div>
+            <div v-else>
+              <el-input size="mini" v-model="scope.row.unStoreReason"></el-input>
             </div>
           </template>
         </el-table-column>

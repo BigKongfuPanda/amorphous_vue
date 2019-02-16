@@ -28,9 +28,9 @@
         <el-button type="primary" icon="el-icon-plus" @click="createMelt">创建化钢记录</el-button>
       </el-col>
       <el-table :data="tableData" stripe border style="width:100%" v-loading="loading"> 
-        <el-table-column prop="createdAt" label="冶炼日期" align="center" width="110px" :formatter="dateFormat"></el-table-column>
-        <el-table-column prop="ribbonTypeName" label="材质" align="center" width="80px"></el-table-column>
-        <el-table-column prop="furnace" label="炉号" align="center" width="170px"></el-table-column>
+        <el-table-column prop="createdAt" label="冶炼日期" align="center" width="110px" :formatter="dateFormat" fixed></el-table-column>
+        <el-table-column prop="ribbonTypeName" label="材质" align="center" width="80px" fixed></el-table-column>
+        <el-table-column prop="furnace" label="炉号" align="center" width="170px" fixed></el-table-column>
         <el-table-column prop="bucket" label="桶号" align="center" width="50px"></el-table-column>
         <el-table-column prop="melter" label="化钢人" align="center" width="70px"></el-table-column>
         <el-table-column prop="meltFurnace" label="冶炼炉" align="center" width="80px"></el-table-column>

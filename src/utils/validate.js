@@ -30,7 +30,7 @@ export const number = (rule, value, callback) => {
   }
 };
 
-// 自然数 0, 1, 2, ...
+// 带有小数，最多保留2位小数
 export const decimalFormat = (rule, value, callback) => {
   const reg = /^(\-?)\d+(?:\.\d{1,2})?$/;
   if(!reg.test(value)) {

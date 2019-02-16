@@ -42,7 +42,7 @@
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="edit(scope.row)">修改</el-button>
-            <el-button size="mini" type="danger" @click="del(scope.row)">删除</el-button>
+            <!-- <el-button size="mini" type="danger" @click="del(scope.row)">删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -144,20 +144,20 @@ export default {
       this.dialogVisible = true;
       this.formType = 'edit';
     },
-    del(row) {
-      const { _id, furnace } = row;
-      this.$confirm(`确定删除 ${furnace} 吗？`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$http('delete', urlmap.delMeasure, {_id}).then(data => {
-          this.getTableData();
-        }).catch(error => {
-          console.log(error);
-        });
-      }).catch(() => {});
-    },
+    // del(row) {
+    //   const { _id, furnace } = row;
+    //   this.$confirm(`确定删除 ${furnace} 吗？`, '提示', {
+    //     confirmButtonText: '确定',
+    //     cancelButtonText: '取消',
+    //     type: 'warning'
+    //   }).then(() => {
+    //     this.$http('delete', urlmap.delMeasure, {_id}).then(data => {
+    //       this.getTableData();
+    //     }).catch(error => {
+    //       console.log(error);
+    //     });
+    //   }).catch(() => {});
+    // },
     closeHandler() {
       this.dialogVisible = false;
     },
@@ -175,9 +175,5 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
 
 

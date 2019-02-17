@@ -319,8 +319,8 @@ export default {
       row.isEditing = true;
     },
     del(row) {
-      const { _id, furnace } = row;
-      this.$confirm(`确定删除 ${furnace} 吗？`, '提示', {
+      const { _id, furnace, coilNumber } = row;
+      this.$confirm(`删除后数据无法恢复，确定删除 ${furnace} 的第 ${coilNumber} 盘吗？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

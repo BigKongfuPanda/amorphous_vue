@@ -60,7 +60,7 @@ export default {
     },
     delRibbon(row) {
       const { ribbonTypeId, ribbonTypeName } = row;
-      this.$confirm(`确定要删除 ${ribbonTypeName} 吗？`, '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'})
+      this.$confirm(`删除后数据无法恢复，确定要删除 ${ribbonTypeName} 吗？`, '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'})
       .then(() => {
         this.$http('delete', urlmap.delRibbonType, { ribbonTypeId }).then(data => {
           this.getRibbonTypeList();

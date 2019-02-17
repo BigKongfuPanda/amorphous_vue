@@ -159,7 +159,7 @@ export default {
     },
     del(row) {
       const { _id, furnace } = row;
-      this.$confirm(`确定删除 ${furnace} 吗？`, '提示', {
+      this.$confirm(`删除后数据无法恢复，确定删除 ${furnace} 吗？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

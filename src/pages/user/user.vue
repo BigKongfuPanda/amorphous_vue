@@ -82,7 +82,7 @@ export default {
     },
     delUser(row) {
       const { username } = row;
-      this.$confirm(`确定要删除 ${username} 吗？`, "提示", {
+      this.$confirm(`删除后数据无法恢复，确定要删除 ${username} 吗？`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

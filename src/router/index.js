@@ -12,7 +12,10 @@ import Login from '@/pages/login.vue';
 import Plan from '@/pages/plan/plan.vue';
 import Melt from '@/pages/melt/melt.vue';
 import Cast from '@/pages/cast/cast.vue';
-import Ribbon from '@/pages/ribbon/ribbon.vue';
+import RibbonType from '@/pages/ribbonType/ribbonType.vue';
+import RibbonWidth from '@/pages/ribbonWidth/ribbonWidth.vue';
+import RibbonThicknessLevel from '@/pages/ribbonThicknessLevel/ribbonThicknessLevel.vue';
+import LaminationLevel from '@/pages/laminationLevel/laminationLevel.vue';
 import User from '@/pages/user/user.vue';
 import Roll from '@/pages/roll/roll.vue';
 import Measure from '@/pages/measure/measure.vue';
@@ -52,10 +55,28 @@ export default new Router({
           meta: { title: '喷带记录表', icon: 'cast' }
         },
         {
-          path: 'ribbon',
-          name: 'ribbon',
-          component: Ribbon,
-          meta: { title: '带材牌号管理', icon: 'ribbon' }
+          path: 'ribbonType',
+          name: 'ribbonType',
+          component: RibbonType,
+          meta: { title: '带材牌号管理', icon: 'ribbonType' }
+        },
+        {
+          path: 'ribbonWidth',
+          name: 'ribbonWidth',
+          component: RibbonWidth,
+          meta: { title: '带材规格管理', icon: 'ribbonWidth' }
+        },
+        {
+          path: 'ribbonThicknessLevel',
+          name: 'ribbonThicknessLevel',
+          component: RibbonThicknessLevel,
+          meta: { title: '带材厚度等级管理', icon: 'ribbonThicknessLevel' }
+        },
+        {
+          path: 'laminationLevel',
+          name: 'laminationLevel',
+          component: LaminationLevel,
+          meta: { title: '带材叠片等级管理', icon: 'laminationLevel' }
         },
         {
           path: 'user',

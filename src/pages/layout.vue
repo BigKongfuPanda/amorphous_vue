@@ -136,10 +136,19 @@
         <el-submenu index="8" v-if="roleId === 1 || roleId === 2">
           <template slot="title">
             <i class="el-icon-location"></i>
-            <span>带材牌号管理</span>
+            <span>带材管理</span>
           </template>
-          <router-link to="/ribbon">
-            <el-menu-item index="/ribbon">带材牌号列表</el-menu-item>
+          <router-link to="/ribbonType">
+            <el-menu-item index="/ribbonType">牌号列表</el-menu-item>
+          </router-link>
+          <router-link to="/ribbonWidth">
+            <el-menu-item index="/ribbonWidth">规格列表</el-menu-item>
+          </router-link>
+          <router-link to="/ribbonThicknessLevel">
+            <el-menu-item index="/ribbonThicknessLevel">厚度等级列表</el-menu-item>
+          </router-link>
+          <router-link to="/laminationLevel">
+            <el-menu-item index="/laminationLevel">叠片等级列表</el-menu-item>
           </router-link>
         </el-submenu>
         <el-submenu index="9" v-if="roleId === 1">

@@ -28,9 +28,6 @@
           <el-option v-for="item in ribbonWidthList" :key="item.ribbonWidthId" :label="item.ribbonWidth" :value="item.ribbonWidth"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="综合级别：">
-        <el-input v-model="searchForm.ribbonTotalLevels" placeholder="请输入综合级别，以逗号分隔"></el-input>
-      </el-form-item>
       <el-form-item label="厚度级别：">
         <el-select v-model="searchForm.ribbonThicknessLevels" placeholder="请选择" multiple collapse-tags>
           <el-option v-for="item in ribbonThicknessLevelList" :key="item.ribbonThicknessLevelId" :label="item.ribbonThicknessLevel" :value="item.ribbonThicknessLevel"></el-option>
@@ -40,6 +37,12 @@
         <el-select v-model="searchForm.laminationLevels" placeholder="请选择" multiple collapse-tags>
           <el-option v-for="item in laminationLevelList" :key="item.laminationLevelId" :label="item.laminationLevel" :value="item.laminationLevel"></el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="综合级别：">
+        <el-input v-model="searchForm.ribbonTotalLevels" placeholder="请输入综合级别，以逗号分隔"></el-input>
+      </el-form-item>
+      <el-form-item label="仓位：">
+        <el-input v-model="searchForm.place" placeholder="请输入仓位，以逗号分隔"></el-input>
       </el-form-item>
       
       <el-form-item>
@@ -134,12 +137,13 @@ export default {
       searchForm: {
         caster: '',
         furnace: '',
-        ribbonTypeNames: [],
         date: [],
+        ribbonTypeNames: [],
         ribbonWidths: [],
         ribbonTotalLevels: '',
         ribbonThicknessLevels: [],
-        laminationLevels: []
+        laminationLevels: [],
+        place: ''
       },
       loading: false,
       tableData: [],
@@ -184,7 +188,7 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { caster: '', furnace: '', date: [], ribbonTypeNames: [] };
+      this.searchForm = { caster: '', furnace: '', date: [], ribbonTypeNames: [], ribbonWidths: [], ribbonTotalLevels: '', ribbonThicknessLevels: [], laminationLevels: [], place: '' };
       const params = {
         current: 1
       };
@@ -198,7 +202,12 @@ export default {
         endTime: this.searchForm.date[1],
         caster: this.searchForm.caster,
         furnace: this.searchForm.furnace,
-        ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames)
+        ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
+        ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths),
+        ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
+        laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
+        ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
+        place: this.searchForm.place
       };
       Object.assign(params, _params);
       this.$http('get', urlmap.queryMeasure, params).then(data => {

@@ -23,6 +23,24 @@
           <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="规格：">
+        <el-select v-model="searchForm.ribbonWidths" placeholder="请选择" multiple collapse-tags>
+          <el-option v-for="item in ribbonWidthList" :key="item.ribbonWidthId" :label="item.ribbonWidth" :value="item.ribbonWidth"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="综合级别：">
+        <el-input v-model="searchForm.ribbonTotalLevels" placeholder="请输入综合级别，以逗号分隔"></el-input>
+      </el-form-item>
+      <el-form-item label="厚度级别：">
+        <el-select v-model="searchForm.ribbonThicknessLevels" placeholder="请选择" multiple collapse-tags>
+          <el-option v-for="item in ribbonThicknessLevelList" :key="item.ribbonThicknessLevelId" :label="item.ribbonThicknessLevel" :value="item.ribbonThicknessLevel"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="叠片级别：">
+        <el-select v-model="searchForm.laminationLevels" placeholder="请选择" multiple collapse-tags>
+          <el-option v-for="item in laminationLevelList" :key="item.laminationLevelId" :label="item.laminationLevel" :value="item.laminationLevel"></el-option>
+        </el-select>
+      </el-form-item>
       
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
@@ -39,8 +57,8 @@
         <el-table-column prop="coilNumber" label="盘号" align="center" width="50px" fixed></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="70px"></el-table-column>
         <el-table-column prop="ribbonWidth" label="规格" align="center" width="50px"></el-table-column>
-        <el-table-column prop="ribbenTotalLevel" label="综合级别" align="center" width="90px"></el-table-column>
-        <el-table-column prop="ribbenThicknessLevel" label="带厚级别" align="center" width="90px"></el-table-column>
+        <el-table-column prop="ribbonTotalLevel" label="综合级别" align="center" width="90px"></el-table-column>
+        <el-table-column prop="ribbonThicknessLevel" label="带厚级别" align="center" width="90px"></el-table-column>
         <el-table-column prop="coilWeight" label="毛重" align="center" width="70px"></el-table-column>
         <el-table-column prop="coilNetWeight" label="净重" align="center" width="70px"></el-table-column>
         <el-table-column prop="outStoreDate" label="出库日期" align="center" :formatter="dateFormat" width="110px"></el-table-column>
@@ -117,7 +135,11 @@ export default {
         caster: '',
         furnace: '',
         ribbonTypeNames: [],
-        date: []
+        date: [],
+        ribbonWidths: [],
+        ribbonTotalLevels: '',
+        ribbonThicknessLevels: [],
+        laminationLevels: []
       },
       loading: false,
       tableData: [],
@@ -130,7 +152,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'ribbonTypeList'
+      'ribbonTypeList', 'ribbonWidthList', 'ribbonThicknessLevelList', 'laminationLevelList'
     ])
   },
   // 动态路由匹配
@@ -139,13 +161,16 @@ export default {
     this.getTableData();
     next();
   },
-  async created () {
-    await this.getRibbonTypeList();
+  created () {
     this.getTableData();
+    this.getRibbonTypeList();
+    this.getRibbonWidthList();
+    this.getRibbonThicknessLevelList();
+    this.getLaminationLevelList();
   },
   methods: {
     ...mapActions([
-      'getRibbonTypeList'
+      'getRibbonTypeList', 'getRibbonWidthList', 'getRibbonThicknessLevelList', 'getLaminationLevelList'
     ]),
     dateFormat(row, column) {
       return dateFormat(row.inStoreDate);
@@ -235,3 +260,8 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+/deep/ .el-form-item {
+  margin: 5px 0;
+}
+</style>

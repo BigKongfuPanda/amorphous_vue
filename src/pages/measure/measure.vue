@@ -51,116 +51,116 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbenThickness1" label="带厚1(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness1" label="带厚1(μm)" align="center" width="90px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
-              {{ scope.row.ribbenThickness1 }}
+              {{ scope.row.ribbonThickness1 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbenThickness1"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness1"></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbenThickness2" label="带厚2(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness2" label="带厚2(μm)" align="center" width="90px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
-              {{ scope.row.ribbenThickness2 }}
+              {{ scope.row.ribbonThickness2 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbenThickness2"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness2"></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbenThickness3" label="带厚3(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness3" label="带厚3(μm)" align="center" width="90px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
-              {{ scope.row.ribbenThickness3 }}
+              {{ scope.row.ribbonThickness3 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbenThickness3"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness3"></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbenThickness4" label="带厚4(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness4" label="带厚4(μm)" align="center" width="90px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
-              {{ scope.row.ribbenThickness4 }}
+              {{ scope.row.ribbonThickness4 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbenThickness4"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness4"></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbenThickness5" label="带厚5(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness5" label="带厚5(μm)" align="center" width="90px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
-              {{ scope.row.ribbenThickness5 }}
+              {{ scope.row.ribbonThickness5 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbenThickness5"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness5"></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbenThickness6" label="带厚6(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness6" label="带厚6(μm)" align="center" width="90px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
-              {{ scope.row.ribbenThickness6 }}
+              {{ scope.row.ribbonThickness6 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbenThickness6"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness6"></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbenThickness7" label="带厚7(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness7" label="带厚7(μm)" align="center" width="90px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
-              {{ scope.row.ribbenThickness7 }}
+              {{ scope.row.ribbonThickness7 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbenThickness7"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness7"></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbenThickness8" label="带厚8(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness8" label="带厚8(μm)" align="center" width="90px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
-              {{ scope.row.ribbenThickness8 }}
+              {{ scope.row.ribbonThickness8 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbenThickness8"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness8"></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbenThickness9" label="带厚9(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness9" label="带厚9(μm)" align="center" width="90px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
-              {{ scope.row.ribbenThickness9 }}
+              {{ scope.row.ribbonThickness9 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbenThickness9"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness9"></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbenThicknessDeviation" label="厚度偏差(μm)" align="center" width="110px"></el-table-column>
-        <el-table-column prop="ribbenThickness" label="平均厚度(μm)" align="center" width="110px"></el-table-column>
-        <el-table-column prop="ribbenThicknessLevel" label="厚度级别" align="center" width="90px"></el-table-column>
-        <el-table-column prop="ribbenToughness" label="韧性" align="center" width="90px">
+        <el-table-column prop="ribbonThicknessDeviation" label="厚度偏差(μm)" align="center" width="110px"></el-table-column>
+        <el-table-column prop="ribbonThickness" label="平均厚度(μm)" align="center" width="110px"></el-table-column>
+        <el-table-column prop="ribbonThicknessLevel" label="厚度级别" align="center" width="90px"></el-table-column>
+        <el-table-column prop="ribbonToughness" label="韧性" align="center" width="90px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
-              {{ scope.row.ribbenToughness }}
+              {{ scope.row.ribbonToughness }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbenToughness"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonToughness"></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbenToughnessLevel" label="韧性等级" align="center" width="90px">
+        <el-table-column prop="ribbonToughnessLevel" label="韧性等级" align="center" width="90px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
-              {{ scope.row.ribbenToughnessLevel }}
+              {{ scope.row.ribbonToughnessLevel }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbenToughnessLevel"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonToughnessLevel"></el-input>
             </div>
           </template>
         </el-table-column>
@@ -184,9 +184,9 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbenTotalLevel" label="综合级别" align="center" width="90px">
+        <el-table-column prop="ribbonTotalLevel" label="综合级别" align="center" width="90px">
           <template slot-scope="scope">
-            <span :class="scope.row.ribbenTotalLevel === '不合格' ? 'text_danger' : '' ">{{scope.row.ribbenTotalLevel}}</span>
+            <span :class="scope.row.ribbonTotalLevel === '不合格' ? 'text_danger' : '' ">{{scope.row.ribbonTotalLevel}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="storageRule" label="入库规则" align="center" width="90px" :show-overflow-tooltip="true"></el-table-column>
@@ -342,25 +342,25 @@ export default {
       row.laminationLevel = this.calcLaminationLevel(row.laminationFactor);
 
       // 计算厚度最大偏差、平均厚度、厚度级别
-      row.ribbenThickness1 = typeof row.ribbenThickness1 === 'string' ? Number(row.ribbenThickness1.trim()) : row.ribbenThickness1;
-      row.ribbenThickness2 = typeof row.ribbenThickness2 === 'string' ? Number(row.ribbenThickness2.trim()) : row.ribbenThickness2;
-      row.ribbenThickness3 = typeof row.ribbenThickness3 === 'string' ? Number(row.ribbenThickness3.trim()) : row.ribbenThickness3;
-      row.ribbenThickness4 = typeof row.ribbenThickness4 === 'string' ? Number(row.ribbenThickness4.trim()) : row.ribbenThickness4;
-      row.ribbenThickness5 = typeof row.ribbenThickness5 === 'string' ? Number(row.ribbenThickness5.trim()) : row.ribbenThickness5;
-      row.ribbenThickness6 = typeof row.ribbenThickness6 === 'string' ? Number(row.ribbenThickness6.trim()) : row.ribbenThickness6;
-      row.ribbenThickness7 = typeof row.ribbenThickness7 === 'string' ? Number(row.ribbenThickness7.trim()) : row.ribbenThickness7;
-      row.ribbenThickness8 = typeof row.ribbenThickness8 === 'string' ? Number(row.ribbenThickness8.trim()) : row.ribbenThickness8;
-      row.ribbenThickness9 = typeof row.ribbenThickness9 === 'string' ? Number(row.ribbenThickness9.trim()) : row.ribbenThickness9;
+      row.ribbonThickness1 = typeof row.ribbonThickness1 === 'string' ? Number(row.ribbonThickness1.trim()) : row.ribbonThickness1;
+      row.ribbonThickness2 = typeof row.ribbonThickness2 === 'string' ? Number(row.ribbonThickness2.trim()) : row.ribbonThickness2;
+      row.ribbonThickness3 = typeof row.ribbonThickness3 === 'string' ? Number(row.ribbonThickness3.trim()) : row.ribbonThickness3;
+      row.ribbonThickness4 = typeof row.ribbonThickness4 === 'string' ? Number(row.ribbonThickness4.trim()) : row.ribbonThickness4;
+      row.ribbonThickness5 = typeof row.ribbonThickness5 === 'string' ? Number(row.ribbonThickness5.trim()) : row.ribbonThickness5;
+      row.ribbonThickness6 = typeof row.ribbonThickness6 === 'string' ? Number(row.ribbonThickness6.trim()) : row.ribbonThickness6;
+      row.ribbonThickness7 = typeof row.ribbonThickness7 === 'string' ? Number(row.ribbonThickness7.trim()) : row.ribbonThickness7;
+      row.ribbonThickness8 = typeof row.ribbonThickness8 === 'string' ? Number(row.ribbonThickness8.trim()) : row.ribbonThickness8;
+      row.ribbonThickness9 = typeof row.ribbonThickness9 === 'string' ? Number(row.ribbonThickness9.trim()) : row.ribbonThickness9;
 
-      row.ribbenThicknessDeviation = this.calcMaxDeviation([row.ribbenThickness1, row.ribbenThickness2, row.ribbenThickness3, row.ribbenThickness4, row.ribbenThickness5, row.ribbenThickness6, row.ribbenThickness7, row.ribbenThickness8, row.ribbenThickness9]);
-      row.ribbenThickness = ((row.ribbenThickness1 + row.ribbenThickness2 + row.ribbenThickness3 + row.ribbenThickness4 + row.ribbenThickness5 + row.ribbenThickness6 + row.ribbenThickness7 + row.ribbenThickness8 + row.ribbenThickness9) / 9).toFixed(2);
-      row.ribbenThicknessLevel = this.calcRibbenThicknessLevel(row.ribbenThickness);
+      row.ribbonThicknessDeviation = this.calcMaxDeviation([row.ribbonThickness1, row.ribbonThickness2, row.ribbonThickness3, row.ribbonThickness4, row.ribbonThickness5, row.ribbonThickness6, row.ribbonThickness7, row.ribbonThickness8, row.ribbonThickness9]);
+      row.ribbonThickness = ((row.ribbonThickness1 + row.ribbonThickness2 + row.ribbonThickness3 + row.ribbonThickness4 + row.ribbonThickness5 + row.ribbonThickness6 + row.ribbonThickness7 + row.ribbonThickness8 + row.ribbonThickness9) / 9).toFixed(2);
+      row.ribbonThicknessLevel = this.calcribbonThicknessLevel(row.ribbonThickness);
 
       // 综合级别
-      row.ribbenTotalLevel = row.laminationLevel === '不合格' ? '不合格' : row.ribbenThicknessLevel + row.laminationLevel + row.ribbenToughnessLevel + row.appearenceLevel;
+      row.ribbonTotalLevel = row.laminationLevel === '不合格' ? '不合格' : row.ribbonThicknessLevel + row.laminationLevel + row.ribbonToughnessLevel + row.appearenceLevel;
 
       // 是否入库 不合格不能入库，端面有问题的不能入库，不满足入库规则的不能入库
-      if (row.ribbenTotalLevel === '不合格') {
+      if (row.ribbonTotalLevel === '不合格') {
         row.isStored = '否';
       }
 
@@ -400,7 +400,7 @@ export default {
       const _len = arr.length;
       return arr[_len - 1] - arr[0];
     },
-    calcRibbenThicknessLevel(thickness) {
+    calcribbonThicknessLevel(thickness) {
       if (!thickness) {
         return;
       }

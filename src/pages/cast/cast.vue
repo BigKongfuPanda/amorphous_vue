@@ -18,6 +18,9 @@
       <el-form-item label="喷带手：">
         <el-input v-model="searchForm.caster" placeholder="请输入喷带手姓名"></el-input>
       </el-form-item>
+      <el-form-item label="炉号：">
+        <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
         <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
@@ -107,6 +110,7 @@ export default {
       castId: 6,
       searchForm: {
         caster: '',
+        furnace: '',
         date: []
       },
       loading: false,
@@ -146,7 +150,7 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { caster: '', date: [] };
+      this.searchForm = { caster: '', furnace: '',  date: [] };
       const params = {
         current: 1
       };
@@ -158,7 +162,8 @@ export default {
         castId: this.castId,
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
-        caster: this.searchForm.caster
+        caster: this.searchForm.caster,
+        furnace: this.searchForm.furnace
       };
       Object.assign(params, _params);
       this.$http('get', urlmap.queryCast, params).then(data => {
@@ -181,7 +186,7 @@ export default {
     },
     del(row) {
       const { _id, furnace } = row;
-      this.$confirm(`确定删除 ${furnace} 吗？`, '提示', {
+      this.$confirm(`删除后数据无法恢复，确定删除 ${furnace} 吗？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

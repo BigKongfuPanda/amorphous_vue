@@ -135,7 +135,7 @@ export default {
     },
     delPlan(row) {
       const { _id, furnace } = row;
-      this.$confirm(`确定要删除 ${furnace} 吗？`, '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'})
+      this.$confirm(`删除后数据无法恢复，确定要删除 ${furnace} 吗？`, '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'})
       .then(() => {
         this.$http('delete', urlmap.delPlan, {_id}).then(data => {
           this.getTableData();

@@ -30,6 +30,16 @@ export const number = (rule, value, callback) => {
   }
 };
 
+// 带有小数，最多保留2位小数
+export const decimalFormat = (rule, value, callback) => {
+  const reg = /^(\-?)\d+(?:\.\d{1,2})?$/;
+  if(!reg.test(value)) {
+    callback(new Error('最多保留两位小数, 如 15, 15.7, 15.75,...'))
+  } else {
+    callback();
+  }
+};
+
 // 小于，默认是 99999999
 export const ltNumber = (max = 99999999) => {
   return (rule, value, callback) => {

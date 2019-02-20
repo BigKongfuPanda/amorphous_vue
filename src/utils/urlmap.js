@@ -20,5 +20,21 @@ export default {
   queryCast: 'api/cast',
   addCast: 'api/cast',
   updateCast: 'api/cast',
-  delCast: 'api/cast'
+  delCast: 'api/cast',
+  queryMeasure: 'api/measure',
+  addMeasure: 'api/measure',
+  updateMeasure: 'api/measure',
+  delMeasure: 'api/measure',
+  queryRibbonWidth: 'api/ribbonWidth',
+  addRibbonWidth: 'api/ribbonWidth',
+  updateRibbonWidth: 'api/ribbonWidth',
+  delRibbonWidth: 'api/ribbonWidth',
+  queryRibbonThicknessLevel: 'api/ribbonThicknessLevel',
+  addRibbonThicknessLevel: 'api/ribbonThicknessLevel',
+  updateRibbonThicknessLevel: 'api/ribbonThicknessLevel',
+  delRibbonThicknessLevel: 'api/ribbonThicknessLevel',
+  queryLaminationLevel: 'api/laminationLevel',
+  addLaminationLevel: 'api/laminationLevel',
+  updateLaminationLevel: 'api/laminationLevel',
+  delLaminationLevel: 'api/laminationLevel'
 };

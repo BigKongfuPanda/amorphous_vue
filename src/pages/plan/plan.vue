@@ -19,9 +19,11 @@
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-plus" @click="createPlan">新增生产计划</el-button>
+        <el-button type="primary" icon="el-icon-check" @click="approve" v-if="roleId === 1 && tableData.length > 0 && !isApproved">待审批</el-button>
+        <el-button type="primary" icon="el-icon-check" v-if="roleId === 1 && tableData.length > 0 && isApproved" disabled>已审核</el-button>
       </el-col>
       <el-table :data=tableData stripe border style="width: 100%" v-loading="loading">
-        <el-table-column prop="date" label="日期" align="center" width="100px"></el-table-column>
+        <el-table-column prop="date" label="日期" align="center" width="110px"></el-table-column>
         <el-table-column prop="castId" label="机组" align="center" width="60px"></el-table-column>
         <el-table-column prop="team" label="班组" align="center" width="50px"></el-table-column>
         <el-table-column prop="taskOrder" label="任务单号" align="center" min-width="100px"></el-table-column>
@@ -71,12 +73,14 @@ export default {
       searchForm: {
         date: dateFormat(new Date())
       },
+      isApproved: false,
       dialogVisible: false,
       formType: 'create',
       rowData: {},
       tableData: [],
       loading: true,
-      castId: 6
+      castId: 6,
+      roleId: null
     }
   },
   // 动态路由匹配
@@ -88,6 +92,7 @@ export default {
   },
   created() {
     this.getTableData();
+    this.roleId = JSON.parse(localStorage.getItem('userinfo')).roleId;
   },
   computed: {
     pickerOptions() {
@@ -105,7 +110,7 @@ export default {
       this.dialogVisible = false;
     },
     submitHandler(data) {
-      this.dialogVisible = false;
+      // this.dialogVisible = false;
       this.getTableData();
     },
     clickSearch() {
@@ -118,6 +123,7 @@ export default {
       };
       this.$http('get', urlmap.queryPlan, params).then(data => {
         this.tableData = data.list;
+        this.isApproved = this.tableData[0] && this.tableData[0].isApproved;
       }).catch((err) => {
         console.log(err);
       }).finally(() => {
@@ -139,6 +145,22 @@ export default {
       .then(() => {
         this.$http('delete', urlmap.delPlan, {_id}).then(data => {
           this.getTableData();
+        }).catch(err => {
+          console.log(err);
+        });
+      })
+      .catch(() => {});
+    },
+    approve() {
+      this.$confirm('确定要审批吗？', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'})
+      .then(() => {
+        const params = {
+          date: this.searchForm.date,
+          castId: this.castId,
+          isApproved: 1 // 1-已经审批，0-没有审批
+        };
+        this.$http('PUT', urlmap.updatePlan, params).then(data => {
+          this.tableData = this.tableData.map(item => item.isApproved = true);
         }).catch(err => {
           console.log(err);
         });

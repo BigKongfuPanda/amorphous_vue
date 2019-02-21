@@ -13,17 +13,23 @@
         <el-table-column prop="password" label="密码" align="center"></el-table-column>
         <el-table-column prop="roleId" label="角色" align="center">
           <template slot-scope="scope">
-            <span v-if="scope.row.roleId === 1">超级管理员</span>
-            <span v-if="scope.row.roleId === 2">普通管理员</span>
-            <span v-if="scope.row.roleId === 3">重卷</span>
-            <span v-if="scope.row.roleId === 4">检测</span>
-            <span v-if="scope.row.roleId === 5">库房</span>
-            <span v-if="scope.row.roleId === 6">6号机组</span>
-            <span v-if="scope.row.roleId === 7">7号机组</span>
-            <span v-if="scope.row.roleId === 8">8号机组</span>
-            <span v-if="scope.row.roleId === 9">9号机组</span>
+            <span v-if="scope.row.roleId === 1">厂长</span>
+            <span v-if="scope.row.roleId === 2">生产计划</span>
+            <span v-if="scope.row.roleId === 3">普通管理员</span>
+            <span v-if="scope.row.roleId === 4">重卷</span>
+            <span v-if="scope.row.roleId === 5">检测</span>
+            <span v-if="scope.row.roleId === 6">库房</span>
+            <span v-if="scope.row.roleId === 7">6号机组-喷带</span>
+            <span v-if="scope.row.roleId === 8">6号机组-化钢</span>
+            <span v-if="scope.row.roleId === 9">7号机组-喷带</span>
+            <span v-if="scope.row.roleId === 10">7号机组-化钢</span>
+            <span v-if="scope.row.roleId === 11">8号机组-喷带</span>
+            <span v-if="scope.row.roleId === 12">8号机组-化钢</span>
+            <span v-if="scope.row.roleId === 13">9号机组-喷带</span>
+            <span v-if="scope.row.roleId === 14">9号机组-化钢</span>
           </template>
         </el-table-column>
+        <el-table-column prop="adminname" label="姓名" align="center"></el-table-column>
         <el-table-column prop="createTime" label="注册时间" align="center"></el-table-column>
         <el-table-column prop="loginTime" label="最后登录时间" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
@@ -81,8 +87,8 @@ export default {
       this.formType = "create";
     },
     delUser(row) {
-      const { username } = row;
-      this.$confirm(`删除后数据无法恢复，确定要删除 ${username} 吗？`, "提示", {
+      const { username, adminname } = row;
+      this.$confirm(`删除后数据无法恢复，确定要删除 ${adminname}-${username} 吗？`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

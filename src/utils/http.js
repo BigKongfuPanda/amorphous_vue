@@ -9,6 +9,10 @@ require('promise.prototype.finally').shim();
 
 // import store from '../store/store';
 
+if (process.env.NODE_ENV === 'development') {
+    axios.defaults.baseURL = 'api';
+}
+
 // Add a response interceptor
 axios.interceptors.response.use(function (response) {
     // Do something with response data

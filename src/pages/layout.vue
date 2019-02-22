@@ -31,7 +31,7 @@
         <el-submenu index="2">
           <template slot="title">
             <i class="el-icon-location"></i>
-            <span>化钢记录</span>
+            <span>冶炼记录</span>
           </template>
           <router-link to="/melt/6">
             <el-menu-item index="/melt/6">6号机组</el-menu-item>

@@ -18,9 +18,9 @@
     </el-form>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-plus" @click="createPlan">新增生产计划</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="createPlan" v-if="roleId === 1 || roleId === 2">新增生产计划</el-button>
         <el-button type="primary" icon="el-icon-check" @click="approve" v-if="roleId === 1 && tableData.length > 0 && !isApproved">待审批</el-button>
-        <el-button type="primary" icon="el-icon-check" v-if="roleId === 1 && tableData.length > 0 && isApproved" disabled>已审核</el-button>
+        <el-button type="primary" icon="el-icon-check" v-if="roleId === 1 && tableData.length > 0 && isApproved" disabled>已审批</el-button>
       </el-col>
       <el-table :data=tableData stripe border style="width: 100%" v-loading="loading">
         <el-table-column prop="date" label="日期" align="center" width="110px"></el-table-column>
@@ -45,7 +45,7 @@
         <el-table-column prop="castTime" label="制带时间" align="center" width="110px"></el-table-column>
         <el-table-column prop="rawWeight" label="大盘毛重" align="center" width="80px"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
-          <template slot-scope="scope">
+          <template slot-scope="scope" v-if="roleId === 1 || roleId === 2">
             <el-button size="mini" type="primary" @click="editPlan(scope.row)">修改</el-button>
             <el-button size="mini" type="danger" @click="delPlan(scope.row)">删除</el-button>
           </template>
@@ -85,12 +85,12 @@ export default {
   },
   // 动态路由匹配
   beforeRouteUpdate(to, from, next) {
-    console.log(to);
     this.castId = to.params.castId;
     this.getTableData();
     next();
   },
   created() {
+    this.castId = this.$route.params.castId;
     this.getTableData();
     this.roleId = JSON.parse(localStorage.getItem('userinfo')).roleId;
   },
@@ -122,8 +122,20 @@ export default {
         date: this.searchForm.date
       };
       this.$http('get', urlmap.queryPlan, params).then(data => {
-        this.tableData = data.list;
-        this.isApproved = this.tableData[0] && this.tableData[0].isApproved;
+        let _list = data.list;
+        // 如果数组中每一条数据的 approved === 1 都成立，则表示该计划已经审批过
+        this.isApproved = _list.every(item => item.approved === 1);
+
+        // 如果计划没有审批，则除了厂长和生产计划以外，其他角色无法看到该张计划单
+        if (!this.isApproved) {
+          if (this.roleId === 1 || this.roleId === 2) {
+            this.tableData = _list;            
+          } else {
+            this.tableData = [];
+          }
+        } else { // 计划审核通过，则所有角色都能够看到计划单
+          this.tableData = _list;
+        }
       }).catch((err) => {
         console.log(err);
       }).finally(() => {
@@ -157,10 +169,10 @@ export default {
         const params = {
           date: this.searchForm.date,
           castId: this.castId,
-          isApproved: 1 // 1-已经审批，0-没有审批
+          roleId: this.roleId
         };
         this.$http('PUT', urlmap.updatePlan, params).then(data => {
-          this.tableData = this.tableData.map(item => item.isApproved = true);
+          this.getTableData();
         }).catch(err => {
           console.log(err);
         });

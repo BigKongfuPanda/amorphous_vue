@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-  :title="dialogData.formType === 'create' ? `新增化钢记录-${$route.params.castId}号机组` : `修改化钢记录-${$route.params.castId}号机组`"
+  :title="dialogData.formType === 'create' ? `新增冶炼记录-${$route.params.castId}号机组` : `修改冶炼记录-${$route.params.castId}号机组`"
   :visible.sync="dialogData.dialogVisible"
   :close-on-click-modal="false"
   :close-on-press-escape="false" 
@@ -12,26 +12,26 @@
     <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="100%" @submit.native.prevent inline>
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-form-item label="材质" prop="ribbonTypeId" class="dialog_field">
-            <el-select v-model="formData.ribbonTypeId" placeholder="请选择">
-              <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeId" :label="item.ribbonTypeName"></el-option>
+          <el-form-item label="材质:" prop="ribbonTypeName" class="dialog_field">
+            <el-select v-model="formData.ribbonTypeName" placeholder="请选择">
+              <el-option v-for="item in dialogData.ribbonTypeList" :key="item.ribbonTypeName" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="制带炉号" prop="furnace" class="dialog_field">
-            <el-input v-model="formData.furnace"></el-input>
+          <el-form-item label="制带炉号:" prop="furnace" class="dialog_field">
+            <el-input v-model="formData.furnace" @blur="setBucket"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="桶号" prop="bucket" class="dialog_field">
-            <el-input v-model="formData.bucket"></el-input>
+          <el-form-item label="桶号:" prop="bucket" class="dialog_field">
+            <span>{{formData.bucket}}</span>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-form-item label="熔炼人" prop="melter" class="dialog_field">
+          <el-form-item label="熔炼人:" prop="melter" class="dialog_field">
             <el-input v-model="formData.melter"></el-input>
           </el-form-item>
         </el-col>
@@ -44,92 +44,92 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="新料批号" prop="newAlloyNumber" class="dialog_field">
+          <el-form-item label="新料批号:" prop="newAlloyNumber" class="dialog_field">
             <el-input v-model="formData.newAlloyNumber"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-form-item label="新料重量" prop="newAlloyWeight" class="dialog_field">
+          <el-form-item label="新料重量:" prop="newAlloyWeight" class="dialog_field">
             <el-input v-model="formData.newAlloyWeight"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="加工料批号" prop="oldAlloyNumber" class="dialog_field">
+          <el-form-item label="加工料批号:" prop="oldAlloyNumber" class="dialog_field">
             <el-input v-model="formData.oldAlloyNumber"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="加工料重量" prop="oldAlloyWeight" class="dialog_field">
+          <el-form-item label="加工料重量:" prop="oldAlloyWeight" class="dialog_field">
             <el-input v-model="formData.oldAlloyWeight"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-form-item label="回炉锭批号" prop="mixAlloyNumber" class="dialog_field">
+          <el-form-item label="回炉锭批号:" prop="mixAlloyNumber" class="dialog_field">
             <el-input v-model="formData.mixAlloyNumber"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="回炉锭重量" prop="mixAlloyWeight" class="dialog_field">
+          <el-form-item label="回炉锭重量:" prop="mixAlloyWeight" class="dialog_field">
             <el-input v-model="formData.mixAlloyWeight"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="高铌料批号" prop="highNbNumber" class="dialog_field">
+          <el-form-item label="高铌料批号:" prop="highNbNumber" class="dialog_field">
             <el-input v-model="formData.highNbNumber"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-form-item label="高铌料重量" prop="highNbWeight" class="dialog_field">
+          <el-form-item label="高铌料重量:" prop="highNbWeight" class="dialog_field">
             <el-input v-model="formData.highNbWeight"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="硅" prop="Si" class="dialog_field">
+          <el-form-item label="硅:" prop="Si" class="dialog_field">
             <el-input v-model="formData.Si"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="镍" prop="Ni" class="dialog_field">
+          <el-form-item label="镍:" prop="Ni" class="dialog_field">
             <el-input v-model="formData.Ni"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-form-item label="铜" prop="Cu" class="dialog_field">
+          <el-form-item label="铜:" prop="Cu" class="dialog_field">
             <el-input v-model="formData.Cu"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="硼铁" prop="BFe" class="dialog_field">
+          <el-form-item label="硼铁:" prop="BFe" class="dialog_field">
             <el-input v-model="formData.BFe"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="铌铁" prop="NbFe" class="dialog_field">
+          <el-form-item label="铌铁:" prop="NbFe" class="dialog_field">
             <el-input v-model="formData.NbFe"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-form-item label="放钢重量" prop="alloyOutWeight" class="dialog_field">
+          <el-form-item label="放钢重量:" prop="alloyOutWeight" class="dialog_field">
             <el-input v-model="formData.alloyOutWeight"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="修正重量" prop="alloyFixWeight" class="dialog_field">
+          <el-form-item label="修正重量:" prop="alloyFixWeight" class="dialog_field">
             <el-input v-model="formData.alloyFixWeight"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="备注" prop="remark" class="dialog_field">
+          <el-form-item label="备注:" prop="remark" class="dialog_field">
             <el-input v-model="formData.remark"></el-input>
           </el-form-item>
         </el-col>
@@ -145,13 +145,11 @@
 <script>
 import { integer, positiveInteger, ltNumber, checkFurnace, number } from '@/utils/validate';
 import urlmap from '@/utils/urlmap';
-import { mapState, mapActions } from 'vuex';
 
 const formConfig = {
   "date": "", //冶炼日期
   "castId": 6,// 机组编号
   "furnace": "",// 制带炉号  06-20181120-01/01
-  "ribbonTypeId": '',//材质id
   "ribbonTypeName": "", //材质名称
   "bucket": '',// 配料桶号
   "melter": "",// 熔炼人
@@ -180,16 +178,16 @@ const formConfig = {
 export default {
   data() {
     return {
+      userinfo: {},
       visible: false,
       loading: false,
       formData: {
         "date": "", //冶炼日期
         "castId": 6,// 机组编号
         "furnace": "",// 制带炉号  06-20181120-01/01
-        "ribbonTypeId": '',//材质id
         "ribbonTypeName": "", //材质名称
         "bucket": '',// 配料桶号
-        "melter": "",// 熔炼人
+        "melter": '',// 熔炼人
         "meltFurnace": "",// 冶炼炉炉号 A 或 B
         "newAlloyNumber": "",// 新料炉号 新B-2018-12-12
         "newAlloyWeight": 0,// 新料重量
@@ -212,7 +210,7 @@ export default {
         "updatedAt": "" //更新时间
       },
       rules: {
-        ribbonTypeId: [{ required: true, message: '请选择材质', trigger: 'blur' }],
+        ribbonTypeName: [{ required: true, message: '请选择材质', trigger: 'blur' }],
         furnace: [
           { required: true, message: '请填写炉号', trigger: 'blur' },
           { max: 20, message: '最多20位字符', trigger: 'blur' },
@@ -295,24 +293,21 @@ export default {
       required: true
     }
   },
-  computed: {
-    ...mapState([
-      'ribbonTypeList'
-    ])
-  },
   created() {
+    this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
     if (this.dialogData.formType === 'create') {
-      this.formData = Object.assign({}, formConfig, {castId: Number(this.$route.params.castId)});
+      this.formData = Object.assign({}, formConfig, {castId: Number(this.$route.params.castId), melter: this.userinfo.adminname});
     } else {
       this.formData = Object.assign(this.formData, this.dialogData.rowData);
     }
-    this.getRibbonTypeList();
   },
-  mounted() {},
   methods: {
-    ...mapActions([
-      'getRibbonTypeList'
-    ]),
+    setBucket(e) { // 根据炉号自动填充母合金桶号
+      const furnace = e.target.value;
+      if(furnace) {
+        this.formData.bucket = e.target.value.split('/')[1];
+      }
+    },
     closeDialog() {
       this.$emit('close');
     },
@@ -320,9 +315,6 @@ export default {
       this.$refs.form.validate((valid) => {
         if(valid) {
           this.loading = true;
-          this.formData.ribbonTypeName = this.ribbonTypeList && this.ribbonTypeList.find(item => {
-            return item.ribbonTypeId === this.formData.ribbonTypeId;
-          }).ribbonTypeName;
 
           // 总重量
           this.formData.alloyTotalWeight = parseInt(this.formData.newAlloyWeight) + parseInt(this.formData.oldAlloyWeight) + parseInt(this.formData.mixAlloyWeight) + parseInt(this.formData.highNbWeight) + parseInt(this.formData.alloyFixWeight);
@@ -344,5 +336,3 @@ export default {
   }
 };
 </script>
-<style lang='scss' scoped>
-</style>

@@ -22,6 +22,9 @@
       <el-form-item label="账号：" prop="username">
         <el-input v-model="formData.username"></el-input>
       </el-form-item>
+      <el-form-item label="姓名：" prop="adminname">
+        <el-input v-model="formData.adminname"></el-input>
+      </el-form-item>
     </el-form>
     <div slot="footer"> 
       <el-button @click="closeDialog">取消</el-button>
@@ -35,20 +38,24 @@ import urlmap from '@/utils/urlmap';
 
 const formConfig = {
   roleId: '',
-  username: ''
+  username: '',
+  adminname: ''
 };
 
-// 1- 超级管理员 super, 2-普通管理员 admin, 3-重卷 chongjuan，4-检测 jiance，5-库房 kufang， 6- 6号机组 liuhaojizu，7-七号机组 qihaojizu，8-8号机组 bahaojizu，9-九号机组 jiuhaojizu
 const roleList = [
-  { id: 1, name: '超级管理员' },
-  { id: 2, name: '普通管理员' },
-  { id: 3, name: '重卷' },
-  { id: 4, name: '检测' },
-  { id: 5, name: '库房' },
-  { id: 6, name: '6号机组' },
-  { id: 7, name: '7号机组' },
-  { id: 8, name: '8号机组' },
-  { id: 9, name: '9号机组' }
+  { id: 2, name: '生产计划' },
+  { id: 3, name: '普通管理员' },
+  { id: 4, name: '重卷' },
+  { id: 5, name: '检测' },
+  { id: 6, name: '库房' },
+  { id: 7, name: '6号机组-喷带' },
+  { id: 8, name: '6号机组-化钢' },
+  { id: 9, name: '7号机组-喷带' },
+  { id: 10, name: '7号机组-化钢' },
+  { id: 11, name: '8号机组-喷带' },
+  { id: 12, name: '8号机组-化钢' },
+  { id: 13, name: '9号机组-喷带' },
+  { id: 14, name: '9号机组-化钢' }
 ];
 
 export default {
@@ -62,7 +69,8 @@ export default {
     return {
       formData: {
         roleId: '',
-        username: ''
+        username: '',
+        adminname: ''
       },
       roleList: roleList,
       rules: {
@@ -73,6 +81,12 @@ export default {
           { required: true, message: '请填写账号', trigger: 'blur' },
           { max: 20, message: '账号长度在6-20位之间', trigger: 'blur' },
           { min: 6, message: '账号长度在6-20位之间', trigger: 'blur' }
+        ],
+        adminname: [
+          { required: true, message: '请填写姓名', trigger: 'blur' },
+          { max: 10, message: '姓名长度在2-10位之间', trigger: 'blur' },
+          { min: 2, message: '姓名长度在2-10位之间', trigger: 'blur' },
+          { pattern: /^[\u4e00-\u9fa5]+$/, message: '只能输入中文汉字', trigger: 'blur' }
         ]
       },
       loading: false

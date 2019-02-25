@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right" class="crumb">
-      <el-breadcrumb-item>化钢记录</el-breadcrumb-item>
+      <el-breadcrumb-item>冶炼记录</el-breadcrumb-item>
       <el-breadcrumb-item>{{castId}}号机组</el-breadcrumb-item>
     </el-breadcrumb>
     <el-form class="search_bar" :model="searchForm" :inline="true">
@@ -18,6 +18,14 @@
       <el-form-item label="冶炼人：">
         <el-input v-model="searchForm.melter" placeholder="请输入冶炼人姓名"></el-input>
       </el-form-item>
+      <el-form-item label="材质：">
+        <el-select v-model="searchForm.ribbonTypeName" placeholder="请选择">
+          <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="桶号：">
+        <el-input v-model="searchForm.bucket" placeholder="请输入桶号"></el-input>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
         <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
@@ -25,14 +33,14 @@
     </el-form>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-plus" @click="createMelt">创建化钢记录</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="createMelt" v-if="isAble">创建冶炼记录</el-button>
       </el-col>
       <el-table :data="tableData" stripe border style="width:100%" v-loading="loading"> 
         <el-table-column prop="createdAt" label="冶炼日期" align="center" width="110px" :formatter="dateFormat" fixed></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="80px" fixed></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="170px" fixed></el-table-column>
         <el-table-column prop="bucket" label="桶号" align="center" width="50px"></el-table-column>
-        <el-table-column prop="melter" label="化钢人" align="center" width="70px"></el-table-column>
+        <el-table-column prop="melter" label="冶炼人" align="center" width="70px"></el-table-column>
         <el-table-column prop="meltFurnace" label="冶炼炉" align="center" width="80px"></el-table-column>
         <el-table-column prop="newAlloyNumber" label="新料炉号" align="center" width="150px"></el-table-column>
         <el-table-column prop="newAlloyWeight" label="新料重量(kg)" align="center" width="110px"></el-table-column>
@@ -53,8 +61,8 @@
         <el-table-column prop="updatedAt" label="更新时间" align="center" width="170px" :formatter="dateTimeFormat"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="edit(scope.row)">修改</el-button>
-            <el-button size="mini" type="danger" @click="del(scope.row)">删除</el-button>
+            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="isAble">修改</el-button>
+            <el-button size="mini" type="danger" @click="del(scope.row)" v-if="userinfo.roleId === 1">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -66,7 +74,7 @@
         :page-size="pageConfig.pageSize"
         @current-change="handleCurrentChange"></el-pagination>
     </div>
-    <dialog-form v-if="dialogVisible" :dialogData="{ formType, dialogVisible, rowData }" @close="closeHandler" @submit="submitHandler"></dialog-form>
+    <dialog-form v-if="dialogVisible" :dialogData="{ formType, dialogVisible, rowData, ribbonTypeList }" @close="closeHandler" @submit="submitHandler"></dialog-form>
   </div>
 </template>
 
@@ -74,6 +82,7 @@
 import urlmap from '@/utils/urlmap';
 import { dateFormat, dateTimeFormat } from '@/utils/common';
 import dialogForm from './components/dialogForm.vue';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'melt',
@@ -82,9 +91,13 @@ export default {
   },
   data () {
     return {
+      userinfo: {},
+      isAble: false,
       castId: 6,
       searchForm: {
         melter: '',
+        ribbonTypeName: '',
+        bucket: '',
         date: []
       },
       loading: false,
@@ -99,21 +112,51 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState([
+      'ribbonTypeList'
+    ])
+  },
   // 动态路由匹配
   beforeRouteUpdate(to, from, next) {
     this.castId = to.params.castId;
     this.getTableData();
+    // 判断当前用户角色是否有操作权限
+    this.isAble = this.setIsAble();    
     next();
   },
   created () {
-    this.getTableData();    
+    this.castId = this.$route.params.castId;
+    this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
+    // 判断当前用户角色是否有操作权限
+    this.isAble = this.setIsAble();
+    this.getTableData();
+    this.getRibbonTypeList();  
   },
   methods: {
+    ...mapActions([
+      'getRibbonTypeList'
+    ]),
     dateFormat(row, column) {
       return dateFormat(row.createdAt);
     },
     dateTimeFormat(row, column) {
       return dateTimeFormat(row.updatedAt);
+    },
+    setIsAble() {
+      if (this.castId == 6 && this.userinfo.roleId == 8) { // 六号机组化钢
+        return true;
+      } else if (this.castId == 7 && this.userinfo.roleId == 10) { // 七号机组化钢
+        return true;
+      } else if (this.castId == 8 && this.userinfo.roleId == 12) { // 八号机组化钢
+        return true;
+      } else if (this.castId == 9 && this.userinfo.roleId == 14) { // 九号机组化钢
+        return true;
+      } else if (this.userinfo.roleId == 1) { // 厂长
+        return true;
+      } else { // 其他
+        return false;
+      }
     },
     clickSearch() {
       // 重置当前页码为1
@@ -124,7 +167,7 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { melter: '', date: [] };
+      this.searchForm = { melter: '', ribbonTypeName: '', bucket: '', date: [] };
       const params = {
         current: 1
       };
@@ -136,7 +179,9 @@ export default {
         castId: this.castId,
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
-        melter: this.searchForm.melter
+        melter: this.searchForm.melter,
+        ribbonTypeName: this.searchForm.ribbonTypeName,
+        bucket: this.searchForm.bucket
       };
       Object.assign(params, _params);
       this.$http('get', urlmap.queryMelt, params).then(data => {

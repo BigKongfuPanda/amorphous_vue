@@ -21,6 +21,16 @@
       <el-form-item label="炉号：">
         <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
       </el-form-item>
+      <el-form-item label="材质：">
+        <el-select v-model="searchForm.ribbonTypeName" placeholder="请选择">
+          <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="规格：">
+        <el-select v-model="searchForm.ribbonWidths" placeholder="请选择" multiple collapse-tags>
+          <el-option v-for="item in ribbonWidthList" :key="item.ribbonWidthId" :label="item.ribbonWidth" :value="item.ribbonWidth"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
         <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
@@ -28,7 +38,7 @@
     </el-form>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-plus" @click="add">创建喷带记录</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="add" v-if="isAble">创建喷带记录</el-button>
       </el-col>
       <el-table :data="tableData" stripe border style="width:100%" v-loading="loading">
         <el-table-column type="expand" label="展开" width="50px">
@@ -59,7 +69,7 @@
         <!-- 主表 -->
         <el-table-column prop="createdAt" label="喷带日期" align="center" width="110px" :formatter="dateFormat"></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="80px"></el-table-column>
-        <el-table-column prop="ribbonWidth" label="带宽" align="center" width="50px"></el-table-column>
+        <el-table-column prop="ribbonWidth" label="规格" align="center" width="50px"></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="170px"></el-table-column>
         <el-table-column prop="caster" label="喷带手" align="center" width="70px"></el-table-column>
         <el-table-column prop="tundish" label="在线包号" align="center" width="80px"></el-table-column>
@@ -78,8 +88,8 @@
         <el-table-column prop="updatedAt" label="更新时间" align="center" width="170px" :formatter="dateTimeFormat"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="edit(scope.row)">修改</el-button>
-            <el-button size="mini" type="danger" @click="del(scope.row)">删除</el-button>
+            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="isAble">修改</el-button>
+            <el-button size="mini" type="danger" @click="del(scope.row)" v-if="userinfo.roleId === 1">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -91,7 +101,7 @@
         :page-size="pageConfig.pageSize"
         @current-change="handleCurrentChange"></el-pagination>
     </div>
-    <dialog-form v-if="dialogVisible" :dialogData="{ formType, dialogVisible, rowData }" @close="closeHandler" @submit="submitHandler"></dialog-form>
+    <dialog-form v-if="dialogVisible" :dialogData="{ formType, dialogVisible, rowData, ribbonTypeList, ribbonWidthList }" @close="closeHandler" @submit="submitHandler"></dialog-form>
   </div>
 </template>
 
@@ -99,6 +109,7 @@
 import urlmap from '@/utils/urlmap';
 import { dateFormat, dateTimeFormat } from '@/utils/common';
 import dialogForm from './components/dialogForm.vue';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'cast',
@@ -111,7 +122,9 @@ export default {
       searchForm: {
         caster: '',
         furnace: '',
-        date: []
+        ribbonTypeName: '',
+        date: [],
+        ribbonWidths: []
       },
       loading: false,
       tableData: [],
@@ -122,24 +135,56 @@ export default {
         total: 1,
         current: 1,
         pageSize: 10
-      }
+      },
+      isAble: false
     }
+  },
+  computed: {
+    ...mapState([
+      'ribbonTypeList', 'ribbonWidthList'
+    ])
   },
   // 动态路由匹配
   beforeRouteUpdate(to, from, next) {
     this.castId = to.params.castId;
     this.getTableData();
+    // 判断当前用户角色是否有操作权限
+    this.isAble = this.setIsAble(); 
     next();
   },
   created () {
-    this.getTableData();    
+    this.castId = this.$route.params.castId;
+    this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
+    // 判断当前用户角色是否有操作权限
+    this.isAble = this.setIsAble(); 
+    this.getTableData();
+    this.getRibbonTypeList();
+    this.getRibbonWidthList();
   },
   methods: {
+    ...mapActions([
+      'getRibbonTypeList', 'getRibbonWidthList'
+    ]),
     dateFormat(row, column) {
       return dateFormat(row.createdAt);
     },
     dateTimeFormat(row, column) {
       return dateTimeFormat(row.updatedAt);
+    },
+    setIsAble() {
+      if (this.castId == 6 && this.userinfo.roleId == 7) { // 六号机组喷带
+        return true;
+      } else if (this.castId == 7 && this.userinfo.roleId == 9) { // 七号机组喷带
+        return true;
+      } else if (this.castId == 8 && this.userinfo.roleId == 11) { // 八号机组喷带
+        return true;
+      } else if (this.castId == 9 && this.userinfo.roleId == 13) { // 九号机组喷带
+        return true;
+      } else if (this.userinfo.roleId == 1) { // 厂长
+        return true;
+      } else { // 其他
+        return false;
+      }
     },
     clickSearch() {
       // 重置当前页码为1
@@ -150,7 +195,7 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { caster: '', furnace: '',  date: [] };
+      this.searchForm = { caster: '', furnace: '', ribbonTypeName: '', date: [], ribbonWidths: [] };
       const params = {
         current: 1
       };
@@ -163,7 +208,9 @@ export default {
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
         caster: this.searchForm.caster,
-        furnace: this.searchForm.furnace
+        furnace: this.searchForm.furnace,
+        ribbonTypeName: this.searchForm.ribbonTypeName,
+        ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths)
       };
       Object.assign(params, _params);
       this.$http('get', urlmap.queryCast, params).then(data => {

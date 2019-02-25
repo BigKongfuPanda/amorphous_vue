@@ -13,14 +13,16 @@
       <el-row :gutter="20">
         <el-col :span="6">
           <el-form-item label="材质" prop="ribbonTypeId" class="dialog_field">
-            <el-select v-model="formData.ribbonTypeId" placeholder="请选择">
-              <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeId" :label="item.ribbonTypeName"></el-option>
+            <el-select v-model="formData.ribbonTypeName" placeholder="请选择">
+              <el-option v-for="item in dialogData.ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="带宽" prop="ribbonWidth" class="dialog_field">
-            <el-input v-model="formData.ribbonWidth"></el-input>
+          <el-form-item label="规格" prop="ribbonWidth" class="dialog_field">
+            <el-select v-model="formData.ribbonWidth" placeholder="请选择">
+              <el-option v-for="item in dialogData.ribbonWidthList" :key="item.ribbonWidthId" :label="item.ribbonWidth" :value="item.ribbonWidth"></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -29,8 +31,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="喷带手" prop="caster" class="dialog_field">
-            <el-input v-model="formData.caster"></el-input>
+          <el-form-item label="喷带手:" prop="caster" class="dialog_field">
+            <span>{{formData.caster}}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -237,7 +239,7 @@ const formConfig = {
   "castId": 6,// 机组编号
   "furnace": "",// 制带炉号  06-20181120-01/01
   "caster": '', //喷带手
-  "ribbonWidth": 30, //带宽
+  "ribbonWidth": null, //带宽
   "ribbonTypeId": '',//材质id
   "ribbonTypeName": "", //材质名称
   "nozzleNum": 1, //喷嘴个数
@@ -258,6 +260,7 @@ const formConfig = {
 export default {
   data() {
     return {
+      userinfo: {},
       visible: false,
       loading: false,
       formData: {
@@ -265,7 +268,7 @@ export default {
         "castId": 6,// 机组编号
         "furnace": "",// 制带炉号  06-20181120-01/01
         "caster": '', //喷带手
-        "ribbonWidth": 30, //带宽
+        "ribbonWidth": null, //带宽
         "ribbonTypeId": '',//材质id
         "ribbonTypeName": "", //材质名称
         "nozzleNum": 1, //喷嘴个数
@@ -357,25 +360,17 @@ export default {
       required: true
     }
   },
-  computed: {
-    ...mapState([
-      'ribbonTypeList'
-    ])
-  },
   created() {
+    this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
     if (this.dialogData.formType === 'add') {
-      this.formData = Object.assign({}, formConfig, {castId: Number(this.$route.params.castId)});
+      this.formData = Object.assign({}, formConfig, {castId: Number(this.$route.params.castId), caster: this.userinfo.adminname});
     } else {
       this.formData = Object.assign(this.formData, this.dialogData.rowData);
       this.formData.castTimes = this.formData.record.length;
     }
-    this.getRibbonTypeList();
   },
   mounted() {},
   methods: {
-    ...mapActions([
-      'getRibbonTypeList'
-    ]),
     closeDialog() {
       this.$emit('close');
     },
@@ -396,9 +391,6 @@ export default {
       this.$refs.form.validate((valid) => {
         if(valid) {
           this.loading = true;
-          this.formData.ribbonTypeName = this.ribbonTypeList && this.ribbonTypeList.find(item => {
-            return item.ribbonTypeId === this.formData.ribbonTypeId;
-          }).ribbonTypeName;
 
           this.formData.recordJson = JSON.stringify(this.formData.record);
 

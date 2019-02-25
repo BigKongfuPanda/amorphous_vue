@@ -95,6 +95,7 @@ export default {
     next();
   },
   created () {
+    this.castId = this.$route.params.castId;
     this.getTableData();    
   },
   methods: {

@@ -31,7 +31,7 @@
         <el-submenu index="2">
           <template slot="title">
             <i class="el-icon-location"></i>
-            <span>化钢记录</span>
+            <span>冶炼记录</span>
           </template>
           <router-link to="/melt/6">
             <el-menu-item index="/melt/6">6号机组</el-menu-item>
@@ -168,7 +168,7 @@
         <div class="signout">
           <label>
             当前用户：
-            <span style="margin-right: 20px">{{username}}</span>
+            <span style="margin-right: 20px">{{adminname}}</span>
           </label>
           <el-button type="primary" @click="modifyPwd" :disabled="isDisabled">修改密码</el-button>
           <el-button type="danger" @click="signout" :disabled="isDisabled">退出登录</el-button>
@@ -233,6 +233,7 @@ export default {
     return {
       isDisabled: false,
       username: "",
+      adminname: '',
       roleId: null,
       loading: false,
       dialogVisible: false,
@@ -266,6 +267,7 @@ export default {
   created() {
     const userinfo = JSON.parse(localStorage.getItem("userinfo"));
     this.username = userinfo.username;
+    this.adminname = userinfo.adminname;
     this.roleId = userinfo.roleId;
   },
   methods: {

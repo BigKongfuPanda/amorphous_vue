@@ -28,7 +28,7 @@
     </el-form>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-plus" @click="add">创建重卷记录</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="add" v-if="isAddable">创建重卷记录</el-button>
       </el-col>
       <el-table :data="tableData" stripe border style="width:100%" v-loading="loading"> 
         <el-table-column prop="furnace" label="炉号" align="center" min-width="170px"></el-table-column>
@@ -39,11 +39,11 @@
         <el-table-column prop="coilNumber" label="盘号" align="center" width="80px"></el-table-column>
         <el-table-column prop="diameter" label="外径(mm)" align="center" width="100px"></el-table-column>
         <el-table-column prop="coilWeight" label="重量(kg)" align="center" width="110px"></el-table-column>
-        <el-table-column prop="coilWeight" label="机器编号" align="center" width="110px"></el-table-column>
-        <el-table-column prop="coilWeight" label="重卷人员" align="center" width="110px"></el-table-column>
+        <el-table-column prop="rollMachine" label="机器编号" align="center" width="110px"></el-table-column>
+        <el-table-column prop="roller" label="重卷人员" align="center" width="110px"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="edit(scope.row)">修改</el-button>
+            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="isEditable">修改</el-button>
             <!-- <el-button size="mini" type="danger" @click="del(scope.row)">删除</el-button> -->
           </template>
         </el-table-column>
@@ -72,6 +72,9 @@ export default {
   },
   data () {
     return {
+      userinfo: {},
+      isAddable: false,
+      isEditable: false,
       castId: 6,
       searchForm: {
         caster: '',
@@ -94,10 +97,17 @@ export default {
   beforeRouteUpdate(to, from, next) {
     this.castId = to.params.castId;
     this.getTableData();
+    // 判断当前用户角色是否有操作权限
+    this.isAddable = this.setIsAddable(); 
+    this.isEditable = this.setIsEditable(); 
     next();
   },
   created () {
     this.castId = this.$route.params.castId;
+    this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
+    // 判断当前用户角色是否有操作权限
+    this.isAddable = this.setIsAddable(); 
+    this.isEditable = this.setIsEditable(); 
     this.getTableData();    
   },
   methods: {
@@ -174,6 +184,20 @@ export default {
         current: val
       };
       this.getTableData(params);
+    },
+    setIsAddable() {
+      if (this.userinfo.roleId == 4) { // 重卷人员可修改
+        return true;
+      } else { // 其他
+        return false;
+      }
+    },
+    setIsEditable() {
+      if (this.userinfo.roleId == 4 || this.userinfo.roleId == 1) { // 重卷人员 或者厂长 可修改
+        return true;
+      } else { // 其他
+        return false;
+      }
     }
   }
 }

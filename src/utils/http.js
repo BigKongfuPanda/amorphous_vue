@@ -7,8 +7,6 @@ import router from '@/router';
 es6Promise.polyfill();
 require('promise.prototype.finally').shim();
 
-// import store from '../store/store';
-
 if (process.env.NODE_ENV === 'development') {
     axios.defaults.baseURL = 'api';
 }
@@ -18,17 +16,21 @@ axios.interceptors.response.use(function (response) {
     // Do something with response data
     const method = response.config.method.toUpperCase();
     const _data = response.data;
+
+    // 如果登录失败，则返回 302，由前端跳转到登录页面去
+    if (_data.status == 302) {
+        Message({
+            message: _data.message,
+            type: 'error'
+        });
+        return router.push({ path: '/login'});
+    }
     
     if(_data.status != 0) {
         return Message({
             message: _data.message,
             type: 'error'
         });
-    }
-
-    // 如果 session 中没有 userId 字段，则返回 302，由前端跳转到登录页面去
-    if (_data.data && _data.data.access === 302) {
-        router.push({ path: '/login'});
     }
 
     // GET 请求不会弹框

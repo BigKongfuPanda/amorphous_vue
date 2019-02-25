@@ -10,6 +10,29 @@
   v-loading="loading"
   element-loading-text="拼命加载中">
     <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="100%" @submit.native.prevent>
+      <el-form-item label="重卷人员：" prop="roller" class="dialog_field">
+        <span>{{formData.roller}}</span>
+      </el-form-item>
+      <el-form-item label="重卷机器：" prop="rollMachine" class="dialog_field">
+        <el-select v-model="formData.rollMachine" placeholder="">
+          <el-option label="#1" :value="1"></el-option>
+          <el-option label="#2" :value="2"></el-option>
+          <el-option label="#3" :value="3"></el-option>
+          <el-option label="#4" :value="4"></el-option>
+          <el-option label="#5" :value="5"></el-option>
+          <el-option label="#6" :value="6"></el-option>
+          <el-option label="#7" :value="7"></el-option>
+          <el-option label="#8" :value="8"></el-option>
+          <el-option label="#9" :value="9"></el-option>
+          <el-option label="#10" :value="10"></el-option>
+          <el-option label="#11" :value="11"></el-option>
+          <el-option label="#12" :value="12"></el-option>
+          <el-option label="#13" :value="13"></el-option>
+          <el-option label="#14" :value="14"></el-option>
+          <el-option label="#15" :value="15"></el-option>
+          <el-option label="#16" :value="16"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="炉号：" prop="furnace" class="dialog_field">
         <el-input v-model="formData.furnace"></el-input>
       </el-form-item>
@@ -36,6 +59,8 @@ import urlmap from '@/utils/urlmap';
 
 const formConfig = {
   castId: 6,// 机组编号
+  roller: '', // 重卷人员
+  rollMachine: null, // 重卷机器
   furnace: '',// 制带炉号  06-20181120-01/01
   coilNumber: '',// 盘号
   diameter: '', //外径,mm
@@ -45,16 +70,22 @@ const formConfig = {
 export default {
   data() {
     return {
+      userinfo: {},
       visible: false,
       loading: false,
       formData: {
         castId: 6,// 机组编号
+        roller: '', // 重卷人员
+        rollMachine: null, // 重卷机器
         furnace: '',// 制带炉号  06-20181120-01/01
         coilNumber: '',// 盘号
         diameter: '', //外径,mm
         coilWeight: '' //重量,kg
       },
       rules: {
+        rollMachine: [
+          { required: true, message: '请选择重卷机编号', trigger: 'blur' }
+        ],
         furnace: [
           { required: true, message: '请填写炉号', trigger: 'blur' },
           { max: 20, message: '最多20位字符', trigger: 'blur' },
@@ -85,8 +116,9 @@ export default {
     }
   },
   created() {
+    this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
     if (this.dialogData.formType === 'add') {
-      this.formData = Object.assign({}, formConfig, {castId: Number(this.$route.params.castId)});
+      this.formData = Object.assign({}, formConfig, {castId: Number(this.$route.params.castId), roller: this.userinfo.adminname});
     } else {
       this.formData = Object.assign(this.formData, this.dialogData.rowData);
     }
@@ -103,9 +135,18 @@ export default {
 
           // 根据炉号从喷带记录表中获取其他的信息
           this.$http('GET', urlmap.queryCast, {castId: this.formData.castId, furnace: this.formData.furnace}).then(data => {
+            if (data.list.length === 0) {
+              this.loading = false;
+              return this.$message({
+                type: 'error',
+                message: '炉号有误，获取带材信息失败'
+              })
+            }
             const { ribbonTypeName, ribbonWidth, createdAt, caster } = data.list[0];
             const params = {
               ribbonTypeName, ribbonWidth, castDate: createdAt, caster,
+              roleId: this.userinfo.roleId,
+              adminname: this.userinfo.adminname,
               ...this.formData
             };
 
@@ -113,6 +154,7 @@ export default {
             const { method, url } = this.dialogData.formType === 'add' ? { method: 'POST', url: urlmap.addMeasure } : { method: 'PUT', url: urlmap.updateMeasure };
 
             this.$http(method, url, params).then(data => {
+              debugger
               this.$emit('submit');
             }).catch((error) => {
               console.log(error);

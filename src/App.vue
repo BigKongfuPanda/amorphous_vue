@@ -110,7 +110,7 @@ export default {
       width: 100%;
     } 
   }
-  .el-form-item {
+  .el-form-item:not(.dialog_field) {
     margin: 5px 0;
   }
 </style>

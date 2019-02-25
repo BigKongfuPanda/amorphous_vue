@@ -8,7 +8,7 @@
         <el-button type="primary" icon="el-icon-plus" @click="createUser">新增用户</el-button>
       </el-col>
       <el-table :data="tableData" stripe border style="width:100%" v-loading="loading">
-        <el-table-column type="index" label="序号" align="center" width="200"></el-table-column>
+        <el-table-column type="index" label="序号" align="center" width="100"></el-table-column>
         <el-table-column prop="username" label="账号" align="center"></el-table-column>
         <el-table-column prop="password" label="密码" align="center"></el-table-column>
         <el-table-column prop="roleId" label="角色" align="center">
@@ -30,8 +30,8 @@
           </template>
         </el-table-column>
         <el-table-column prop="adminname" label="姓名" align="center"></el-table-column>
-        <el-table-column prop="createTime" label="注册时间" align="center"></el-table-column>
-        <el-table-column prop="loginTime" label="最后登录时间" align="center"></el-table-column>
+        <el-table-column prop="createTime" label="注册时间" align="center" width="170px"></el-table-column>
+        <el-table-column prop="loginTime" label="最后登录时间" align="center" width="170px"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button size="mini" type="danger" @click="delUser(scope.row)">删除账户</el-button>

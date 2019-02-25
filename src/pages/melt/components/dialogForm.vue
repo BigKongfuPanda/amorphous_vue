@@ -32,7 +32,7 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item label="熔炼人:" prop="melter" class="dialog_field">
-            <el-input v-model="formData.melter"></el-input>
+            <span>{{formData.melter}}</span>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -318,6 +318,9 @@ export default {
 
           // 总重量
           this.formData.alloyTotalWeight = parseInt(this.formData.newAlloyWeight) + parseInt(this.formData.oldAlloyWeight) + parseInt(this.formData.mixAlloyWeight) + parseInt(this.formData.highNbWeight) + parseInt(this.formData.alloyFixWeight);
+
+          this.formData.roleId = this.userinfo.roleId;
+          this.formData.adminname = this.userinfo.adminname;
 
           const { method, url } = this.dialogData.formType === 'create' ? { method: 'POST', url: urlmap.addMelt } : { method: 'PUT', url: urlmap.updateMelt };
 

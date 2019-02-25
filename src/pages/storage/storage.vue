@@ -270,8 +270,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-/deep/ .el-form-item {
-  margin: 5px 0;
-}
-</style>

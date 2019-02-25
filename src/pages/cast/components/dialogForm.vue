@@ -39,7 +39,7 @@
       <el-row :gutter="20">
         <el-col :span="6">
           <el-form-item label="在线包号" prop="tundish" class="dialog_field">
-            <el-input v-model="formData.tundish"></el-input>
+            <el-input v-model="formData.tundish" placeholder="请输入包体编号数字"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -182,8 +182,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="抓取次数" class="dialog_field" :prop="'record.' + index + '.coilTimes'" :rules="[{ required: true, message: '请填写抓取次数', trigger: 'blur' }, { pattern: /^[1-9]$/, message: '请输入9以内正整数, 如 3,...', trigger: 'blur' }]">
-              <el-input v-model="item.coilTimes"></el-input>
+            <el-form-item label="抓取次数" class="dialog_field" :prop="'record.' + index + '.coilTimes'" :rules="[{ required: true, message: '请填写抓取次数', trigger: 'blur' }]">
+              <el-select v-model="item.coilTimes">
+                <el-option label="1" value="1"></el-option>
+                <el-option label="2" value="2"></el-option>
+                <el-option label="3" value="3"></el-option>
+                <el-option label=">3" value=">3"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -214,24 +219,24 @@ import { mapState, mapActions } from 'vuex';
 import { cloneDeep } from 'lodash';
 
 const defaultCastDetail = {
-  "nozzleSize": "30*0.25", //喷嘴规格
+  "nozzleSize": "", //喷嘴规格
   "nozzleNum": 1, //喷嘴数量
   "heatCupNum": 1, //加热杯数量
   "treatCoolRoller": "", //冷却辊处理方式 车，修
-  "coolRollerThickness": 40, //铜套厚度
+  "coolRollerThickness": null, //铜套厚度
   "ReceiveMeltTime": "", //接钢时间
-  "tundishTemperatureWithoutMelt": 1350, //接钢前温度 摄氏度
-  "tundishTemperatureWithMelt": 1330, // 接钢后包温 摄氏度
+  "tundishTemperatureWithoutMelt": null, //接钢前温度 摄氏度
+  "tundishTemperatureWithMelt": null, // 接钢后包温 摄氏度
   "installNozzleTime": "", //装杯时间
   "castTimeStart": "", //喷带开始时间
-  "pressure": 18, //开包压力
-  "tundishTemperatureCasting": 1350, //喷带开始时包温 摄氏度
-  "coolRollerTemperatureBeforeCast": "32-32", //喷带开始时冷却辊进出水水温
-  "coolRollerTemperatureAfterCast": "32-35", //喷带结束时冷却辊进出水水温
-  "castLocation": "左", //喷带位置
-  "coilTimes": 1, //抓取次数
+  "pressure": null, //开包压力
+  "tundishTemperatureCasting": null, //喷带开始时包温 摄氏度
+  "coolRollerTemperatureBeforeCast": "", //喷带开始时冷却辊进出水水温
+  "coolRollerTemperatureAfterCast": "", //喷带结束时冷却辊进出水水温
+  "castLocation": "", //喷带位置
+  "coilTimes": null, //抓取次数
   "castTimeEnd": "", // 喷带结束时间
-  "describe": "抓取1次完" //喷带过程描述
+  "describe": "" //喷带过程描述
 };
 
 const formConfig = {
@@ -243,13 +248,13 @@ const formConfig = {
   "ribbonTypeId": '',//材质id
   "ribbonTypeName": "", //材质名称
   "nozzleNum": 1, //喷嘴个数
-  "heatCupNum": 1, //加热杯个数
+  "heatCupNum": 0, //加热杯个数
   "tundishCar": '', //包车
   "tundish": '', //在线包包号
   "isChangeTundish": '', //是否换包 1-是 0-否
   "meltOutWeight": 0, //放钢重量
-  "rawWeight": 0, //大盘毛重
-  "remark": '备注', //备注
+  "rawWeight": null, //大盘毛重
+  "remark": '', //备注
   "createdAt": "", //创建时间
   "updatedAt": "", //更新时间
   record: [
@@ -277,30 +282,30 @@ export default {
         "tundish": '', //在线包包号
         "isChangeTundish": '', //是否换包 1-是 0-否
         "meltOutWeight": 0, //放钢重量
-        "rawWeight": 0, //大盘毛重
-        "remark": '备注', //备注
+        "rawWeight": null, //大盘毛重
+        "remark": '', //备注
         "createdAt": "", //创建时间
         "updatedAt": "", //更新时间
         record: [
           {
-            "nozzleSize": "30*0.25", //喷嘴规格
+            "nozzleSize": "", //喷嘴规格
             "nozzleNum": 1, //喷嘴数量
             "heatCupNum": 1, //加热杯数量
             "treatCoolRoller": "", //冷却辊处理方式 车、修
-            "coolRollerThickness": 40, //铜套厚度
+            "coolRollerThickness": null, //铜套厚度
             "ReceiveMeltTime": "", //接钢时间
-            "tundishTemperatureWithoutMelt": 1350, //接钢前温度 摄氏度
-            "tundishTemperatureWithMelt": 1330, // 接钢后包温 摄氏度
+            "tundishTemperatureWithoutMelt": null, //接钢前温度 摄氏度
+            "tundishTemperatureWithMelt": null, // 接钢后包温 摄氏度
             "installNozzleTime": "", //装杯时间
             "castTimeStart": "", //喷带开始时间
-            "pressure": 18, //开包压力
-            "tundishTemperatureCasting": 1350, //喷带开始时包温 摄氏度
-            "coolRollerTemperatureBeforeCast": "32-32", //喷带开始时冷却辊进出水水温
-            "coolRollerTemperatureAfterCast": "32-35", //喷带结束时冷却辊进出水水温
-            "castLocation": "左", //喷带位置
-            "coilTimes": 1, //抓取次数
+            "pressure": null, //开包压力
+            "tundishTemperatureCasting": null, //喷带开始时包温 摄氏度
+            "coolRollerTemperatureBeforeCast": "", //喷带开始时冷却辊进出水水温
+            "coolRollerTemperatureAfterCast": "", //喷带结束时冷却辊进出水水温
+            "castLocation": "", //喷带位置
+            "coilTimes": null, //抓取次数
             "castTimeEnd": "", // 喷带结束时间
-            "describe": "抓取1次完" //喷带过程描述
+            "describe": "" //喷带过程描述
           }
         ]
       },
@@ -340,12 +345,12 @@ export default {
         meltOutWeight: [
           { required: true, message: '请填写放钢重量', trigger: 'blur' },
           { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
+          { validator: ltNumber(300), trigger: 'blur' }
         ],
         rawWeight: [
           { required: true, message: '请填写大盘毛重', trigger: 'blur' },
           { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
+          { validator: ltNumber(300), trigger: 'blur' }
         ],
         remark: [
           { max: 50, message: '最多50位字符', trigger: 'blur' }
@@ -393,6 +398,8 @@ export default {
           this.loading = true;
 
           this.formData.recordJson = JSON.stringify(this.formData.record);
+          this.formData.roleId = this.userinfo.roleId;
+          this.formData.adminname = this.userinfo.adminname;
 
           const { method, url } = this.dialogData.formType === 'add' ? { method: 'POST', url: urlmap.addCast } : { method: 'PUT', url: urlmap.updateCast };
 

@@ -59,9 +59,10 @@
         <el-table-column prop="alloyFixWeight" label="修正重量(kg)" align="center" width="110px"></el-table-column>
         <el-table-column prop="remark" label="备注" align="center" width="100px" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="updatedAt" label="更新时间" align="center" width="170px" :formatter="dateTimeFormat"></el-table-column>
+        <el-table-column prop="updatePerson" label="更新者" align="center" width="70px"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="isAble">修改</el-button>
+            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="isAble" :disabled="userinfo.roleId !== 1 && userinfo.adminname !== scope.row.melter">修改</el-button>
             <el-button size="mini" type="danger" @click="del(scope.row)" v-if="userinfo.roleId === 1">删除</el-button>
           </template>
         </el-table-column>

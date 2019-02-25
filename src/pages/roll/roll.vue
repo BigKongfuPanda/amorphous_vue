@@ -39,6 +39,8 @@
         <el-table-column prop="coilNumber" label="盘号" align="center" width="80px"></el-table-column>
         <el-table-column prop="diameter" label="外径(mm)" align="center" width="100px"></el-table-column>
         <el-table-column prop="coilWeight" label="重量(kg)" align="center" width="110px"></el-table-column>
+        <el-table-column prop="coilWeight" label="机器编号" align="center" width="110px"></el-table-column>
+        <el-table-column prop="coilWeight" label="重卷人员" align="center" width="110px"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="edit(scope.row)">修改</el-button>

@@ -66,12 +66,19 @@
             </el-table>
           </template>
         </el-table-column>
-        <!-- 主表 -->
-        <el-table-column prop="createdAt" label="喷带日期" align="center" width="110px" :formatter="dateFormat"></el-table-column>
-        <el-table-column prop="ribbonTypeName" label="材质" align="center" width="80px"></el-table-column>
+        <!-- 主表  castTimes-->
+        <el-table-column prop="createdAt" label="喷带日期" align="center" width="110px" :formatter="dateFormat">
+        </el-table-column>
+        <el-table-column prop="ribbonTypeName" label="材质" align="center" width="80px">
+        </el-table-column>
         <el-table-column prop="ribbonWidth" label="规格" align="center" width="50px"></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="170px"></el-table-column>
         <el-table-column prop="caster" label="喷带手" align="center" width="70px"></el-table-column>
+        <el-table-column prop="castTimes" label="开包次数" align="center" width="80px">
+          <template slot-scope="scope">
+            <span :class="scope.row.castTimes > 1 ? 'text_danger' : '' ">{{scope.row.castTimes}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="tundish" label="在线包号" align="center" width="80px"></el-table-column>
         <el-table-column prop="tundishCar" label="包车编号" align="center" width="80px"></el-table-column>
         <el-table-column prop="isChangeTundish" label="是否换包" align="center" width="80px">
@@ -86,9 +93,10 @@
         <el-table-column prop="rawWeight" label="大盘毛重(kg)" align="center" width="110px"></el-table-column>
         <el-table-column prop="remark" label="备注" align="center" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="updatedAt" label="更新时间" align="center" width="170px" :formatter="dateTimeFormat"></el-table-column>
+        <el-table-column prop="updatePerson" label="更新者" align="center" width="70px"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="isAble">修改</el-button>
+            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="isAble" :disabled="userinfo.roleId !== 1 && userinfo.adminname !== scope.row.caster">修改</el-button>
             <el-button size="mini" type="danger" @click="del(scope.row)" v-if="userinfo.roleId === 1">删除</el-button>
           </template>
         </el-table-column>
@@ -118,6 +126,7 @@ export default {
   },
   data () {
     return {
+      userinfo: {},
       castId: 6,
       searchForm: {
         caster: '',

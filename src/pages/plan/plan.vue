@@ -4,16 +4,12 @@
       <el-breadcrumb-item>生产计划</el-breadcrumb-item>
       <el-breadcrumb-item>{{castId}}号机组</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-form class="search_bar" :model="searchForm">
+    <el-form class="search_bar" :model="searchForm" :inline="true">
       <el-form-item label="排产日期：">
-        <el-col :span="6">
-          <el-form-item prop="date">
-            <el-date-picker v-model="searchForm.date" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" :editable="false" :clearable="false" :picker-options="pickerOptions"></el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="2">
-          <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
-        </el-col>
+        <el-date-picker v-model="searchForm.date" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" :editable="false" :clearable="false" :picker-options="pickerOptions"></el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
       </el-form-item>
     </el-form>
     <div class="main_bd">

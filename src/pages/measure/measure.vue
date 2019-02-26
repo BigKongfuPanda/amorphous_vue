@@ -150,7 +150,13 @@
               {{ scope.row.ribbonToughness }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonToughness"></el-input>
+              <el-select size="mini" v-model="scope.row.ribbonToughness" placeholder="">
+                <el-option label="合格" value="合格"></el-option>
+                <el-option label="边脆" value="边脆"></el-option>
+                <el-option label="横撕脆" value="横撕脆"></el-option>
+                <el-option label="脆" value="脆"></el-option>
+                <el-option label="脆(>50)" value="脆(>50)"></el-option>
+              </el-select>
             </div>
           </template>
         </el-table-column>
@@ -160,7 +166,13 @@
               {{ scope.row.ribbonToughnessLevel }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonToughnessLevel"></el-input>
+              <el-select size="mini" v-model="scope.row.ribbonToughnessLevel" placeholder="">
+                <el-option label="A" value="A"></el-option>
+                <el-option label="B" value="B"></el-option>
+                <el-option label="C" value="C"></el-option>
+                <el-option label="D" value="D"></el-option>
+                <el-option label="E" value="E"></el-option>
+              </el-select>
             </div>
           </template>
         </el-table-column>
@@ -170,7 +182,19 @@
               {{ scope.row.appearence }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.appearence"></el-input>
+               <el-select size="mini" v-model="scope.row.appearence" placeholder="">
+                <el-option label="无明显缺陷" value="无明显缺陷"></el-option>
+                <el-option label="轻棱" value="轻棱"></el-option>
+                <el-option label="棱" value="棱"></el-option>
+                <el-option label="轻微麻点" value="轻微麻点"></el-option>
+                <el-option label="麻点" value="麻点"></el-option>
+                <el-option label="轻微划痕" value="轻微划痕"></el-option>
+                <el-option label="划痕" value="划痕"></el-option>
+                <el-option label="轻微挖心" value="轻微挖心"></el-option>
+                <el-option label="挖心" value="挖心"></el-option>
+                <el-option label="少量劈裂" value="少量劈裂"></el-option>
+                <el-option label="大量劈裂" value="大量劈裂"></el-option>
+              </el-select>
             </div>
           </template>
         </el-table-column>
@@ -180,7 +204,12 @@
               {{ scope.row.appearenceLevel }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.appearenceLevel"></el-input>
+              <el-select size="mini" v-model="scope.row.appearenceLevel" placeholder="">
+                <el-option label="A" value="A"></el-option>
+                <el-option label="B" value="B"></el-option>
+                <el-option label="C" value="C"></el-option>
+                <el-option label="不合格" value="不合格"></el-option>
+              </el-select>
             </div>
           </template>
         </el-table-column>
@@ -213,21 +242,29 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="clients" label="去向" align="center" width="90px" :show-overflow-tooltip="true">
+        <el-table-column prop="clients" label="去向" align="center" width="120px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
-              {{ scope.row.clients }}
+              {{ scope.row.clients.toString() }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.clients"></el-input>
+              <el-select size="mini" v-model="scope.row.clients" placeholder="" multiple collapse-tags>
+                <el-option label="F" value="F"></el-option>
+                <el-option label="D" value="D"></el-option>
+                <el-option label="VM" value="VM"></el-option>
+                <el-option label="VS" value="VS"></el-option>
+                <el-option label="VD" value="VD"></el-option>
+                <el-option label="O" value="O"></el-option>
+                <el-option label="Z" value="Z"></el-option>
+              </el-select>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false">修改</el-button>
+            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button>
             <el-button size="mini" type="success" @click="save(scope.row)" v-else>保存</el-button>
-            <el-button size="mini" type="danger" @click="del(scope.row)">删除</el-button>
+            <el-button size="mini" type="danger" @click="del(scope.row)" v-if="isDeleteable">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -250,6 +287,7 @@ export default {
   name: 'melt',
   data () {
     return {
+      userinfo: {},
       castId: 6,
       searchForm: {
         caster: '',
@@ -262,22 +300,43 @@ export default {
         total: 1,
         current: 1,
         pageSize: 10
-      }
+      },
+      isEditable: false,
+      isDeleteable: false
     }
   },
   // 动态路由匹配
   beforeRouteUpdate(to, from, next) {
     this.castId = to.params.castId;
     this.getTableData();
+    this.isEditable = this.setEditable();
+    this.isDeleteable = this.setDeleteable();
     next();
   },
   created () {
     this.castId = this.$route.params.castId;
+    this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
+    this.isEditable = this.setEditable();
+    this.isDeleteable = this.setDeleteable();
     this.getTableData();
   },
   methods: {
     dateFormat(row, column) {
       return dateFormat(row.castDate);
+    },
+    setEditable() {
+      if (this.userinfo.roleId == 5 || this.userinfo.roleId == 1) { // 重卷人员 或者厂长 可修改
+        return true;
+      } else { // 其他
+        return false;
+      }
+    },
+    setDeleteable() {
+      if (this.userinfo.roleId == 1) { // 厂长 可删除
+        return true;
+      } else { // 其他
+        return false;
+      }
     },
     clickSearch() {
       // 重置当前页码为1

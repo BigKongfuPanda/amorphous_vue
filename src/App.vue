@@ -110,7 +110,10 @@ export default {
       width: 100%;
     } 
   }
-  .el-form-item:not(.dialog_field) {
+  .search_bar .el-form-item {
     margin: 5px 0;
+  }
+  .el-select {
+    width: 100%;
   }
 </style>

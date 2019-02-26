@@ -21,6 +21,9 @@
       <el-form-item label="炉号：">
         <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
       </el-form-item>
+      <el-form-item label="重卷：">
+        <el-input v-model="searchForm.roller" placeholder="请输入重卷人姓名"></el-input>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
         <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
@@ -43,7 +46,7 @@
         <el-table-column prop="roller" label="重卷人员" align="center" width="110px"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="isEditable">修改</el-button>
+            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="isEditable" :disabled="scope.row.roller !== userinfo.adminname">修改</el-button>
             <!-- <el-button size="mini" type="danger" @click="del(scope.row)">删除</el-button> -->
           </template>
         </el-table-column>
@@ -79,6 +82,7 @@ export default {
       searchForm: {
         caster: '',
         furnace: '',
+        roller: '',
         date: []
       },
       loading: false,
@@ -123,7 +127,7 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { caster: '', furnace: '', date: [] };
+      this.searchForm = { caster: '', furnace: '', roller: '', date: [] };
       const params = {
         current: 1
       };
@@ -136,7 +140,8 @@ export default {
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
         caster: this.searchForm.caster,
-        furnace: this.searchForm.furnace
+        furnace: this.searchForm.furnace,
+        roller: this.searchForm.roller
       };
       Object.assign(params, _params);
       this.$http('get', urlmap.queryMeasure, params).then(data => {

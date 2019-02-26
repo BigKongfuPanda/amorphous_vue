@@ -51,9 +51,6 @@
       </el-form-item>
     </el-form>
     <div class="main_bd">
-      <!-- <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-plus" @click="add">创建检测记录</el-button>
-      </el-col> -->
       <el-table :data="tableData" stripe border style="width:100%" v-loading="loading"> 
         <el-table-column prop="inStoreDate" label="入库日期" align="center" :formatter="dateFormat" width="110px"></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="170px" fixed></el-table-column>
@@ -72,13 +69,13 @@
             </div>
             <div v-else>
               <el-select v-model="scope.row.takeBy" placeholder="" size="mini">
-                <el-option label="辊剪" value="辊剪"></el-option>
-                <el-option label="顺义" value="顺义"></el-option>
-                <el-option label="卷绕" value="卷绕"></el-option>
-                <el-option label="固安" value="固安"></el-option>
-                <el-option label="发货" value="发货"></el-option>
-                <el-option label="回炉/置换" value="回炉/置换"></el-option>
-                <el-option label="粉末厂" value="粉末厂"></el-option>
+                <el-option label="J" value="J"></el-option>
+                <el-option label="F" value="F"></el-option>
+                <el-option label="Z" value="Z"></el-option>
+                <el-option label="S" value="S"></el-option>
+                <el-option label="G" value="G"></el-option>
+                <el-option label="W" value="W"></el-option>
+                <el-option label="H" value="H"></el-option>
               </el-select>
             </div>
           </template>

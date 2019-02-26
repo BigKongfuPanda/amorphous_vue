@@ -6,14 +6,14 @@
   :close-on-press-escape="false" 
   @close="closeDialog"
   :center="true"
-  width="380px"
+  width="30%"
   v-loading="loading"
   element-loading-text="拼命加载中">
     <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="100%" @submit.native.prevent>
-      <el-form-item label="重卷人员：" prop="roller" class="dialog_field">
+      <el-form-item label="重卷人员：" prop="roller">
         <span>{{formData.roller}}</span>
       </el-form-item>
-      <el-form-item label="重卷机器：" prop="rollMachine" class="dialog_field">
+      <el-form-item label="重卷机器：" prop="rollMachine">
         <el-select v-model="formData.rollMachine" placeholder="">
           <el-option label="#1" :value="1"></el-option>
           <el-option label="#2" :value="2"></el-option>
@@ -33,16 +33,16 @@
           <el-option label="#16" :value="16"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="炉号：" prop="furnace" class="dialog_field">
+      <el-form-item label="炉号：" prop="furnace">
         <el-input v-model="formData.furnace"></el-input>
       </el-form-item>
-      <el-form-item label="盘号：" prop="coilNumber" class="dialog_field">
+      <el-form-item label="盘号：" prop="coilNumber">
         <el-input v-model="formData.coilNumber"></el-input>
       </el-form-item>
-      <el-form-item label="外径：" prop="diameter" class="dialog_field">
+      <el-form-item label="外径：" prop="diameter">
         <el-input v-model="formData.diameter"></el-input>
       </el-form-item>
-      <el-form-item label="重量：" prop="coilWeight" class="dialog_field">
+      <el-form-item label="重量：" prop="coilWeight">
         <el-input v-model="formData.coilWeight"></el-input>
       </el-form-item>
     </el-form>
@@ -154,7 +154,9 @@ export default {
             const { method, url } = this.dialogData.formType === 'add' ? { method: 'POST', url: urlmap.addMeasure } : { method: 'PUT', url: urlmap.updateMeasure };
 
             this.$http(method, url, params).then(data => {
-              debugger
+              this.formData.coilNumber++;
+              this.formData.coilWeight = null;
+              this.formData.diameter = null;
               this.$emit('submit');
             }).catch((error) => {
               console.log(error);
@@ -173,3 +175,4 @@ export default {
   }
 };
 </script>
+

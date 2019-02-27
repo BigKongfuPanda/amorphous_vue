@@ -245,7 +245,7 @@
         <el-table-column prop="clients" label="去向" align="center" width="120px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
-              {{ scope.row.clients.toString() }}
+              {{ scope.row.clients ? scope.row.clients.toString() : '' }}
             </div>
             <div v-else>
               <el-select size="mini" v-model="scope.row.clients" placeholder="" multiple collapse-tags>
@@ -325,7 +325,7 @@ export default {
       return dateFormat(row.castDate);
     },
     setEditable() {
-      if (this.userinfo.roleId == 5 || this.userinfo.roleId == 1) { // 重卷人员 或者厂长 可修改
+      if (this.userinfo.roleId == 5 || this.userinfo.roleId == 1) { // 检测人员 或者厂长 可修改
         return true;
       } else { // 其他
         return false;
@@ -417,9 +417,14 @@ export default {
       row.ribbonThicknessLevel = this.calcribbonThicknessLevel(row.ribbonThickness);
 
       // 综合级别
-      row.ribbonTotalLevel = row.laminationLevel === '不合格' ? '不合格' : row.ribbonThicknessLevel + row.laminationLevel + row.ribbonToughnessLevel + row.appearenceLevel;
+      // 叠片系数不合格，或者外观等级为不合格，则综合级别为不合格
+      row.ribbonTotalLevel = row.laminationLevel === '不合格' || row.appearenceLevel === '不合格' ? '不合格' : row.ribbonThicknessLevel + row.laminationLevel + row.ribbonToughnessLevel + row.appearenceLevel;
+      // 规格 为 32/35/40/42/45/50/，材质为 1K107B 的带材，如果韧性为D，则综合级别为不合格
+      if ([32, 35, 40, 42, 45, 50].includes(row.ribbonWidth) && row.ribbonTypeName == '1K107B' && row.ribbonToughnessLevel == 'D') {
+        row.ribbonTotalLevel = '不合格';
+      }
 
-      // 是否入库 不合格不能入库，端面有问题的不能入库，不满足入库规则的不能入库
+      // 是否入库：不合格不能入库，端面有问题的不能入库，不满足入库规则的不能入库
       if (row.ribbonTotalLevel === '不合格') {
         row.isStored = '否';
       }

@@ -46,7 +46,7 @@
         <el-table-column prop="roller" label="重卷人员" align="center" width="110px"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="isEditable" :disabled="scope.row.roller !== userinfo.adminname">修改</el-button>
+            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="isEditable" :disabled="scope.row.roller !== userinfo.adminname && userinfo.roleId !== 1">修改</el-button>
             <!-- <el-button size="mini" type="danger" @click="del(scope.row)">删除</el-button> -->
           </template>
         </el-table-column>
@@ -180,7 +180,9 @@ export default {
       this.dialogVisible = false;
     },
     submitHandler() {
-      // this.dialogVisible = false;
+      if (this.formType === 'edit') {
+        this.dialogVisible = false;
+      }
       this.pageConfig.current = 1;
       this.getTableData();
     },

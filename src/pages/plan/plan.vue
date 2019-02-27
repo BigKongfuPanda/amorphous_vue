@@ -106,7 +106,9 @@ export default {
       this.dialogVisible = false;
     },
     submitHandler(data) {
-      // this.dialogVisible = false;
+      if (this.formType === 'edit') {
+        this.dialogVisible = false;
+      }
       this.getTableData();
     },
     clickSearch() {

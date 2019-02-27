@@ -69,6 +69,7 @@
             </div>
             <div v-else>
               <el-select v-model="scope.row.takeBy" placeholder="" size="mini">
+                <el-option label="不选择" value=""></el-option>
                 <el-option label="J" value="J"></el-option>
                 <el-option label="F" value="F"></el-option>
                 <el-option label="Z" value="Z"></el-option>
@@ -104,9 +105,9 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false">修改</el-button>
+            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button>
             <el-button size="mini" type="success" @click="save(scope.row)" v-else>保存</el-button>
-            <el-button size="mini" type="danger" @click="del(scope.row)">删除</el-button>
+            <el-button size="mini" type="danger" @click="del(scope.row)" v-if="isDeleteable">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -130,6 +131,7 @@ export default {
   name: 'melt',
   data () {
     return {
+      userinfo: {},
       castId: 6,
       searchForm: {
         caster: '',
@@ -148,7 +150,9 @@ export default {
         total: 1,
         current: 1,
         pageSize: 10
-      }
+      },
+      isEditable: false,
+      isDeleteable: false
     }
   },
   computed: {
@@ -160,10 +164,15 @@ export default {
   beforeRouteUpdate(to, from, next) {
     this.castId = to.params.castId;
     this.getTableData();
+    this.isEditable = this.setEditable();
+    this.isDeleteable = this.setDeleteable();
     next();
   },
   created () {
     this.castId = this.$route.params.castId;
+    this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
+    this.isEditable = this.setEditable();
+    this.isDeleteable = this.setDeleteable();
     this.getTableData();
     this.getRibbonTypeList();
     this.getRibbonWidthList();
@@ -176,6 +185,20 @@ export default {
     ]),
     dateFormat(row, column) {
       return dateFormat(row.inStoreDate);
+    },
+    setEditable() {
+      if (this.userinfo.roleId == 6 || this.userinfo.roleId == 1) { // 检测人员 或者厂长 可修改
+        return true;
+      } else { // 其他
+        return false;
+      }
+    },
+    setDeleteable() {
+      if (this.userinfo.roleId == 1) { // 厂长 可删除
+        return true;
+      } else { // 其他
+        return false;
+      }
     },
     clickSearch() {
       // 重置当前页码为1
@@ -249,6 +272,8 @@ export default {
       // 计算结存：当实际去向确定的时候，结余为 0
       if (row.takeBy) {
         row.remainWeight = 0;
+      } else {
+        row.remainWeight = row.coilNetWeight;
       }
       
       // 发送请求，更新当前的数据

@@ -103,9 +103,9 @@ export default {
   }
   .orign_field {
     width: 100%;
-    .el-form-item__content {
-      width: 480px;
-    }
+    // .el-form-item__content {
+    //   width: 300px;
+    // }
     .el-input {
       width: 100%;
     } 

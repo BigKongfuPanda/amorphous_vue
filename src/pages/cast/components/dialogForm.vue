@@ -9,7 +9,7 @@
   width="1200px"
   v-loading="loading"
   element-loading-text="拼命加载中">
-    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="100%" @submit.native.prevent>
+    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" @submit.native.prevent>
       <el-row :gutter="20">
         <el-col :span="6">
           <el-form-item label="材质" prop="ribbonTypeId" class="dialog_field">

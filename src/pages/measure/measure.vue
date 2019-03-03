@@ -536,20 +536,101 @@ export default {
     setStored(row) {
       let inPlanFlag = true;
       let outPlanFlag = true;
-      // 厚度
+      // 计划内：厚度
       const ribbonThickness = row.ribbonThickness;
       const orderThickness = row.orderThickness;
-      const qualifiedThickness = row.qualifiedThickness;
       if (orderThickness.indexOf('≤')) { // ≤23
         const maxThickness = parseInt(orderThickness.substr(1));
         if (ribbonThickness >= maxThickness) {
           // 厚度不符合符合计划内入库的要求
           inPlanFlag = false;
         }
-      } else {
-
+      } else if (orderThickness.indexOf('-')) {
+        const maxThickness = orderThickness.split('-')[1];
+        const minThickness = orderThickness.split('-')[0];
+        if (ribbonThickness < minThickness || ribbonThickness > maxThickness) {
+          inPlanFlag = false;
+        }
       }
-      return 1;
+      // 计划内：叠片
+      const laminationFactor = row.laminationFactor;
+      const orderLaminationFactor = row.orderLaminationFactor;
+      if (orderLaminationFactor.indexOf('≥')) { // ≥0.78
+        const minLaminationFactor = parseInt(orderLaminationFactor.substr(1));
+        if (laminationFactor <= minLaminationFactor) {
+          // 叠片不符合符合计划内入库的要求
+          inPlanFlag = false;
+        }
+      } else if (orderLaminationFactor.indexOf('-')) {
+        const maxLaminationFactor = orderLaminationFactor.split('-')[1];
+        const minLaminationFactor = orderLaminationFactor.split('-')[0];
+        if (laminationFactor < minLaminationFactor || laminationFactor > maxLaminationFactor) {
+          inPlanFlag = false;
+        }
+      }
+      // 计划内：韧性
+      const ribbonToughnessLevel = row.ribbonToughnessLevel;
+      const orderRibbonToughnessLevels = row.orderRibbonToughnessLevels;
+      if (!orderRibbonToughnessLevels.includes(ribbonToughnessLevel)) {
+        inPlanFlag = false;
+      }
+      // 计划内：外观
+      const appearenceLevel = row.appearenceLevel;
+      const orderAppearenceLevels = row.orderAppearenceLevels;
+      if (!orderAppearenceLevels.includes(appearenceLevel)) {
+        inPlanFlag = false;
+      }
+
+      if (inPlanFlag) {
+        return 1;
+      }
+
+      // 计划外：厚度
+      const qualifiedThickness = row.qualifiedThickness;
+      if (qualifiedThickness.indexOf('≤')) { // ≤23
+        const maxThickness = parseInt(qualifiedThickness.substr(1));
+        if (ribbonThickness >= maxThickness) {
+          // 厚度不符合符合计划外入库的要求
+          outPlanFlag = false;
+        }
+      } else if (qualifiedThickness.indexOf('-')) {
+        const maxThickness = qualifiedThickness.split('-')[1];
+        const minThickness = qualifiedThickness.split('-')[0];
+        if (ribbonThickness < minThickness || ribbonThickness > maxThickness) {
+          outPlanFlag = false;
+        }
+      }
+      // 计划外：叠片
+      const qualifiedLaminationFactor = row.qualifiedLaminationFactor;
+      if (qualifiedLaminationFactor.indexOf('≥')) { // ≥0.78
+        const minLaminationFactor = parseInt(qualifiedLaminationFactor.substr(1));
+        if (laminationFactor <= minLaminationFactor) {
+          // 叠片不符合符合计划外入库的要求
+          outPlanFlag = false;
+        }
+      } else if (qualifiedLaminationFactor.indexOf('-')) {
+        const maxLaminationFactor = qualifiedLaminationFactor.split('-')[1];
+        const minLaminationFactor = qualifiedLaminationFactor.split('-')[0];
+        if (laminationFactor < minLaminationFactor || laminationFactor > maxLaminationFactor) {
+          outPlanFlag = false;
+        }
+      }
+      // 计划外：韧性
+      const qualifiedRibbonToughnessLevels = row.qualifiedRibbonToughnessLevels;
+      if (!qualifiedRibbonToughnessLevels.includes(ribbonToughnessLevel)) {
+        outPlanFlag = false;
+      }
+      // 计划外：外观
+      const qualifiedAppearenceLevels = row.qualifiedAppearenceLevels;
+      if (!qualifiedAppearenceLevels.includes(appearenceLevel)) {
+        outPlanFlag = false;
+      }
+
+      if (outPlanFlag) {
+        return 2
+      }
+
+      return 3;
     }
   }
 }

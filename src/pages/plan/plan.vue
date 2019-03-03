@@ -15,8 +15,8 @@
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-plus" @click="createPlan" v-if="roleId === 1 || roleId === 2">新增生产计划</el-button>
-        <el-button type="primary" icon="el-icon-check" @click="approve" v-if="roleId === 1 && tableData.length > 0 && !isApproved">待审批</el-button>
-        <el-button type="primary" icon="el-icon-check" v-if="roleId === 1 && tableData.length > 0 && isApproved" disabled>已审批</el-button>
+        <el-button type="primary" icon="el-icon-check" @click="approve" v-if="(roleId === 1 || roleId === 2) && tableData.length > 0 && !isApproved" :disabled="roleId === 2 && tableData.length > 0 && !isApproved">待审批</el-button>
+        <el-button type="primary" icon="el-icon-check" v-if="(roleId === 1 || roleId === 2) && tableData.length > 0 && isApproved" disabled>已审批</el-button>
       </el-col>
       <el-table :data=tableData stripe border style="width: 100%" v-loading="loading">
         <el-table-column prop="date" label="日期" align="center" width="110px"></el-table-column>
@@ -26,22 +26,56 @@
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="80px"></el-table-column>
         <el-table-column prop="ribbonWidth" label="规格(mm)" align="center" width="90px"></el-table-column>
         <el-table-column prop="client" label="客户" align="center" width="100px"></el-table-column>
-        <el-table-column label="带厚(μm)" align="center" width="90px">
-          <template slot-scope="scope">
-            <span class="text_danger">{{scope.row.thickness}}</span>
-          </template>
+        <el-table-column label="订单要求">
+          <el-table-column label="带厚(μm)" align="center" width="90px">
+            <template slot-scope="scope">
+              <span class="text_danger">{{scope.row.orderThickness}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="叠片" align="center" width="80px">
+            <template slot-scope="scope">
+              <span class="text_danger">{{scope.row.orderLaminationFactor}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="韧性" align="center" width="80px">
+            <template slot-scope="scope">
+              <span class="text_danger">{{scope.row.orderRibbonToughnessLevels.toString()}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="外观" align="center" width="80px">
+            <template slot-scope="scope">
+              <span class="text_danger">{{scope.row.orderAppearenceLevels.toString()}}</span>
+            </template>
+          </el-table-column>
         </el-table-column>
-        <el-table-column label="叠片" align="center" width="80px">
-          <template slot-scope="scope">
-            <span class="text_danger">{{scope.row.laminationFactor}}</span>
-          </template>
+        <el-table-column label="计划外入库要求">
+          <el-table-column label="带厚(μm)" align="center" width="90px">
+            <template slot-scope="scope">
+              <span>{{scope.row.qualifiedThickness}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="叠片" align="center" width="80px">
+            <template slot-scope="scope">
+              <span>{{scope.row.qualifiedLaminationFactor}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="韧性" align="center" width="80px">
+            <template slot-scope="scope">
+              <span>{{scope.row.qualifiedRibbonToughnessLevels.toString()}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="外观" align="center" width="80px">
+            <template slot-scope="scope">
+              <span>{{scope.row.qualifiedAppearenceLevels.toString()}}</span>
+            </template>
+          </el-table-column>
         </el-table-column>
         <el-table-column prop="furnace" label="制带炉号" align="center" width="150px"></el-table-column>
         <el-table-column prop="alloyWeight" label="单炉投入" align="center" width="80px"></el-table-column>
         <el-table-column prop="castTime" label="制带时间" align="center" width="110px"></el-table-column>
         <el-table-column prop="rawWeight" label="大盘毛重" align="center" width="80px"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
-          <template slot-scope="scope" v-if="roleId === 1 || roleId === 2">
+          <template slot-scope="scope" v-if="roleId === 2">
             <el-button size="mini" type="primary" @click="editPlan(scope.row)">修改</el-button>
             <el-button size="mini" type="danger" @click="delPlan(scope.row)">删除</el-button>
           </template>

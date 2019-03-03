@@ -38,9 +38,9 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-form-item label="材质" prop="ribbonTypeId" class="dialog_field">
-            <el-select v-model="formData.ribbonTypeId" placeholder="请选择">
-              <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :label="item.ribbonTypeName" :value="item.ribbonTypeId"></el-option>
+          <el-form-item label="材质" prop="ribbonTypeName" class="dialog_field">
+            <el-select v-model="formData.ribbonTypeName" placeholder="请选择">
+              <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :label="item.ribbonTypeName" :value="item.ribbonTypeName"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -177,15 +177,14 @@ import { mapState, mapActions } from 'vuex';
 
 const formConfig = {
   date: '',
-  castId: 6,
+  castId: null,
   team: '',
   taskOrder: '',
-  ribbonTypeId: '',
   ribbonTypeName: '',
-  ribbonWidth: 30,
+  ribbonWidth: null,
   client: '',
   furnace: '',
-  alloyWeight: 230,
+  alloyWeight: null,
   castTime: '',
   rawWeight: '',
   remark: '计划喷带12炉，如果有富余时间喷带按照当天最后一炉规定的要求生产。',
@@ -222,19 +221,19 @@ export default {
     };
 
     return {
+      roleId: null,
       visible: false,
       loading: false,
       formData: {
         date: '',
-        castId: 6,
+        castId: null,
         team: '',
         taskOrder: '',
-        ribbonTypeId: '',
         ribbonTypeName: '',
-        ribbonWidth: 30,
+        ribbonWidth: null,
         client: '',
         furnace: '',
-        alloyWeight: 230,
+        alloyWeight: null,
         castTime: '',
         rawWeight: '',
         remark: '',
@@ -252,7 +251,7 @@ export default {
         date: [{ required: true, message: '请选择日期', trigger: 'blur' }],
         castId: [{ required: true, message: '请选择机组', trigger: 'blur' }],
         team: [{ required: true, message: '请选择班次', trigger: 'blur' }],
-        ribbonTypeId: [{ required: true, message: '请选择材质', trigger: 'blur' }],
+        ribbonTypeName: [{ required: true, message: '请选择材质', trigger: 'blur' }],
         ribbonWidth: [
           { required: true, message: '请填写带宽', trigger: 'blur' },
           { validator: positiveInteger, trigger: 'blur' },
@@ -313,6 +312,7 @@ export default {
     } else {
       this.formData = Object.assign(this.formData, this.dialogData.rowData);
     }
+    this.roleId = JSON.parse(localStorage.getItem('userinfo')).roleId;
     this.getRibbonTypeList();
     this.getRibbonWidthList();
   },
@@ -327,9 +327,12 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.loading = true;
-          this.formData.ribbonTypeName = this.ribbonTypeList && this.ribbonTypeList.find(item => {
-            return item.ribbonTypeId === this.formData.ribbonTypeId;
-          }).ribbonTypeName;
+
+          this.formData.roleId = this.roleId;
+          this.formData.orderRibbonToughnessLevelsJson = JSON.stringify(this.formData.orderRibbonToughnessLevels);
+          this.formData.orderAppearenceLevelsJson = JSON.stringify(this.formData.orderAppearenceLevels);
+          this.formData.qualifiedRibbonToughnessLevelsJson = JSON.stringify(this.formData.qualifiedRibbonToughnessLevels);
+          this.formData.qualifiedAppearenceLevelsJson = JSON.stringify(this.formData.qualifiedAppearenceLevels);
 
           const { method, url } = this.dialogData.formType === 'create' ? { method: 'post', url: urlmap.addPlan } : { method: 'put', url: urlmap.updatePlan } ;
 

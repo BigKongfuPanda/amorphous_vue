@@ -218,16 +218,50 @@
             <span :class="scope.row.ribbonTotalLevel === '不合格' ? 'text_danger' : '' ">{{scope.row.ribbonTotalLevel}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="storageRule" label="入库规则" align="center" width="90px" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="isStored" label="是否入库" align="center" width="90px">
+        <el-table-column label="入库规则" align="center" width="90px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false" :class="scope.row.isStored === '否' ? 'text_danger' : '' ">
-              {{ scope.row.isStored }}
+            <el-popover placement="right" trigger="hover">
+              <table class="popover_table" cellpadding="0" cellspacing="0">
+                <thead>
+                  <th>类别</th>
+                  <th>带厚</th>
+                  <th>叠片</th>
+                  <th>韧性</th>
+                  <th>外观</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>计划内入库要求</td>
+                    <td>{{scope.row.storageRule.orderThickness}}</td>
+                    <td>{{scope.row.storageRule.orderLaminationFactor}}</td>
+                    <td>{{scope.row.storageRule.orderRibbonToughnessLevels.toString()}}</td>
+                    <td>{{scope.row.storageRule.orderAppearenceLevels.toString()}}</td>
+                  </tr>
+                  <tr>
+                    <td>计划外入库要求</td>
+                    <td>{{scope.row.storageRule.qualifiedThickness}}</td>
+                    <td>{{scope.row.storageRule.qualifiedLaminationFactor}}</td>
+                    <td>{{scope.row.storageRule.qualifiedRibbonToughnessLevels.toString()}}</td>
+                    <td>{{scope.row.storageRule.qualifiedAppearenceLevels.toString()}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <el-button slot="reference" size="mini" type="text">详情</el-button>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column prop="isStored" label="是否入库" align="center" width="100px">
+          <template slot-scope="scope">
+            <div v-if="scope.row.isEditing === false" :class="scope.row.isStored === 3 ? 'text_danger' : '' ">
+              <span v-if="scope.row.isStored === 1">计划内入库</span>
+              <span v-if="scope.row.isStored === 2">计划外入库</span>
+              <span v-if="scope.row.isStored === 3">否</span>
             </div>
             <div v-else>
               <el-select v-model="scope.row.isStored" placeholder="" size="mini">
-                <el-option label="是" value="是"></el-option>
-                <el-option label="否" value="否"></el-option>
+                <el-option label="计划内入库" :value="1"></el-option>
+                <el-option label="计划外入库" :value="2"></el-option>
+                <el-option label="否" :value="3"></el-option>
               </el-select>
             </div>
           </template>
@@ -242,7 +276,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="clients" label="去向" align="center" width="120px" :show-overflow-tooltip="true">
+        <el-table-column prop="clients" label="判定去向" align="center" width="120px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.clients ? scope.row.clients.toString() : '' }}
@@ -367,6 +401,16 @@ export default {
         this.pageConfig.total = data.count;
         data.list && data.list.forEach(item => {
           item.isEditing = false;
+          item.storageRule = {
+            orderThickness: item.orderThickness,
+            orderLaminationFactor: item.orderLaminationFactor,
+            orderRibbonToughnessLevels: item.orderRibbonToughnessLevels,
+            orderAppearenceLevels: item.orderAppearenceLevels,
+            qualifiedThickness: item.qualifiedThickness,
+            qualifiedLaminationFactor: item.qualifiedLaminationFactor,
+            qualifiedRibbonToughnessLevels: item.qualifiedRibbonToughnessLevels,
+            qualifiedAppearenceLevels: item.qualifiedAppearenceLevels
+          };
         });
         this.tableData = data.list;
       }).catch((err) => {
@@ -426,8 +470,10 @@ export default {
 
       // 是否入库：不合格不能入库，端面有问题的不能入库，不满足入库规则的不能入库
       if (row.ribbonTotalLevel === '不合格') {
-        row.isStored = '否';
+        row.isStored = 3;
       }
+      // 入库分为：计划内入库和计划外入库
+      row.isStored = this.setStored(row);
 
       // 发送请求，更新当前的数据
       this.$http('PUT', urlmap.updateMeasure, row).then(data => {
@@ -486,7 +532,36 @@ export default {
       } else if(thickness <= 12) {
         return 8;
       }
+    },
+    setStored(row) {
+      let inPlanFlag = true;
+      let outPlanFlag = true;
+      // 厚度
+      const ribbonThickness = row.ribbonThickness;
+      const orderThickness = row.orderThickness;
+      const qualifiedThickness = row.qualifiedThickness;
+      if (orderThickness.indexOf('≤')) { // ≤23
+        const maxThickness = parseInt(orderThickness.substr(1));
+        if (ribbonThickness >= maxThickness) {
+          // 厚度不符合符合计划内入库的要求
+          inPlanFlag = false;
+        }
+      } else {
+
+      }
+      return 1;
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+.popover_table {
+  text-align: center;
+  th, td {
+    border-bottom: 1px solid #dcdfe6;
+  }
+  td {
+    padding: 5px 8px;
+  }
+}
+</style>

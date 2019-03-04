@@ -20,6 +20,7 @@ import User from '@/pages/user/user.vue';
 import Roll from '@/pages/roll/roll.vue';
 import Measure from '@/pages/measure/measure.vue';
 import Storage from '@/pages/storage/storage.vue';
+import StorageTotal from '@/pages/storage/storageTotal.vue';
 import StatisticsWeiht from '@/pages/statisticsWeiht/statisticsWeiht.vue';
 import StatisticsStorage from '@/pages/statisticsStorage/statisticsStorage.vue';
 import StatisticsOder from '@/pages/statisticsOder/statisticsOder.vue';
@@ -101,6 +102,12 @@ export default new Router({
           name: 'storage',
           component: Storage,
           meta: { title: '库房记录表', icon: 'storage' }
+        },
+        {
+          path: 'storageTotal',
+          name: 'storageTotal',
+          component: StorageTotal,
+          meta: { title: '库房总表', icon: 'storageTotal' }
         },
         {
           path: '/data',

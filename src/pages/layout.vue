@@ -117,8 +117,11 @@
           <router-link to="/storage/9">
             <el-menu-item index="/storage/9">9号机组</el-menu-item>
           </router-link>
+          <router-link to="/storage/total">
+            <el-menu-item index="/storage/total">库存总表</el-menu-item>
+          </router-link>
         </el-submenu>
-        <el-submenu index="7">
+        <el-submenu index="7" v-if="roleId === 1 || roleId === 2 || roleId === 3">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>数据统计</span>
@@ -133,7 +136,7 @@
             <el-menu-item index="/data/statisticsOder">订单统计表</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="8" v-if="roleId === 1 || roleId === 2">
+        <el-submenu index="8" v-if="roleId === 1 || roleId === 2 || roleId === 3">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>带材管理</span>

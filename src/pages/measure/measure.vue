@@ -194,6 +194,7 @@
                 <el-option label="挖心" value="挖心"></el-option>
                 <el-option label="少量劈裂" value="少量劈裂"></el-option>
                 <el-option label="大量劈裂" value="大量劈裂"></el-option>
+                <el-option label="端面损坏" value="端面损坏"></el-option>
               </el-select>
             </div>
           </template>
@@ -420,6 +421,12 @@ export default {
       });
     },
     edit(row) {
+      if (row.isStored == 1 || row.isStored == 2) {// 已经入库
+        return this.$message({
+          message: '该带材已经入库，您无权限操作，请联系库房主管人员！',
+          type: 'error'
+        });
+      }
       row.isEditing = true;
     },
     del(row) {
@@ -471,9 +478,12 @@ export default {
       // 是否入库：不合格不能入库，端面有问题的不能入库，不满足入库规则的不能入库
       if (row.ribbonTotalLevel === '不合格') {
         row.isStored = 3;
+      } else {
+        // 入库分为：计划内入库和计划外入库
+        row.isStored = this.setStoredType(row);
+        console.log(this.setStoredType(row));
       }
-      // 入库分为：计划内入库和计划外入库
-      row.isStored = this.setStored(row);
+      
 
       // 发送请求，更新当前的数据
       this.$http('PUT', urlmap.updateMeasure, row).then(data => {
@@ -533,19 +543,19 @@ export default {
         return 8;
       }
     },
-    setStored(row) {
+    setStoredType(row) {
       let inPlanFlag = true;
       let outPlanFlag = true;
       // 计划内：厚度
       const ribbonThickness = row.ribbonThickness;
       const orderThickness = row.orderThickness;
-      if (orderThickness.indexOf('≤')) { // ≤23
+      if (orderThickness.indexOf('≤') > -1) { // ≤23
         const maxThickness = parseInt(orderThickness.substr(1));
-        if (ribbonThickness >= maxThickness) {
+        if (ribbonThickness > maxThickness) {
           // 厚度不符合符合计划内入库的要求
           inPlanFlag = false;
         }
-      } else if (orderThickness.indexOf('-')) {
+      } else if (orderThickness.indexOf('-') > -1) {
         const maxThickness = orderThickness.split('-')[1];
         const minThickness = orderThickness.split('-')[0];
         if (ribbonThickness < minThickness || ribbonThickness > maxThickness) {
@@ -555,13 +565,13 @@ export default {
       // 计划内：叠片
       const laminationFactor = row.laminationFactor;
       const orderLaminationFactor = row.orderLaminationFactor;
-      if (orderLaminationFactor.indexOf('≥')) { // ≥0.78
+      if (orderLaminationFactor.indexOf('≥') > -1) { // ≥0.78
         const minLaminationFactor = parseInt(orderLaminationFactor.substr(1));
-        if (laminationFactor <= minLaminationFactor) {
+        if (laminationFactor < minLaminationFactor) {
           // 叠片不符合符合计划内入库的要求
           inPlanFlag = false;
         }
-      } else if (orderLaminationFactor.indexOf('-')) {
+      } else if (orderLaminationFactor.indexOf('-') > -1) {
         const maxLaminationFactor = orderLaminationFactor.split('-')[1];
         const minLaminationFactor = orderLaminationFactor.split('-')[0];
         if (laminationFactor < minLaminationFactor || laminationFactor > maxLaminationFactor) {
@@ -587,13 +597,13 @@ export default {
 
       // 计划外：厚度
       const qualifiedThickness = row.qualifiedThickness;
-      if (qualifiedThickness.indexOf('≤')) { // ≤23
+      if (qualifiedThickness.indexOf('≤') > -1) { // ≤23
         const maxThickness = parseInt(qualifiedThickness.substr(1));
-        if (ribbonThickness >= maxThickness) {
+        if (ribbonThickness > maxThickness) {
           // 厚度不符合符合计划外入库的要求
           outPlanFlag = false;
         }
-      } else if (qualifiedThickness.indexOf('-')) {
+      } else if (qualifiedThickness.indexOf('-') > -1) {
         const maxThickness = qualifiedThickness.split('-')[1];
         const minThickness = qualifiedThickness.split('-')[0];
         if (ribbonThickness < minThickness || ribbonThickness > maxThickness) {
@@ -602,13 +612,13 @@ export default {
       }
       // 计划外：叠片
       const qualifiedLaminationFactor = row.qualifiedLaminationFactor;
-      if (qualifiedLaminationFactor.indexOf('≥')) { // ≥0.78
+      if (qualifiedLaminationFactor.indexOf('≥') > -1) { // ≥0.78
         const minLaminationFactor = parseInt(qualifiedLaminationFactor.substr(1));
-        if (laminationFactor <= minLaminationFactor) {
+        if (laminationFactor < minLaminationFactor) {
           // 叠片不符合符合计划外入库的要求
           outPlanFlag = false;
         }
-      } else if (qualifiedLaminationFactor.indexOf('-')) {
+      } else if (qualifiedLaminationFactor.indexOf('-') > -1) {
         const maxLaminationFactor = qualifiedLaminationFactor.split('-')[1];
         const minLaminationFactor = qualifiedLaminationFactor.split('-')[0];
         if (laminationFactor < minLaminationFactor || laminationFactor > maxLaminationFactor) {

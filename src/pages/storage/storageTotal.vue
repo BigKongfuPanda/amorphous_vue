@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right" class="crumb">
       <el-breadcrumb-item>库存记录</el-breadcrumb-item>
-      <el-breadcrumb-item>{{castId}}号机组</el-breadcrumb-item>
+      <el-breadcrumb-item>库存总表</el-breadcrumb-item>
     </el-breadcrumb>
     <el-form class="search_bar" :model="searchForm" :inline="true">
       <el-form-item label="入库日期：">
@@ -44,7 +44,6 @@
       <el-form-item label="仓位：">
         <el-input v-model="searchForm.place" placeholder="请输入仓位，以逗号分隔"></el-input>
       </el-form-item>
-      
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
         <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
@@ -112,13 +111,13 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="150px">
+        <!-- <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button>
             <el-button size="mini" type="success" @click="save(scope.row)" v-else>保存</el-button>
             <el-button size="mini" type="danger" @click="del(scope.row)" v-if="isDeleteable">退库</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <el-pagination
         background
@@ -141,7 +140,6 @@ export default {
   data () {
     return {
       userinfo: {},
-      castId: 6,
       searchForm: {
         caster: '',
         furnace: '',
@@ -169,16 +167,7 @@ export default {
       'ribbonTypeList', 'ribbonWidthList', 'ribbonThicknessLevelList', 'laminationLevelList'
     ])
   },
-  // 动态路由匹配
-  beforeRouteUpdate(to, from, next) {
-    this.castId = to.params.castId;
-    this.getTableData();
-    this.isEditable = this.setEditable();
-    this.isDeleteable = this.setDeleteable();
-    next();
-  },
   created () {
-    this.castId = this.$route.params.castId;
     this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
     this.isEditable = this.setEditable();
     this.isDeleteable = this.setDeleteable();
@@ -230,7 +219,7 @@ export default {
     },
     getTableData(params = {}) {
       const _params = {
-        castId: this.castId,
+        // castId: this.castId,
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
         caster: this.searchForm.caster,

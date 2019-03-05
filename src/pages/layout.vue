@@ -117,8 +117,8 @@
           <router-link to="/storage/9">
             <el-menu-item index="/storage/9">9号机组</el-menu-item>
           </router-link>
-          <router-link to="/storage/total">
-            <el-menu-item index="/storage/total">库存总表</el-menu-item>
+          <router-link to="/storageTotal">
+            <el-menu-item index="/storageTotal">库存总表</el-menu-item>
           </router-link>
         </el-submenu>
         <el-submenu index="7" v-if="roleId === 1 || roleId === 2 || roleId === 3">

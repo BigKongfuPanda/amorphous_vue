@@ -21,9 +21,9 @@ import Roll from '@/pages/roll/roll.vue';
 import Measure from '@/pages/measure/measure.vue';
 import Storage from '@/pages/storage/storage.vue';
 import StorageTotal from '@/pages/storage/storageTotal.vue';
-import StatisticsWeiht from '@/pages/statisticsWeiht/statisticsWeiht.vue';
-import StatisticsStorage from '@/pages/statisticsStorage/statisticsStorage.vue';
-import StatisticsOder from '@/pages/statisticsOder/statisticsOder.vue';
+import StatisticsWeight from '@/pages/statistics/statisticsWeight/statisticsWeight.vue';
+import StatisticsQuality from '@/pages/statistics/statisticsQuality/statisticsQuality.vue';
+import StatisticsOder from '@/pages/statistics/statisticsOder/statisticsOder.vue';
 
 export default new Router({
   routes: [
@@ -110,29 +110,22 @@ export default new Router({
           meta: { title: '库房总表', icon: 'storageTotal' }
         },
         {
-          path: '/data',
-          redirect: '/data/statisticsWeiht',
-          meta: { title: '统计中心', icon: 'data' },
-          children: [
-            {
-              path: 'statisticsWeiht',
-              name: 'statisticsWeiht',
-              component: StatisticsWeiht,
-              meta: { title: '大盘毛重统计表', icon: 'statisticsWeiht' }
-            },
-            {
-              path: 'statisticsStorage',
-              name: 'statisticsStorage',
-              component: StatisticsStorage,
-              meta: { title: '带材库存统计表', icon: 'statisticsStorage' }
-            },
-            {
-              path: 'statisticsOder',
-              name: 'statisticsOder',
-              component: StatisticsOder,
-              meta: { title: '订单统计表', icon: 'statisticsOder' }
-            }
-          ]
+          path: 'statisticsWeight',
+          name: 'statisticsWeight',
+          component: StatisticsWeight,
+          meta: { title: '大盘毛重统计表', icon: 'statisticsWeight' }
+        },
+        {
+          path: 'statisticsQuality',
+          name: 'statisticsQuality',
+          component: StatisticsQuality,
+          meta: { title: '带材库存统计表', icon: 'statisticsQuality' }
+        },
+        {
+          path: 'statisticsOder',
+          name: 'statisticsOder',
+          component: StatisticsOder,
+          meta: { title: '订单统计表', icon: 'statisticsOder' }
         }
       ]
     }

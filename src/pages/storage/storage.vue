@@ -240,7 +240,8 @@ export default {
         ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
         ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
-        place: this.searchForm.place
+        place: this.searchForm.place,
+        filterBy: 'storage' // 筛选库房所需的数据：入库且结余大于0
       };
       Object.assign(params, _params);
       this.$http('get', urlmap.queryMeasure, params).then(data => {

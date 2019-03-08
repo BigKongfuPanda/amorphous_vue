@@ -421,12 +421,12 @@ export default {
       });
     },
     edit(row) {
-      if (row.isStored == 1 || row.isStored == 2) {// 已经入库
-        return this.$message({
-          message: '该带材已经入库，您无权限操作，请联系库房主管人员！',
-          type: 'error'
-        });
-      }
+      // if (row.isStored == 1 || row.isStored == 2) {// 已经入库
+      //   return this.$message({
+      //     message: '该带材已经入库，您无权限操作，请联系库房主管人员！',
+      //     type: 'error'
+      //   });
+      // }
       row.isEditing = true;
     },
     del(row) {
@@ -481,10 +481,35 @@ export default {
       } else {
         // 入库分为：计划内入库和计划外入库
         row.isStored = this.setStoredType(row);
-        console.log(this.setStoredType(row));
+        if (row.isStored === 1) {
+          row.inPlanStoredWeight = row.coilNetWeight;
+          // 符合订单非薄带重量：满足订单要求且厚度为2级别的带材重量
+          if (row.ribbonThicknessLevel === 2) {
+            row.inPlanThickRibbonWeight = row.coilNetWeight;
+          }
+        } else if (row.isStored === 2) {
+          row.outPlanStoredWeight = row.coilNetWeight;          
+        }
+
+        // 总入库重量
+        row.totalStoredWeight = (row.inPlanStoredWeight + row.outPlanStoredWeight).toFixed(2);
+
+        // 计算各质量等级的重量
+        this.calcQualityOfABCDE(row);
+        // 计算薄带和高叠片薄带的重量
+        this.calcThinRibbonWeight(row);
+        // 质量等级为好的带材质量：A + 符合订单非薄带
+        row.qualityOfGood = (row.qualityOfA + row.inPlanThickRibbonWeight).toFixed(2);
+        // 质量等级为良的带材质量：B
+        row.qualityOfFine = row.qualityOfB;
+        // 质量等级为中的带材质量：30**、40**+ 计划外入库
+        if (/^[3-4]0[A-Z]{2,3}$/.test(row.ribbonTotalLevel)) {
+          row.qualityOfNormal = row.coilNetWeight;
+        } else if(row.isStored === 2) {
+          row.qualityOfNormal = row.outPlanStoredWeight;
+        }
       }
       
-
       // 发送请求，更新当前的数据
       this.$http('PUT', urlmap.updateMeasure, row).then(data => {
 
@@ -497,6 +522,44 @@ export default {
         current: val
       };
       this.getTableData(params);
+    },
+    calcThinRibbonWeight(row) {
+      if (row.ribbonThickness > 23) {
+        return;
+      }
+      // 高叠片薄带重量 ≤23, >=0.78
+      if (row.laminationFactor >= 0.78) {
+        return row.highFactorThinRibbonWeight = row.coilNetWeight;
+      }
+      // 薄带重量 ≤23, >=0.75
+      if (row.laminationFactor >= 0.75) {
+        row.thinRibbonWeight = row.coilNetWeight;
+      }
+    },
+    calcQualityOfABCDE(row) {
+      // 计算各质量等级的重量
+      // A: 32**,42**,52**,62**,72**,82**,33**,43**,53**,63**,73**,83**,34**,44**,54**,64**,74**,84**
+      const requireMentOfA = /^[3-8][2-4][A-Z]{2,3}$/;
+      // B: 31**,41**,51**,61**,71**,81**
+      const requireMentOfB = /^[3-8]1[A-Z]{2,3}$/;
+      // C: 30**,40**,50**,60**,70**,80**
+      const requireMentOfC = /^[3-8]0[A-Z]{2,3}$/;
+      // D: 21**,22**,23**,24**
+      const requireMentOfD = /^2[1-4][A-Z]{2,3}$/;
+      // E: 11**,12**,13**,14**
+      const requireMentOfE = /^1[1-4][A-Z]{2,3}$/;
+      const ribbonTotalLevel = row.ribbonTotalLevel;
+      if (requireMentOfA.test(ribbonTotalLevel)) {
+        row.qualityOfA = row.coilNetWeight;
+      } else if (requireMentOfB.test(ribbonTotalLevel)) {
+        row.qualityOfB = row.coilNetWeight;
+      } else if (requireMentOfC.test(ribbonTotalLevel)) {
+        row.qualityOfC = row.coilNetWeight;
+      } else if (requireMentOfD.test(ribbonTotalLevel)) {
+        row.qualityOfD = row.coilNetWeight;
+      } else if (requireMentOfE.test(ribbonTotalLevel)) {
+        row.qualityOfE = row.coilNetWeight;
+      }
     },
     calcLaminationLevel(factor) {
       if (!factor) return '';

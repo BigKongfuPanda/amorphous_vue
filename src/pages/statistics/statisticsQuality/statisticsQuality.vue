@@ -126,14 +126,14 @@ export default {
         ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths)
       };
       Object.assign(params, _params);
-      // this.$http('get', urlmap.queryCast, params).then(data => {
-      //   this.pageConfig.total = data.count;
-      //   this.tableData = data.list;
-      // }).catch((err) => {
-      //   console.log(err);
-      // }).finally(() => {
-      //   this.loading = false;
-      // });
+      this.$http('get', urlmap.queryStatisticsQuality, params).then(data => {
+        // this.pageConfig.total = data.count;
+        this.tableData = data.list;
+      }).catch((err) => {
+        console.log(err);
+      }).finally(() => {
+        this.loading = false;
+      });
     },
     handleCurrentChange(val) {
       const params = {

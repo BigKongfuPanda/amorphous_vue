@@ -37,5 +37,6 @@ export default {
   addLaminationLevel: '/laminationLevel',
   updateLaminationLevel: '/laminationLevel',
   delLaminationLevel: '/laminationLevel',
-  queryStatisticsQuality: '/statisticsQuality'
+  queryStatisticsQuality: '/statistics/quality',
+  queryStatisticsRatio: '/statistics/ratio'
 };

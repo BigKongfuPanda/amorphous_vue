@@ -3,10 +3,6 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-function _import (path) {
-  return () => import(`@/pages/${path}.vue`);
-}
-
 import Layout from '@/pages/layout.vue';
 import Login from '@/pages/login.vue';
 import Plan from '@/pages/plan/plan.vue';
@@ -21,9 +17,9 @@ import Roll from '@/pages/roll/roll.vue';
 import Measure from '@/pages/measure/measure.vue';
 import Storage from '@/pages/storage/storage.vue';
 import StorageTotal from '@/pages/storage/storageTotal.vue';
-import StatisticsWeight from '@/pages/statistics/statisticsWeight/statisticsWeight.vue';
-import StatisticsQuality from '@/pages/statistics/statisticsQuality/statisticsQuality.vue';
-import StatisticsOder from '@/pages/statistics/statisticsOder/statisticsOder.vue';
+import StatisticsOfRatio from '@/pages/statistics/statisticsOfRatio.vue';
+import StatisticsQuality from '@/pages/statistics/statisticsQuality.vue';
+import StatisticsOder from '@/pages/statistics/statisticsOder.vue';
 
 export default new Router({
   routes: [
@@ -110,16 +106,16 @@ export default new Router({
           meta: { title: '库房总表', icon: 'storageTotal' }
         },
         {
-          path: 'statisticsWeight',
-          name: 'statisticsWeight',
-          component: StatisticsWeight,
-          meta: { title: '大盘毛重统计表', icon: 'statisticsWeight' }
+          path: 'statisticsOfRatio',
+          name: 'statisticsOfRatio',
+          component: StatisticsOfRatio,
+          meta: { title: '喷带手生产统计表', icon: 'statisticsOfRatio' }
         },
         {
           path: 'statisticsQuality',
           name: 'statisticsQuality',
           component: StatisticsQuality,
-          meta: { title: '带材库存统计表', icon: 'statisticsQuality' }
+          meta: { title: '带材质量统计表', icon: 'statisticsQuality' }
         },
         {
           path: 'statisticsOder',

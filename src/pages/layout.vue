@@ -126,8 +126,8 @@
             <i class="el-icon-location"></i>
             <span>数据统计</span>
           </template>
-          <router-link to="/statisticsWeight">
-            <el-menu-item index="/statisticsWeight">大盘毛重统计表</el-menu-item>
+          <router-link to="/statisticsOfRatio">
+            <el-menu-item index="/statisticsOfRatio">直通率统计表</el-menu-item>
           </router-link>
           <router-link to="/statisticsQuality">
             <el-menu-item index="/statisticsQuality">带材质量统计</el-menu-item>

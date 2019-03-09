@@ -380,7 +380,8 @@ export default {
   created() {
     this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
     if (this.dialogData.formType === 'add') {
-      this.formData = Object.assign({}, formConfig, {castId: Number(this.$route.params.castId), caster: this.userinfo.adminname});
+      const _formConfig = cloneDeep(formConfig);
+      this.formData = Object.assign({}, _formConfig, {castId: Number(this.$route.params.castId), caster: this.userinfo.adminname});
     } else {
       this.formData = Object.assign(this.formData, this.dialogData.rowData);
       this.formData.castTimes = this.formData.record.length;

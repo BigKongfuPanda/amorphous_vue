@@ -177,6 +177,7 @@ export default {
 
         // 第三次遍历，求出合格率直通率等
         list.forEach(item => {
+          item.totalStoredWeight = item.totalStoredWeight.toFixed(2);
           // 不合格重量
           item.unqualifiedWeight = item.rawWeight - item.totalStoredWeight;
           // 有效过钢率，卷曲率，合格率，直通率
@@ -202,14 +203,6 @@ export default {
         current: val
       };
       this.getTableData(params);
-    },
-    calcSum(arr, name) {
-      return arr.reduce((sum, item) => {
-        if (item[name] === undefined || item[name] === null) {
-          item[name] = 0;
-        }
-        return sum + item[name];
-      }, 0).toFixed(2);
     }
   }
 }

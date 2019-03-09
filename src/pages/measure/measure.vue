@@ -421,12 +421,12 @@ export default {
       });
     },
     edit(row) {
-      // if (row.isStored == 1 || row.isStored == 2) {// 已经入库
-      //   return this.$message({
-      //     message: '该带材已经入库，您无权限操作，请联系库房主管人员！',
-      //     type: 'error'
-      //   });
-      // }
+      if (row.isStored == 1 || row.isStored == 2) {// 已经入库
+        return this.$message({
+          message: '该带材已经入库，您无权限操作，请联系库房主管人员！',
+          type: 'error'
+        });
+      }
       row.isEditing = true;
     },
     del(row) {
@@ -469,10 +469,23 @@ export default {
 
       // 综合级别
       // 叠片系数不合格，或者外观等级为不合格，则综合级别为不合格
-      row.ribbonTotalLevel = row.laminationLevel === '不合格' || row.appearenceLevel === '不合格' ? '不合格' : row.ribbonThicknessLevel + row.laminationLevel + row.ribbonToughnessLevel + row.appearenceLevel;
+      row.ribbonTotalLevel = row.laminationLevel === '不合格' || row.appearenceLevel === '不合格' || row.ribbonThicknessDeviation > 3 ? '不合格' : row.ribbonThicknessLevel + row.laminationLevel + row.ribbonToughnessLevel + row.appearenceLevel;
       // 规格 为 32/35/40/42/45/50/，材质为 1K107B 的带材，如果韧性为D，则综合级别为不合格
       if ([32, 35, 40, 42, 45, 50].includes(row.ribbonWidth) && row.ribbonTypeName == '1K107B' && row.ribbonToughnessLevel == 'D') {
         row.ribbonTotalLevel = '不合格';
+      }
+      // 如果厚度为20-22，则加G，厚度为23-24，加L
+      if (row.ribbonTotalLevel !== '不合格') {
+        if (row.ribbonThickness >= 20 && row.ribbonThickness <= 22) {
+          row.ribbonTotalLevel = row.ribbonTotalLevel + 'G';
+        }
+        if (row.ribbonThickness >= 23 && row.ribbonThickness <= 24) {
+          row.ribbonTotalLevel = row.ribbonTotalLevel + 'L';
+        }
+      }
+
+      if (row.ribbonThicknessLevel == '' || row.laminationLevel === '' || row.ribbonToughnessLevel == '' || row.appearenceLevel == '') {
+        row.ribbonTotalLevel = '';
       }
 
       // 是否入库：不合格不能入库，端面有问题的不能入库，不满足入库规则的不能入库
@@ -498,15 +511,27 @@ export default {
         this.calcQualityOfABCDE(row);
         // 计算薄带和高叠片薄带的重量
         this.calcThinRibbonWeight(row);
-        // 质量等级为好的带材质量：A + 符合订单非薄带
-        row.qualityOfGood = (row.qualityOfA + row.inPlanThickRibbonWeight).toFixed(2);
-        // 质量等级为良的带材质量：B
-        row.qualityOfFine = row.qualityOfB;
-        // 质量等级为中的带材质量：30**、40**+ 计划外入库
-        if (/^[3-4]0[A-Z]{2,3}$/.test(row.ribbonTotalLevel)) {
-          row.qualityOfNormal = row.coilNetWeight;
-        } else if(row.isStored === 2) {
-          row.qualityOfNormal = row.outPlanStoredWeight;
+        // // 质量等级为好的带材质量：A + 符合订单非薄带
+        // row.qualityOfGood = (row.qualityOfA + row.inPlanThickRibbonWeight).toFixed(2);
+        // // 质量等级为良的带材质量：B
+        // row.qualityOfFine = row.qualityOfB;
+        // // 质量等级为中的带材质量：30**、40**+ 计划外入库
+        // if (/^[3-4]0[A-Z]{2,3}$/.test(row.ribbonTotalLevel)) {
+        //   row.qualityOfNormal = row.coilNetWeight;
+        // } else if(row.isStored === 2) {
+        //   row.qualityOfNormal = row.outPlanStoredWeight;
+        // }
+
+        // 质量等级为好的带材质量：符合订单的带材
+        row.qualityOfGood = row.inPlanStoredWeight;
+        // 质量等级为良的带材质量：除去符合任务单要求的薄带（31**41**51**61**71**81**32**42**52**62**72**82**33**43**53**63**73**83**34**44**54**64**74**84**）还有德国法国的（22*B、23*B）
+        // 质量等级为中的带材质量：除去好和良的其他入库。
+        if (row.isStored === 2) {
+          if (/^[3-8][1-4][A-Z]{2,3}$/.test(row.ribbonTotalLevel) || /^2[2-3][A-C]BL?$/.test(row.ribbonTotalLevel)) {
+            row.qualityOfFine = row.coilNetWeight;
+          } else {
+            row.qualityOfNormal = row.coilNetWeight;
+          }
         }
       }
       

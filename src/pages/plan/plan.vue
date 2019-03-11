@@ -48,7 +48,7 @@
             </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column label="计划外入库要求">
+        <el-table-column label="计划外入库要求" v-if="roleId === 1 || roleId === 2 || roleId === 3">
           <el-table-column label="带厚(μm)" align="center" width="90px">
             <template slot-scope="scope">
               <span>{{scope.row.qualifiedThickness}}</span>

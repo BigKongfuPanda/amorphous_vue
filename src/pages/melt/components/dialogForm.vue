@@ -224,7 +224,7 @@ export default {
           { required: true, message: '请填写熔炼人姓名', trigger: 'blur' },
           { max: 10, message: '最多10位字符', trigger: 'blur' }
         ],
-        meltFurnace: [{ required: true, message: '请选择材质', trigger: 'blur' }],
+        meltFurnace: [{ required: true, message: '请选择冶炼炉', trigger: 'blur' }],
         newAlloyNumber: [
           { max: 20, message: '最多20位字符', trigger: 'blur' }
         ],

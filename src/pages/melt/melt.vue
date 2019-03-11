@@ -221,7 +221,9 @@ export default {
       this.dialogVisible = false;
     },
     submitHandler() {
-      this.dialogVisible = false;
+      if (this.formType === 'edit') {
+        this.dialogVisible = false;
+      }
       this.pageConfig.current = 1;
       this.getTableData();
     },

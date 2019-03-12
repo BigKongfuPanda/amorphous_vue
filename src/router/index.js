@@ -3,10 +3,6 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-function _import (path) {
-  return () => import(`@/pages/${path}.vue`);
-}
-
 import Layout from '@/pages/layout.vue';
 import Login from '@/pages/login.vue';
 import Plan from '@/pages/plan/plan.vue';
@@ -20,9 +16,10 @@ import User from '@/pages/user/user.vue';
 import Roll from '@/pages/roll/roll.vue';
 import Measure from '@/pages/measure/measure.vue';
 import Storage from '@/pages/storage/storage.vue';
-import StatisticsWeiht from '@/pages/statisticsWeiht/statisticsWeiht.vue';
-import StatisticsStorage from '@/pages/statisticsStorage/statisticsStorage.vue';
-import StatisticsOder from '@/pages/statisticsOder/statisticsOder.vue';
+import StorageTotal from '@/pages/storage/storageTotal.vue';
+import StatisticsOfRatio from '@/pages/statistics/statisticsOfRatio.vue';
+import StatisticsQuality from '@/pages/statistics/statisticsQuality.vue';
+import StatisticsOder from '@/pages/statistics/statisticsOder.vue';
 
 export default new Router({
   routes: [
@@ -103,29 +100,28 @@ export default new Router({
           meta: { title: '库房记录表', icon: 'storage' }
         },
         {
-          path: '/data',
-          redirect: '/data/statisticsWeiht',
-          meta: { title: '统计中心', icon: 'data' },
-          children: [
-            {
-              path: 'statisticsWeiht',
-              name: 'statisticsWeiht',
-              component: StatisticsWeiht,
-              meta: { title: '大盘毛重统计表', icon: 'statisticsWeiht' }
-            },
-            {
-              path: 'statisticsStorage',
-              name: 'statisticsStorage',
-              component: StatisticsStorage,
-              meta: { title: '带材库存统计表', icon: 'statisticsStorage' }
-            },
-            {
-              path: 'statisticsOder',
-              name: 'statisticsOder',
-              component: StatisticsOder,
-              meta: { title: '订单统计表', icon: 'statisticsOder' }
-            }
-          ]
+          path: 'storageTotal',
+          name: 'storageTotal',
+          component: StorageTotal,
+          meta: { title: '库房总表', icon: 'storageTotal' }
+        },
+        {
+          path: 'statisticsOfRatio',
+          name: 'statisticsOfRatio',
+          component: StatisticsOfRatio,
+          meta: { title: '喷带手生产统计表', icon: 'statisticsOfRatio' }
+        },
+        {
+          path: 'statisticsQuality',
+          name: 'statisticsQuality',
+          component: StatisticsQuality,
+          meta: { title: '带材质量统计表', icon: 'statisticsQuality' }
+        },
+        {
+          path: 'statisticsOder',
+          name: 'statisticsOder',
+          component: StatisticsOder,
+          meta: { title: '订单统计表', icon: 'statisticsOder' }
         }
       ]
     }

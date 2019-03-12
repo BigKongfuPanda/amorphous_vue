@@ -9,10 +9,10 @@
   width="1200px"
   v-loading="loading"
   element-loading-text="拼命加载中">
-    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="100%" @submit.native.prevent>
+    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" @submit.native.prevent>
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-form-item label="材质" prop="ribbonTypeId" class="dialog_field">
+          <el-form-item label="材质" prop="ribbonTypeName" class="dialog_field">
             <el-select v-model="formData.ribbonTypeName" placeholder="请选择">
               <el-option v-for="item in dialogData.ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
             </el-select>
@@ -81,12 +81,17 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="备注" prop="remark" class="dialog_field">
-            <el-input v-model="formData.remark"></el-input>
+          <el-form-item label="废带重量" prop="uselessRibbonWeight" class="dialog_field">
+            <el-input v-model="formData.uselessRibbonWeight"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
+        <el-col :span="6">
+          <el-form-item label="备注" prop="remark" class="dialog_field">
+            <el-input v-model="formData.remark"></el-input>
+          </el-form-item>
+        </el-col>
         <el-col :span="6">
           <el-form-item label="开包次数" prop="castTimes">
             <el-select v-model="formData.castTimes" @change="castTimesChangeHandler">
@@ -257,6 +262,7 @@ const formConfig = {
   "remark": '', //备注
   "createdAt": "", //创建时间
   "updatedAt": "", //更新时间
+  "uselessRibbonWeight": null, // 废带重量
   record: [
     defaultCastDetail
   ]
@@ -286,6 +292,7 @@ export default {
         "remark": '', //备注
         "createdAt": "", //创建时间
         "updatedAt": "", //更新时间
+        "uselessRibbonWeight": null, // 废带重量
         record: [
           {
             "nozzleSize": "", //喷嘴规格
@@ -310,7 +317,7 @@ export default {
         ]
       },
       rules: {
-        ribbonTypeId: [{ required: true, message: '请选择材质', trigger: 'blur' }],
+        ribbonTypeName: [{ required: true, message: '请选择材质', trigger: 'blur' }],
         ribbonWidth: [
           { required: true, message: '请填写带宽', trigger: 'blur' },
           { validator: positiveInteger, trigger: 'blur' },
@@ -355,7 +362,12 @@ export default {
         remark: [
           { max: 50, message: '最多50位字符', trigger: 'blur' }
         ],
-        castTimes: [{ required: true, message: '请选择开包次数', trigger: 'blur' }]
+        castTimes: [{ required: true, message: '请选择开包次数', trigger: 'blur' }],
+        uselessRibbonWeight: [
+          { required: true, message: '请填写大盘毛重', trigger: 'blur' },
+          { validator: number, trigger: 'blur' },
+          { validator: ltNumber(300), trigger: 'blur' }
+        ]
       }
     };
   },
@@ -368,7 +380,8 @@ export default {
   created() {
     this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
     if (this.dialogData.formType === 'add') {
-      this.formData = Object.assign({}, formConfig, {castId: Number(this.$route.params.castId), caster: this.userinfo.adminname});
+      const _formConfig = cloneDeep(formConfig);
+      this.formData = Object.assign({}, _formConfig, {castId: Number(this.$route.params.castId), caster: this.userinfo.adminname});
     } else {
       this.formData = Object.assign(this.formData, this.dialogData.rowData);
       this.formData.castTimes = this.formData.record.length;

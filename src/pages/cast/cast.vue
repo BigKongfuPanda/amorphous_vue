@@ -91,6 +91,7 @@
         <el-table-column prop="heatCupNum" label="加热杯个数" align="center" width="100px"></el-table-column>
         <el-table-column prop="meltOutWeight" label="放钢重量(kg)" align="center" width="110px"></el-table-column>
         <el-table-column prop="rawWeight" label="大盘毛重(kg)" align="center" width="110px"></el-table-column>
+        <el-table-column prop="uselessRibbonWeight" label="废带重量(kg)" align="center" width="110px"></el-table-column>
         <el-table-column prop="remark" label="备注" align="center" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="updatedAt" label="更新时间" align="center" width="170px" :formatter="dateTimeFormat"></el-table-column>
         <el-table-column prop="updatePerson" label="更新者" align="center" width="70px"></el-table-column>
@@ -258,7 +259,9 @@ export default {
       this.dialogVisible = false;
     },
     submitHandler() {
-      this.dialogVisible = false;
+      if (this.formType === 'edit') {
+        this.dialogVisible = false;
+      }
       this.pageConfig.current = 1;
       this.getTableData();
     },

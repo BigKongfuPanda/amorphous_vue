@@ -194,6 +194,7 @@
                 <el-option label="挖心" value="挖心"></el-option>
                 <el-option label="少量劈裂" value="少量劈裂"></el-option>
                 <el-option label="大量劈裂" value="大量劈裂"></el-option>
+                <el-option label="端面损坏" value="端面损坏"></el-option>
               </el-select>
             </div>
           </template>
@@ -218,16 +219,50 @@
             <span :class="scope.row.ribbonTotalLevel === '不合格' ? 'text_danger' : '' ">{{scope.row.ribbonTotalLevel}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="storageRule" label="入库规则" align="center" width="90px" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="isStored" label="是否入库" align="center" width="90px">
+        <el-table-column label="入库规则" align="center" width="90px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false" :class="scope.row.isStored === '否' ? 'text_danger' : '' ">
-              {{ scope.row.isStored }}
+            <el-popover placement="right" trigger="hover">
+              <table class="popover_table" cellpadding="0" cellspacing="0">
+                <thead>
+                  <th>类别</th>
+                  <th>带厚</th>
+                  <th>叠片</th>
+                  <th>韧性</th>
+                  <th>外观</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>计划内入库要求</td>
+                    <td>{{scope.row.storageRule.orderThickness}}</td>
+                    <td>{{scope.row.storageRule.orderLaminationFactor}}</td>
+                    <td>{{scope.row.storageRule.orderRibbonToughnessLevels.toString()}}</td>
+                    <td>{{scope.row.storageRule.orderAppearenceLevels.toString()}}</td>
+                  </tr>
+                  <tr>
+                    <td>计划外入库要求</td>
+                    <td>{{scope.row.storageRule.qualifiedThickness}}</td>
+                    <td>{{scope.row.storageRule.qualifiedLaminationFactor}}</td>
+                    <td>{{scope.row.storageRule.qualifiedRibbonToughnessLevels.toString()}}</td>
+                    <td>{{scope.row.storageRule.qualifiedAppearenceLevels.toString()}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <el-button slot="reference" size="mini" type="text">详情</el-button>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column prop="isStored" label="是否入库" align="center" width="100px">
+          <template slot-scope="scope">
+            <div v-if="scope.row.isEditing === false" :class="scope.row.isStored === 3 ? 'text_danger' : '' ">
+              <span v-if="scope.row.isStored === 1">计划内入库</span>
+              <span v-if="scope.row.isStored === 2">计划外入库</span>
+              <span v-if="scope.row.isStored === 3">否</span>
             </div>
             <div v-else>
               <el-select v-model="scope.row.isStored" placeholder="" size="mini">
-                <el-option label="是" value="是"></el-option>
-                <el-option label="否" value="否"></el-option>
+                <el-option label="计划内入库" :value="1"></el-option>
+                <el-option label="计划外入库" :value="2"></el-option>
+                <el-option label="否" :value="3"></el-option>
               </el-select>
             </div>
           </template>
@@ -242,10 +277,10 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="clients" label="去向" align="center" width="120px" :show-overflow-tooltip="true">
+        <el-table-column prop="clients" label="判定去向" align="center" width="120px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
-              {{ scope.row.clients.toString() }}
+              {{ scope.row.clients ? scope.row.clients.toString() : '' }}
             </div>
             <div v-else>
               <el-select size="mini" v-model="scope.row.clients" placeholder="" multiple collapse-tags>
@@ -325,7 +360,7 @@ export default {
       return dateFormat(row.castDate);
     },
     setEditable() {
-      if (this.userinfo.roleId == 5 || this.userinfo.roleId == 1) { // 重卷人员 或者厂长 可修改
+      if (this.userinfo.roleId == 5 || this.userinfo.roleId == 1) { // 检测人员 或者厂长 可修改
         return true;
       } else { // 其他
         return false;
@@ -367,6 +402,16 @@ export default {
         this.pageConfig.total = data.count;
         data.list && data.list.forEach(item => {
           item.isEditing = false;
+          item.storageRule = {
+            orderThickness: item.orderThickness,
+            orderLaminationFactor: item.orderLaminationFactor,
+            orderRibbonToughnessLevels: item.orderRibbonToughnessLevels,
+            orderAppearenceLevels: item.orderAppearenceLevels,
+            qualifiedThickness: item.qualifiedThickness,
+            qualifiedLaminationFactor: item.qualifiedLaminationFactor,
+            qualifiedRibbonToughnessLevels: item.qualifiedRibbonToughnessLevels,
+            qualifiedAppearenceLevels: item.qualifiedAppearenceLevels
+          };
         });
         this.tableData = data.list;
       }).catch((err) => {
@@ -376,6 +421,12 @@ export default {
       });
     },
     edit(row) {
+      if (row.isStored == 1 || row.isStored == 2) {// 已经入库
+        return this.$message({
+          message: '该带材已经入库，您无权限操作，请联系库房主管人员！',
+          type: 'error'
+        });
+      }
       row.isEditing = true;
     },
     del(row) {
@@ -417,13 +468,73 @@ export default {
       row.ribbonThicknessLevel = this.calcribbonThicknessLevel(row.ribbonThickness);
 
       // 综合级别
-      row.ribbonTotalLevel = row.laminationLevel === '不合格' ? '不合格' : row.ribbonThicknessLevel + row.laminationLevel + row.ribbonToughnessLevel + row.appearenceLevel;
-
-      // 是否入库 不合格不能入库，端面有问题的不能入库，不满足入库规则的不能入库
-      if (row.ribbonTotalLevel === '不合格') {
-        row.isStored = '否';
+      // 叠片系数不合格，或者外观等级为不合格，则综合级别为不合格
+      row.ribbonTotalLevel = row.laminationLevel === '不合格' || row.appearenceLevel === '不合格' || row.ribbonThicknessDeviation > 3 ? '不合格' : row.ribbonThicknessLevel + row.laminationLevel + row.ribbonToughnessLevel + row.appearenceLevel;
+      // 规格 为 32/35/40/42/45/50/，材质为 1K107B 的带材，如果韧性为D，则综合级别为不合格
+      if ([32, 35, 40, 42, 45, 50].includes(row.ribbonWidth) && row.ribbonTypeName == '1K107B' && row.ribbonToughnessLevel == 'D') {
+        row.ribbonTotalLevel = '不合格';
+      }
+      // 如果厚度为20-22，则加G，厚度为23-24，加L
+      if (row.ribbonTotalLevel !== '不合格') {
+        if (row.ribbonThickness >= 20 && row.ribbonThickness <= 22) {
+          row.ribbonTotalLevel = row.ribbonTotalLevel + 'G';
+        }
+        if (row.ribbonThickness >= 23 && row.ribbonThickness <= 24) {
+          row.ribbonTotalLevel = row.ribbonTotalLevel + 'L';
+        }
       }
 
+      if (row.ribbonThicknessLevel == '' || row.laminationLevel === '' || row.ribbonToughnessLevel == '' || row.appearenceLevel == '') {
+        row.ribbonTotalLevel = '';
+      }
+
+      // 是否入库：不合格不能入库，端面有问题的不能入库，不满足入库规则的不能入库
+      if (row.ribbonTotalLevel === '不合格') {
+        row.isStored = 3;
+      } else {
+        // 入库分为：计划内入库和计划外入库
+        row.isStored = this.setStoredType(row);
+        if (row.isStored === 1) {
+          row.inPlanStoredWeight = row.coilNetWeight;
+          // 符合订单非薄带重量：满足订单要求且厚度为2级别的带材重量
+          if (row.ribbonThicknessLevel === 2) {
+            row.inPlanThickRibbonWeight = row.coilNetWeight;
+          }
+        } else if (row.isStored === 2) {
+          row.outPlanStoredWeight = row.coilNetWeight;          
+        }
+
+        // 总入库重量
+        row.totalStoredWeight = (row.inPlanStoredWeight + row.outPlanStoredWeight).toFixed(2);
+
+        // 计算各质量等级的重量
+        this.calcQualityOfABCDE(row);
+        // 计算薄带和高叠片薄带的重量
+        this.calcThinRibbonWeight(row);
+        // // 质量等级为好的带材质量：A + 符合订单非薄带
+        // row.qualityOfGood = (row.qualityOfA + row.inPlanThickRibbonWeight).toFixed(2);
+        // // 质量等级为良的带材质量：B
+        // row.qualityOfFine = row.qualityOfB;
+        // // 质量等级为中的带材质量：30**、40**+ 计划外入库
+        // if (/^[3-4]0[A-Z]{2,3}$/.test(row.ribbonTotalLevel)) {
+        //   row.qualityOfNormal = row.coilNetWeight;
+        // } else if(row.isStored === 2) {
+        //   row.qualityOfNormal = row.outPlanStoredWeight;
+        // }
+
+        // 质量等级为好的带材质量：符合订单的带材
+        row.qualityOfGood = row.inPlanStoredWeight;
+        // 质量等级为良的带材质量：除去符合任务单要求的薄带（31**41**51**61**71**81**32**42**52**62**72**82**33**43**53**63**73**83**34**44**54**64**74**84**）还有德国法国的（22*B、23*B）
+        // 质量等级为中的带材质量：除去好和良的其他入库。
+        if (row.isStored === 2) {
+          if (/^[3-8][1-4][A-Z]{2,3}$/.test(row.ribbonTotalLevel) || /^2[2-3][A-C]BL?$/.test(row.ribbonTotalLevel)) {
+            row.qualityOfFine = row.coilNetWeight;
+          } else {
+            row.qualityOfNormal = row.coilNetWeight;
+          }
+        }
+      }
+      
       // 发送请求，更新当前的数据
       this.$http('PUT', urlmap.updateMeasure, row).then(data => {
 
@@ -436,6 +547,44 @@ export default {
         current: val
       };
       this.getTableData(params);
+    },
+    calcThinRibbonWeight(row) {
+      if (row.ribbonThickness > 23) {
+        return;
+      }
+      // 高叠片薄带重量 ≤23, >=0.78
+      if (row.laminationFactor >= 0.78) {
+        return row.highFactorThinRibbonWeight = row.coilNetWeight;
+      }
+      // 薄带重量 ≤23, >=0.75
+      if (row.laminationFactor >= 0.75) {
+        row.thinRibbonWeight = row.coilNetWeight;
+      }
+    },
+    calcQualityOfABCDE(row) {
+      // 计算各质量等级的重量
+      // A: 32**,42**,52**,62**,72**,82**,33**,43**,53**,63**,73**,83**,34**,44**,54**,64**,74**,84**
+      const requireMentOfA = /^[3-8][2-4][A-Z]{2,3}$/;
+      // B: 31**,41**,51**,61**,71**,81**
+      const requireMentOfB = /^[3-8]1[A-Z]{2,3}$/;
+      // C: 30**,40**,50**,60**,70**,80**
+      const requireMentOfC = /^[3-8]0[A-Z]{2,3}$/;
+      // D: 21**,22**,23**,24**
+      const requireMentOfD = /^2[1-4][A-Z]{2,3}$/;
+      // E: 11**,12**,13**,14**
+      const requireMentOfE = /^1[1-4][A-Z]{2,3}$/;
+      const ribbonTotalLevel = row.ribbonTotalLevel;
+      if (requireMentOfA.test(ribbonTotalLevel)) {
+        row.qualityOfA = row.coilNetWeight;
+      } else if (requireMentOfB.test(ribbonTotalLevel)) {
+        row.qualityOfB = row.coilNetWeight;
+      } else if (requireMentOfC.test(ribbonTotalLevel)) {
+        row.qualityOfC = row.coilNetWeight;
+      } else if (requireMentOfD.test(ribbonTotalLevel)) {
+        row.qualityOfD = row.coilNetWeight;
+      } else if (requireMentOfE.test(ribbonTotalLevel)) {
+        row.qualityOfE = row.coilNetWeight;
+      }
     },
     calcLaminationLevel(factor) {
       if (!factor) return '';
@@ -481,7 +630,117 @@ export default {
       } else if(thickness <= 12) {
         return 8;
       }
+    },
+    setStoredType(row) {
+      let inPlanFlag = true;
+      let outPlanFlag = true;
+      // 计划内：厚度
+      const ribbonThickness = row.ribbonThickness;
+      const orderThickness = row.orderThickness;
+      if (orderThickness.indexOf('≤') > -1) { // ≤23
+        const maxThickness = parseInt(orderThickness.substr(1));
+        if (ribbonThickness > maxThickness) {
+          // 厚度不符合符合计划内入库的要求
+          inPlanFlag = false;
+        }
+      } else if (orderThickness.indexOf('-') > -1) {
+        const maxThickness = orderThickness.split('-')[1];
+        const minThickness = orderThickness.split('-')[0];
+        if (ribbonThickness < minThickness || ribbonThickness > maxThickness) {
+          inPlanFlag = false;
+        }
+      }
+      // 计划内：叠片
+      const laminationFactor = row.laminationFactor;
+      const orderLaminationFactor = row.orderLaminationFactor;
+      if (orderLaminationFactor.indexOf('≥') > -1) { // ≥0.78
+        const minLaminationFactor = parseInt(orderLaminationFactor.substr(1));
+        if (laminationFactor < minLaminationFactor) {
+          // 叠片不符合符合计划内入库的要求
+          inPlanFlag = false;
+        }
+      } else if (orderLaminationFactor.indexOf('-') > -1) {
+        const maxLaminationFactor = orderLaminationFactor.split('-')[1];
+        const minLaminationFactor = orderLaminationFactor.split('-')[0];
+        if (laminationFactor < minLaminationFactor || laminationFactor > maxLaminationFactor) {
+          inPlanFlag = false;
+        }
+      }
+      // 计划内：韧性
+      const ribbonToughnessLevel = row.ribbonToughnessLevel;
+      const orderRibbonToughnessLevels = row.orderRibbonToughnessLevels;
+      if (!orderRibbonToughnessLevels.includes(ribbonToughnessLevel)) {
+        inPlanFlag = false;
+      }
+      // 计划内：外观
+      const appearenceLevel = row.appearenceLevel;
+      const orderAppearenceLevels = row.orderAppearenceLevels;
+      if (!orderAppearenceLevels.includes(appearenceLevel)) {
+        inPlanFlag = false;
+      }
+
+      if (inPlanFlag) {
+        return 1;
+      }
+
+      // 计划外：厚度
+      const qualifiedThickness = row.qualifiedThickness;
+      if (qualifiedThickness.indexOf('≤') > -1) { // ≤23
+        const maxThickness = parseInt(qualifiedThickness.substr(1));
+        if (ribbonThickness > maxThickness) {
+          // 厚度不符合符合计划外入库的要求
+          outPlanFlag = false;
+        }
+      } else if (qualifiedThickness.indexOf('-') > -1) {
+        const maxThickness = qualifiedThickness.split('-')[1];
+        const minThickness = qualifiedThickness.split('-')[0];
+        if (ribbonThickness < minThickness || ribbonThickness > maxThickness) {
+          outPlanFlag = false;
+        }
+      }
+      // 计划外：叠片
+      const qualifiedLaminationFactor = row.qualifiedLaminationFactor;
+      if (qualifiedLaminationFactor.indexOf('≥') > -1) { // ≥0.78
+        const minLaminationFactor = parseInt(qualifiedLaminationFactor.substr(1));
+        if (laminationFactor < minLaminationFactor) {
+          // 叠片不符合符合计划外入库的要求
+          outPlanFlag = false;
+        }
+      } else if (qualifiedLaminationFactor.indexOf('-') > -1) {
+        const maxLaminationFactor = qualifiedLaminationFactor.split('-')[1];
+        const minLaminationFactor = qualifiedLaminationFactor.split('-')[0];
+        if (laminationFactor < minLaminationFactor || laminationFactor > maxLaminationFactor) {
+          outPlanFlag = false;
+        }
+      }
+      // 计划外：韧性
+      const qualifiedRibbonToughnessLevels = row.qualifiedRibbonToughnessLevels;
+      if (!qualifiedRibbonToughnessLevels.includes(ribbonToughnessLevel)) {
+        outPlanFlag = false;
+      }
+      // 计划外：外观
+      const qualifiedAppearenceLevels = row.qualifiedAppearenceLevels;
+      if (!qualifiedAppearenceLevels.includes(appearenceLevel)) {
+        outPlanFlag = false;
+      }
+
+      if (outPlanFlag) {
+        return 2
+      }
+
+      return 3;
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+.popover_table {
+  text-align: center;
+  th, td {
+    border-bottom: 1px solid #dcdfe6;
+  }
+  td {
+    padding: 5px 8px;
+  }
+}
+</style>

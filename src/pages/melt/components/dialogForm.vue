@@ -9,7 +9,7 @@
   width="950px"
   v-loading="loading"
   element-loading-text="拼命加载中">
-    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="100%" @submit.native.prevent inline>
+    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" @submit.native.prevent inline>
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item label="材质:" prop="ribbonTypeName" class="dialog_field">
@@ -224,7 +224,7 @@ export default {
           { required: true, message: '请填写熔炼人姓名', trigger: 'blur' },
           { max: 10, message: '最多10位字符', trigger: 'blur' }
         ],
-        meltFurnace: [{ required: true, message: '请选择材质', trigger: 'blur' }],
+        meltFurnace: [{ required: true, message: '请选择冶炼炉', trigger: 'blur' }],
         newAlloyNumber: [
           { max: 20, message: '最多20位字符', trigger: 'blur' }
         ],

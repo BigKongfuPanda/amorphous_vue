@@ -117,23 +117,26 @@
           <router-link to="/storage/9">
             <el-menu-item index="/storage/9">9号机组</el-menu-item>
           </router-link>
+          <router-link to="/storageTotal">
+            <el-menu-item index="/storageTotal">库存总表</el-menu-item>
+          </router-link>
         </el-submenu>
-        <el-submenu index="7">
+        <el-submenu index="7" v-if="roleId === 1 || roleId === 2 || roleId === 3">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>数据统计</span>
           </template>
-          <router-link to="/data/statisticsWeiht">
-            <el-menu-item index="/data/statisticsWeiht">大盘毛重统计表</el-menu-item>
+          <router-link to="/statisticsOfRatio">
+            <el-menu-item index="/statisticsOfRatio">直通率统计表</el-menu-item>
           </router-link>
-          <router-link to="/data/statisticsStorage">
-            <el-menu-item index="/data/statisticsStorage">带材库存统计表</el-menu-item>
+          <router-link to="/statisticsQuality">
+            <el-menu-item index="/statisticsQuality">带材质量统计</el-menu-item>
           </router-link>
-          <router-link to="/data/statisticsOder">
-            <el-menu-item index="/data/statisticsOder">订单统计表</el-menu-item>
+          <router-link to="/statisticsOder">
+            <el-menu-item index="/statisticsOder">订单统计表</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="8" v-if="roleId === 1 || roleId === 2">
+        <el-submenu index="8" v-if="roleId === 1 || roleId === 2 || roleId === 3">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>带材管理</span>

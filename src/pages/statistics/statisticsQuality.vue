@@ -157,6 +157,7 @@ export default {
           item.qualityOfNormal = this.calcSum(fromMeasure, 'qualityOfNormal');
           item.netWeight = this.calcSum(fromMeasure, 'coilNetWeight');
           item.unqualifiedWeight = item.netWeight - item.totalStoredWeight;
+          item.alloyTotalWeight = item.fromMelt[0].alloyTotalWeight ? item.fromMelt[0].alloyTotalWeight : 0;
         });
         this.tableData = data.list;
       }).catch((err) => {

@@ -15,6 +15,14 @@
           end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
+      <el-form-item label="班组：">
+        <el-select v-model="searchForm.team" placeholder="请选择班组">
+          <el-option label="甲" value="甲"></el-option>
+          <el-option label="乙" value="乙"></el-option>
+          <el-option label="丙" value="丙"></el-option>
+          <el-option label="丁" value="丁"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="喷带手：">
         <el-input v-model="searchForm.caster" placeholder="请输入喷带手姓名"></el-input>
       </el-form-item>
@@ -73,6 +81,7 @@
         </el-table-column>
         <el-table-column prop="ribbonWidth" label="规格" align="center" width="50px"></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="170px"></el-table-column>
+        <el-table-column prop="team" label="班组" align="center" width="50px"></el-table-column>
         <el-table-column prop="caster" label="喷带手" align="center" width="70px"></el-table-column>
         <el-table-column prop="castTimes" label="开包次数" align="center" width="80px">
           <template slot-scope="scope">
@@ -131,6 +140,7 @@ export default {
       castId: 6,
       searchForm: {
         caster: '',
+        team: '',
         furnace: '',
         ribbonTypeName: '',
         date: [],
@@ -205,7 +215,7 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { caster: '', furnace: '', ribbonTypeName: '', date: [], ribbonWidths: [] };
+      this.searchForm = { caster: '', team: '', furnace: '', ribbonTypeName: '', date: [], ribbonWidths: [] };
       const params = {
         current: 1
       };
@@ -215,6 +225,7 @@ export default {
     getTableData(params = {}) {
       const _params = {
         castId: this.castId,
+        team: this.searchForm.team,
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
         caster: this.searchForm.caster,

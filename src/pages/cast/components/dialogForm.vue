@@ -59,8 +59,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="喷嘴杯个数" prop="nozzleNum" class="dialog_field">
-            <el-input v-model="formData.nozzleNum"></el-input>
+          <el-form-item label="喷嘴杯个数:" prop="nozzleNum" class="dialog_field">
+            <span>{{formData.nozzleNum}}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -88,8 +88,13 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-form-item label="备注" prop="remark" class="dialog_field">
-            <el-input v-model="formData.remark"></el-input>
+          <el-form-item label="所在班组" prop="team">
+            <el-select v-model="formData.team">
+              <el-option :label="formData.castId + '#-甲'" :value="formData.castId + '#-甲'"></el-option>
+              <el-option :label="formData.castId + '#-乙'" :value="formData.castId + '#-乙'"></el-option>
+              <el-option :label="formData.castId + '#-丙'" :value="formData.castId + '#-丙'"></el-option>
+              <el-option :label="formData.castId + '#-丁'" :value="formData.castId + '#-丁'"></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -102,6 +107,11 @@
               <el-option label="5" :value="5"></el-option>
               <el-option label="6" :value="6"></el-option>
             </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="备注" prop="remark" class="dialog_field">
+            <el-input v-model="formData.remark"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -208,7 +218,6 @@
           </el-col>
         </el-row>
       </section>
-
     </el-form>
     <div slot="footer">
       <el-button @click="closeDialog">取消</el-button>
@@ -247,6 +256,7 @@ const defaultCastDetail = {
 const formConfig = {
   "castTimes": 1, //开包次数，默认为1
   "castId": 6,// 机组编号
+  "team": '', // 所在班组，甲乙丙丁
   "furnace": "",// 制带炉号  06-20181120-01/01
   "caster": '', //喷带手
   "ribbonWidth": null, //带宽
@@ -277,6 +287,7 @@ export default {
       formData: {
         "castTimes": 1, //开包次数，默认为1
         "castId": 6,// 机组编号
+        "team": '', //所在班组
         "furnace": "",// 制带炉号  06-20181120-01/01
         "caster": '', //喷带手
         "ribbonWidth": null, //带宽
@@ -367,7 +378,8 @@ export default {
           { required: true, message: '请填写大盘毛重', trigger: 'blur' },
           { validator: number, trigger: 'blur' },
           { validator: ltNumber(300), trigger: 'blur' }
-        ]
+        ],
+        team: [{ required: true, message: '请选择所在班组', trigger: 'blur' }]
       }
     };
   },
@@ -393,6 +405,7 @@ export default {
       this.$emit('close');
     },
     castTimesChangeHandler(val) { // 开包次数的改变
+      this.formData.nozzleNum = val; // 喷嘴杯的数量等于开包次数
       const _length = this.formData.record.length;
       if (val > _length) {
         const clone = cloneDeep(defaultCastDetail);

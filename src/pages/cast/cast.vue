@@ -48,7 +48,7 @@
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-plus" @click="add" v-if="isAble">创建喷带记录</el-button>
       </el-col>
-      <el-table :data="tableData" stripe border style="width:100%" v-loading="loading">
+      <el-table :data="tableData" ref="table"  stripe border style="width:100%" :height="tableHeight" v-loading="loading">
         <el-table-column type="expand" label="展开" width="50px">
           <template slot-scope="props">
             <!-- 副表 -->
@@ -81,7 +81,7 @@
         </el-table-column>
         <el-table-column prop="ribbonWidth" label="规格" align="center" width="50px"></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="170px"></el-table-column>
-        <el-table-column prop="team" label="班组" align="center" width="50px"></el-table-column>
+        <el-table-column prop="team" label="班组" align="center" width="70px"></el-table-column>
         <el-table-column prop="caster" label="喷带手" align="center" width="70px"></el-table-column>
         <el-table-column prop="castTimes" label="开包次数" align="center" width="80px">
           <template slot-scope="scope">
@@ -156,7 +156,8 @@ export default {
         current: 1,
         pageSize: 10
       },
-      isAble: false
+      isAble: false,
+      tableHeight: 500
     }
   },
   computed: {
@@ -180,6 +181,9 @@ export default {
     this.getTableData();
     this.getRibbonTypeList();
     this.getRibbonWidthList();
+  },
+  mounted () {
+      this.tableHeight = window.innerHeight - this.$refs.table.$el.getBoundingClientRect().top;
   },
   methods: {
     ...mapActions([

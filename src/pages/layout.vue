@@ -1,7 +1,10 @@
 <template>
   <el-container>
-    <el-aside width="180px" style="background-color: #304156;">
-      <div class="aside_title"></div>
+    <el-aside width="auto" style="background-color: #304156;">
+      <div class="aside_title" @click="collapseHandler">
+        <img src="../assets/outdent.png" alt="" v-show="!isCollapse">
+        <img src="../assets/indent.png" alt="" v-show="isCollapse">
+      </div>
       <el-menu
         :default-active="$route.path"
         mode="vertical"
@@ -9,6 +12,8 @@
         text-color="#fff"
         active-text-color="#ffd04b"
         background-color="#304156"
+        :collapse="isCollapse"
+        class="el-menu-vertical"
       >
         <el-submenu index="1">
           <template slot="title">
@@ -165,7 +170,7 @@
         </el-submenu>
       </el-menu>
     </el-aside>
-    <el-container>
+    <el-container :style="{marginLeft: mgleft}">
       <el-header>
         <div class="logo"></div>
         <div class="signout">
@@ -234,6 +239,8 @@ export default {
       }
     };
     return {
+      isCollapse: false,
+      mgleft: "180px",
       isDisabled: false,
       username: "",
       adminname: '',
@@ -274,6 +281,10 @@ export default {
     this.roleId = userinfo.roleId;
   },
   methods: {
+    collapseHandler() {
+      this.isCollapse = !this.isCollapse;
+      this.mgleft = this.isCollapse ? '72px' : '180px';
+    },
     signout() {
       this.isDisabled = true;
       this.$http("POST", urlmap.signout, {})
@@ -323,8 +334,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-menu-vertical:not(.el-menu--collapse) {
+  width: 180px;
+}
 .aside_title {
   height: 60px;
+  line-height: 60px;
+  text-align: center;
+  img {
+    width: 20px;
+    height: 20px;
+  }
 }
 .main {
   background-color: #f0f2f5;

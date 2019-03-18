@@ -43,6 +43,16 @@ export default {
   .text_danger {
     color: #DB2023;
   }
+  .el-aside {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
   .el-submenu .el-menu-item {
     min-width: 0;
   }

@@ -27,10 +27,10 @@
       </el-form-item>
     </el-form>
     <div class="main_bd">
-      <!-- <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-plus" @click="add">创建检测记录</el-button>
-      </el-col> -->
-      <el-table :data="tableData" stripe border style="width:100%" v-loading="loading"> 
+      <el-col class="table_hd">
+        <el-button type="primary" icon="el-icon-plus" @click="exportExcel">导出</el-button>
+      </el-col>
+      <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading"> 
         <el-table-column prop="furnace" label="炉号" align="center" width="170px" fixed></el-table-column>
         <el-table-column prop="coilNumber" label="盘号" align="center" width="50px" fixed></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="70px"></el-table-column>
@@ -315,6 +315,7 @@
 </template>
 
 <script>
+import qs from 'qs';
 import urlmap from '@/utils/urlmap';
 import { dateFormat } from '@/utils/common';
 
@@ -337,7 +338,8 @@ export default {
         pageSize: 10
       },
       isEditable: false,
-      isDeleteable: false
+      isDeleteable: false,
+      tableHeight: 550
     }
   },
   // 动态路由匹配
@@ -354,6 +356,9 @@ export default {
     this.isEditable = this.setEditable();
     this.isDeleteable = this.setDeleteable();
     this.getTableData();
+  },
+  mounted () {
+    this.tableHeight = window.innerHeight - this.$refs.table.$el.getBoundingClientRect().top;
   },
   methods: {
     dateFormat(row, column) {
@@ -729,6 +734,17 @@ export default {
       }
 
       return 3;
+    },
+    exportExcel() {
+      const params = {
+        castId: this.castId,
+        startTime: this.searchForm.date[0],
+        endTime: this.searchForm.date[1],
+        caster: this.searchForm.caster,
+        furnace: this.searchForm.furnace
+      };
+      const url = `${urlmap.exportMeasure}?${qs.stringify(params)}`;
+      window.open(url);
     }
   }
 }

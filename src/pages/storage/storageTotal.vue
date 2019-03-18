@@ -50,7 +50,7 @@
       </el-form-item>
     </el-form>
     <div class="main_bd">
-      <el-table :data="tableData" stripe border style="width:100%" v-loading="loading"> 
+      <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading"> 
         <el-table-column prop="inStoreDate" label="入库日期" align="center" :formatter="inStoreDateFormat" width="110px"></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="170px" fixed></el-table-column>
         <el-table-column prop="coilNumber" label="盘号" align="center" width="50px" fixed></el-table-column>
@@ -159,7 +159,8 @@ export default {
         pageSize: 10
       },
       isEditable: false,
-      isDeleteable: false
+      isDeleteable: false,
+      tableHeight: 550
     }
   },
   computed: {
@@ -176,6 +177,9 @@ export default {
     this.getRibbonWidthList();
     this.getRibbonThicknessLevelList();
     this.getLaminationLevelList();
+  },
+  mounted () {
+    this.tableHeight = window.innerHeight - this.$refs.table.$el.getBoundingClientRect().top;
   },
   methods: {
     ...mapActions([

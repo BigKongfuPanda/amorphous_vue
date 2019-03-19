@@ -28,7 +28,7 @@
     </el-form>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-plus" @click="exportExcel">导出</el-button>
+        <el-button type="primary" icon="el-icon-download" @click="exportExcel">导出</el-button>
       </el-col>
       <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading"> 
         <el-table-column prop="furnace" label="炉号" align="center" width="170px" fixed></el-table-column>

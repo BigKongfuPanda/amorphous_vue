@@ -10,6 +10,7 @@
     <el-table :data="ribbonTypeList" stripe border style="width:100%" v-loading="loading">
       <el-table-column type="index" label="序号" align="center" width="200"></el-table-column>
       <el-table-column prop="ribbonTypeName" label="带材牌号名称" align="center"></el-table-column>
+      <el-table-column prop="NCode" label="NC编码" align="center"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="editRibbon(scope.row)">修改</el-button>

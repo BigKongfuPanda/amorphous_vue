@@ -46,7 +46,7 @@
     </el-form>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-plus" @click="add" v-if="isAble">创建喷带记录</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="add" v-if="isAddAble">创建喷带记录</el-button>
       </el-col>
       <el-table :data="tableData" ref="table"  stripe border style="width:100%" :height="tableHeight" v-loading="loading">
         <el-table-column type="expand" label="展开" width="50px">
@@ -106,8 +106,8 @@
         <el-table-column prop="updatePerson" label="更新者" align="center" width="70px"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="isAble" :disabled="userinfo.roleId !== 1 && userinfo.adminname !== scope.row.caster">修改</el-button>
-            <el-button size="mini" type="danger" @click="del(scope.row)" v-if="userinfo.roleId === 1">删除</el-button>
+            <el-button size="mini" type="primary" @click="edit(scope.row)" :disabled="userinfo.roleId !== 1 && userinfo.roleId !== 3 && userinfo.adminname !== scope.row.caster">修改</el-button>
+            <el-button size="mini" type="danger" @click="del(scope.row)" v-if="userinfo.roleId === 1 || userinfo.roleId === 3">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -156,7 +156,8 @@ export default {
         current: 1,
         pageSize: 10
       },
-      isAble: false,
+      isAddAble: false,
+      isDelAble: false,
       tableHeight: 500
     }
   },
@@ -170,14 +171,16 @@ export default {
     this.castId = to.params.castId;
     this.getTableData();
     // 判断当前用户角色是否有操作权限
-    this.isAble = this.setIsAble(); 
+    this.isAddAble = this.setIsAddAble(); 
+    this.isDelAble = this.setIsDelAble();
     next();
   },
   created () {
     this.castId = this.$route.params.castId;
     this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
     // 判断当前用户角色是否有操作权限
-    this.isAble = this.setIsAble(); 
+    this.isAddAble = this.setIsAddAble(); 
+    this.isDelAble = this.setIsDelAble();
     this.getTableData();
     this.getRibbonTypeList();
     this.getRibbonWidthList();
@@ -195,19 +198,17 @@ export default {
     dateTimeFormat(row, column) {
       return dateTimeFormat(row.updatedAt);
     },
-    setIsAble() {
-      if (this.castId == 6 && this.userinfo.roleId == 7) { // 六号机组喷带
-        return true;
-      } else if (this.castId == 7 && this.userinfo.roleId == 9) { // 七号机组喷带
-        return true;
-      } else if (this.castId == 8 && this.userinfo.roleId == 11) { // 八号机组喷带
-        return true;
-      } else if (this.castId == 9 && this.userinfo.roleId == 13) { // 九号机组喷带
-        return true;
-      } else if (this.userinfo.roleId == 1) { // 厂长
+    setIsAddAble() {
+      // 7：6#机组喷带手，9：7#机组喷带手，11：8#机组喷带手，13：9#机组喷带手
+      if (this.userinfo.roleId == 7 || this.userinfo.roleId == 9 || this.userinfo.roleId == 11 || this.userinfo.roleId == 13) {
         return true;
       } else { // 其他
         return false;
+      }
+    },
+    setIsDelAble() {
+      if (this.userinfo.roleId === 1 && this.userinfo.roleId === 3) {
+        return true;
       }
     },
     clickSearch() {
@@ -289,8 +290,4 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
 

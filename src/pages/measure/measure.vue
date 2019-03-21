@@ -28,7 +28,7 @@
     </el-form>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-plus" @click="exportExcel">导出</el-button>
+        <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable">导出</el-button>
       </el-col>
       <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading"> 
         <el-table-column prop="furnace" label="炉号" align="center" width="170px" fixed></el-table-column>
@@ -337,6 +337,7 @@ export default {
         current: 1,
         pageSize: 10
       },
+      isExportable: false,
       isEditable: false,
       isDeleteable: false,
       tableHeight: 550
@@ -346,6 +347,7 @@ export default {
   beforeRouteUpdate(to, from, next) {
     this.castId = to.params.castId;
     this.getTableData();
+    this.isExportable = this.setExportable();
     this.isEditable = this.setEditable();
     this.isDeleteable = this.setDeleteable();
     next();
@@ -353,6 +355,7 @@ export default {
   created () {
     this.castId = this.$route.params.castId;
     this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
+    this.isExportable = this.setExportable();
     this.isEditable = this.setEditable();
     this.isDeleteable = this.setDeleteable();
     this.getTableData();
@@ -375,6 +378,13 @@ export default {
       if (this.userinfo.roleId == 1) { // 厂长 可删除
         return true;
       } else { // 其他
+        return false;
+      }
+    },
+    setExportable() {
+      if ([1, 2, 3, 5].includes(this.userinfo.roleId)) {
+        return true;
+      } else {
         return false;
       }
     },

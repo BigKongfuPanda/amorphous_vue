@@ -11,6 +11,9 @@
       <el-form-item label="带材牌号：" prop="ribbonTypeName">
         <el-input v-model="formData.ribbonTypeName"></el-input>
       </el-form-item>
+      <el-form-item label="NC编码：" prop="NCode">
+        <el-input v-model="formData.NCode"></el-input>
+      </el-form-item>
     </el-form>
     <div slot="footer"> 
       <el-button @click="closeDialog">取消</el-button>
@@ -24,7 +27,8 @@ import urlmap from '@/utils/urlmap';
 
 const formConfig = {
   ribbonTypeId: '',
-  ribbonTypeName: ''
+  ribbonTypeName: '',
+  NCode: ''
 };
 
 export default {
@@ -38,11 +42,16 @@ export default {
     return {
       formData: {
         ribbonTypeId: '',
-        ribbonTypeName: ''
+        ribbonTypeName: '',
+        NCode: ''
       },
       rules: {
         ribbonTypeName: [
           { required: true, message: '请填写带材牌号', trigger: 'blur' },
+          { max: 50, message: '长度不能超过50位', trigger: 'blur' }
+        ],
+        NCode: [
+          { required: true, message: '请填写NC编码', trigger: 'blur' },
           { max: 50, message: '长度不能超过50位', trigger: 'blur' }
         ]
       },

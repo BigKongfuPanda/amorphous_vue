@@ -51,6 +51,9 @@
       </el-form-item>
     </el-form>
     <div class="main_bd">
+      <el-col class="table_hd">
+        <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable">导出</el-button>
+      </el-col>
       <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading"> 
         <el-table-column prop="inStoreDate" label="入库日期" align="center" :formatter="inStoreDateFormat" width="110px"></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="170px" fixed></el-table-column>
@@ -132,6 +135,7 @@
 </template>
 
 <script>
+import qs from 'qs';
 import urlmap from '@/utils/urlmap';
 import { dateFormat } from '@/utils/common';
 import { mapState, mapActions } from 'vuex';
@@ -160,6 +164,7 @@ export default {
         current: 1,
         pageSize: 10
       },
+      isExportable: false,
       isEditable: false,
       isDeleteable: false,
       tableHeight: 550
@@ -174,6 +179,7 @@ export default {
   beforeRouteUpdate(to, from, next) {
     this.castId = to.params.castId;
     this.getTableData();
+    this.isExportable = this.setExportable();
     this.isEditable = this.setEditable();
     this.isDeleteable = this.setDeleteable();
     next();
@@ -181,6 +187,7 @@ export default {
   created () {
     this.castId = this.$route.params.castId;
     this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
+    this.isExportable = this.setExportable();
     this.isEditable = this.setEditable();
     this.isDeleteable = this.setDeleteable();
     this.getTableData();
@@ -213,6 +220,13 @@ export default {
       if (this.userinfo.roleId == 1 || this.userinfo.roleId == 6) { // 厂长和库房 可退库
         return true;
       } else { // 其他
+        return false;
+      }
+    },
+    setExportable() {
+      if ([1, 2, 3, 6].includes(this.userinfo.roleId)) {
+        return true;
+      } else {
         return false;
       }
     },
@@ -305,6 +319,24 @@ export default {
         current: val
       };
       this.getTableData(params);
+    },
+    exportExcel() {
+      const params = {
+        castId: this.castId,
+        startTime: this.searchForm.date[0],
+        endTime: this.searchForm.date[1],
+        caster: this.searchForm.caster,
+        furnace: this.searchForm.furnace,
+        ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
+        ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths),
+        ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
+        laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
+        ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
+        place: this.searchForm.place,
+        filterBy: 'storage' // 筛选库房所需的数据：入库且结余大于0
+      };
+      const url = `${urlmap.exportStorage}?${qs.stringify(params)}`;
+      window.open(url);
     }
   }
 }

@@ -9,7 +9,7 @@
         <el-date-picker
           v-model="searchForm.date"
           type="daterange"
-          :default-time="['08:00:00', '07:59:59']"
+          :default-time="['00:00:00', '23:59:59']"
           :clearable="false"
           start-placeholder="开始日期"
           end-placeholder="结束日期">
@@ -42,7 +42,7 @@
         <el-button type="primary" icon="el-icon-plus" @click="createMelt" v-if="isAble">创建冶炼记录</el-button>
       </el-col>
       <el-table :data="tableData" stripe border style="width:100%" v-loading="loading"> 
-        <el-table-column prop="createdAt" label="冶炼日期" align="center" width="110px" :formatter="dateFormat" fixed></el-table-column>
+        <el-table-column prop="createTime" label="冶炼日期" align="center" width="110px" :formatter="dateFormat" fixed></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="80px" fixed></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="170px" fixed></el-table-column>
         <el-table-column prop="bucket" label="桶号" align="center" width="50px"></el-table-column>
@@ -147,7 +147,7 @@ export default {
       'getRibbonTypeList'
     ]),
     dateFormat(row, column) {
-      return dateFormat(row.createdAt);
+      return dateFormat(row.createTime);
     },
     dateTimeFormat(row, column) {
       return dateTimeFormat(row.updatedAt);

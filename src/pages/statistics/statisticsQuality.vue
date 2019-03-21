@@ -6,7 +6,7 @@
     </el-breadcrumb>
     <el-form class="search_bar" :model="searchForm" :inline="true">
       <el-form-item label="机组：">
-        <el-select v-model="searchForm.castId" placeholder="请选择机组">
+        <el-select v-model="searchForm.castIds" placeholder="请选择机组" multiple collapse-tags>
           <el-option :value="6" label="6号机组"></el-option>
           <el-option :value="7" label="7号机组"></el-option>
           <el-option :value="8" label="8号机组"></el-option>
@@ -20,7 +20,7 @@
         <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
       </el-form-item>
       <el-form-item label="材质：">
-        <el-select v-model="searchForm.ribbonTypeName" placeholder="请选择">
+        <el-select v-model="searchForm.ribbonTypeNames" placeholder="请选择" multiple collapse-tags>
           <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
         </el-select>
       </el-form-item>
@@ -83,10 +83,10 @@ export default {
   data() {
     return {
       searchForm: {
-        castId: null,
+        castIds: [],
         caster: '',
         furnace: '',
-        ribbonTypeName: '',
+        ribbonTypeNames: [],
         ribbonWidths: []
       },
       loading: false,
@@ -121,7 +121,7 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { castId: null, caster: '', furnace: '', ribbonTypeName: '', ribbonWidths: [] };
+      this.searchForm = { castIds: [], caster: '', furnace: '', ribbonTypeNames: [], ribbonWidths: [] };
       const params = {
         current: 1
       };
@@ -130,10 +130,10 @@ export default {
     },
     getTableData(params = {}) {
       const _params = {
-        castId: this.searchForm.castId,
+        castIdJson: JSON.stringify(this.searchForm.castIds),
         caster: this.searchForm.caster,
         furnace: this.searchForm.furnace,
-        ribbonTypeName: this.searchForm.ribbonTypeName,
+        ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
         ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths)
       };
       Object.assign(params, _params);

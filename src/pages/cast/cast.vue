@@ -75,7 +75,7 @@
           </template>
         </el-table-column>
         <!-- 主表  castTimes-->
-        <el-table-column prop="createdAt" label="喷带日期" align="center" width="110px" :formatter="dateFormat">
+        <el-table-column prop="createTime" label="喷带日期" align="center" width="110px" :formatter="dateFormat">
         </el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="80px">
         </el-table-column>
@@ -193,7 +193,7 @@ export default {
       'getRibbonTypeList', 'getRibbonWidthList'
     ]),
     dateFormat(row, column) {
-      return dateFormat(row.createdAt);
+      return dateFormat(row.createTime);
     },
     dateTimeFormat(row, column) {
       return dateTimeFormat(row.updatedAt);

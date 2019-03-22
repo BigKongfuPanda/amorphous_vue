@@ -142,9 +142,9 @@ export default {
                 message: '炉号有误，获取带材信息失败'
               })
             }
-            const { ribbonTypeName, ribbonWidth, createdAt, caster } = data.list[0];
+            const { ribbonTypeName, ribbonWidth, createTime, caster } = data.list[0];
             const params = {
-              ribbonTypeName, ribbonWidth, castDate: createdAt, caster,
+              ribbonTypeName, ribbonWidth, castDate: createTime, caster,
               roleId: this.userinfo.roleId,
               adminname: this.userinfo.adminname,
               ...this.formData

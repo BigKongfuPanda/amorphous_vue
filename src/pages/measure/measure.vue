@@ -442,7 +442,7 @@ export default {
       });
     },
     edit(row) {
-      if (row.isStored == 1 || row.isStored == 2) {// 已经入库
+      if ((row.isStored == 1 || row.isStored == 2) && row.isMeasureConfirmed == 1) {// 已经入库
         return this.$message({
           message: '该带材已经入库，您无权限操作，请联系库房主管人员！',
           type: 'error'
@@ -779,7 +779,7 @@ export default {
     },
     measureConfirm() {
       if (this.multipleSelection.length === 0) {
-        this.$alert('请选择要入库的带材', '提示');
+        return this.$alert('请选择要入库的带材', '提示');
       }
       this.multipleSelection.forEach(row => {
         row.isMeasureConfirmed = 1; // 1-检测确认入库，0-还没有确认

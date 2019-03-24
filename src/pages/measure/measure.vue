@@ -28,9 +28,11 @@
     </el-form>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable">导出</el-button>
+        <el-button type="primary" icon="el-icon-success" @click="measureConfirm">确认入库</el-button>
+        <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable" class="pull_right">导出</el-button>
       </el-col>
-      <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading"> 
+      <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading" @selection-change="handleSelectionChange"> 
+        <el-table-column type="selection" width="30" :selectable="setSelectable"></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="170px" fixed></el-table-column>
         <el-table-column prop="coilNumber" label="盘号" align="center" width="50px" fixed></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="70px"></el-table-column>
@@ -249,18 +251,18 @@
         </el-table-column>
         <el-table-column prop="isStored" label="是否入库" align="center" width="100px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false" :class="scope.row.isStored === 3 ? 'text_danger' : '' ">
+            <div v-if="scope.row.isMeasureConfirmed === 1">
               <span v-if="scope.row.isStored === 1">计划内入库</span>
               <span v-if="scope.row.isStored === 2">计划外入库</span>
-              <span v-if="scope.row.isStored === 3">否</span>
+              <span v-if="scope.row.isStored === 3" class="text_danger">否</span>
             </div>
-            <div v-else>
+            <!-- <div v-else>
               <el-select v-model="scope.row.isStored" placeholder="" size="mini">
                 <el-option label="计划内入库" :value="1"></el-option>
                 <el-option label="计划外入库" :value="2"></el-option>
                 <el-option label="否" :value="3"></el-option>
               </el-select>
-            </div>
+            </div> -->
           </template>
         </el-table-column>
         <el-table-column prop="unStoreReason" label="不入库原因" align="center" width="100px" :show-overflow-tooltip="true">
@@ -291,6 +293,7 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column prop="time" label="检测时间" align="center" width=""></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button>
@@ -337,7 +340,8 @@ export default {
       isExportable: false,
       isEditable: false,
       isDeleteable: false,
-      tableHeight: 550
+      tableHeight: 550,
+      multipleSelection: []
     }
   },
   computed: {
@@ -763,6 +767,29 @@ export default {
       };
       const url = `${urlmap.exportMeasure}?${qs.stringify(params)}`;
       window.open(url);
+    },
+    setSelectable(row, index) {
+      // 合格并且已经检测过了的，才可以被选中来入库
+      if ([1, 2].includes(row.isStored) && !row.isMeasureConfirmed ) {
+        return true;
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    measureConfirm() {
+      if (this.multipleSelection.length === 0) {
+        this.$alert('请选择要入库的带材', '提示');
+      }
+      this.multipleSelection.forEach(row => {
+        row.isMeasureConfirmed = 1; // 1-检测确认入库，0-还没有确认
+      });
+      // 发送请求，更新当前的数据
+      this.$http('PUT', urlmap.updateMeasure, { dataJson: JSON.stringify(this.multipleSelection) }).then(data => {
+        this.getTableData();
+      }).catch(error => {
+        console.log(error);
+      });
     }
   }
 }

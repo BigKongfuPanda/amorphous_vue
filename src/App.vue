@@ -126,4 +126,10 @@ export default {
   .el-select {
     width: 100%;
   }
+  .pull_left {
+    float: left;
+  }
+  .pull_right {
+    float: right;
+  }
 </style>

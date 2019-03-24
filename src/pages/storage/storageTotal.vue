@@ -256,7 +256,7 @@ export default {
           item.isEditing = false;
         });
         this.tableData = data.list && data.list.filter(item => {
-          return item.isStored == 1 || item.isStored == 2;
+          return (item.isStored == 1 || item.isStored == 2) && item.isMeasureConfirmed == 1;
         });
       }).catch((err) => {
         console.log(err);
@@ -274,8 +274,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // 库房测的删除操作并非真正的删除数据，而是将当前带材的入库状态改为不入库，3
+        // 库房测的删除操作并非真正的删除数据，而是将当前带材的入库状态改为不入库，3；并且检测的确认状态也改为0
         row.isStored = 3;
+        row.isMeasureConfirmed = 0;
         this.$http('PUT', urlmap.updateMeasure, row).then(data => {
           this.getTableData();
         }).catch(error => {

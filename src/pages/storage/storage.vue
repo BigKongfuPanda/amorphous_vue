@@ -268,7 +268,7 @@ export default {
           item.isEditing = false;
         });
         this.tableData = data.list && data.list.filter(item => {
-          return item.isStored == 1 || item.isStored == 2;
+          return (item.isStored == 1 || item.isStored == 2) && item.isMeasureConfirmed == 1;
         });
       }).catch((err) => {
         console.log(err);

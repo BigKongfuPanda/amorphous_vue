@@ -371,9 +371,11 @@ export default {
               let clone = cloneDeep(this.formData);
               clone.furnace = fHead + fEnd;
               clone.castTime = this.setCastTime(fEnd);
+              clone.roleId = this.roleId;
               formData.push(clone);
               fEnd = (Number(fEnd) + 1) < 10 ? '0' + (Number(fEnd) + 1) : (Number(fEnd) + 1);
             }
+            
             params = { formDataJson: JSON.stringify(formData) };
           } else { // 编辑
             method = 'put';
@@ -387,13 +389,13 @@ export default {
             params = this.formData;
           }
 
-          // this.$http(method, url, params).then(data => {
-          //   this.$emit('submit');
-          // }).catch(err => {
-          //   console.log(err);
-          // }).finally(() => {
-          //   this.loading = false;
-          // });    
+          this.$http(method, url, params).then(data => {
+            this.$emit('submit');
+          }).catch(err => {
+            console.log(err);
+          }).finally(() => {
+            this.loading = false;
+          });    
         } else {
           return false;
         }

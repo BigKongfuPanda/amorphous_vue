@@ -158,6 +158,9 @@
           <router-link to="/laminationLevel">
             <el-menu-item index="/laminationLevel">叠片等级列表</el-menu-item>
           </router-link>
+          <router-link to="/ribbonToughnessLevel">
+            <el-menu-item index="/ribbonToughnessLevel">韧性等级列表</el-menu-item>
+          </router-link>
         </el-submenu>
         <el-submenu index="9" v-if="roleId === 1">
           <template slot="title">

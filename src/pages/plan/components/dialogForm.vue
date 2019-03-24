@@ -22,7 +22,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="班组" prop="team" class="dialog_field">
+          <el-form-item label="班次" prop="team" class="dialog_field">
             <el-select v-model="formData.team" placeholder="请选择">
               <el-option label="早班" value="早"></el-option>
               <el-option label="中班" value="中"></el-option>
@@ -51,21 +51,35 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <!-- 新增 -->
+        <el-col :span="6" v-if="dialogData.formType === 'create'">
+          <el-form-item label="开始炉号" prop="theBeginfurnace" class="dialog_field">
+            <el-input v-model="formData.theBeginfurnace"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6" v-if="dialogData.formType === 'create'">
+          <el-form-item label="计划炉次" prop="heatNum" class="dialog_field">
+            <el-input v-model="formData.heatNum"></el-input>
+          </el-form-item>
+        </el-col>
+        <!-- 新增 结束 -->
+        <!-- 编辑 -->
+        <el-col :span="6" v-if="dialogData.formType === 'edit'">
           <el-form-item label="制带炉号" prop="furnace" class="dialog_field">
             <el-input v-model="formData.furnace"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
-          <el-form-item label="单炉投入" prop="alloyWeight" class="dialog_field">
-            <el-input v-model="formData.alloyWeight"></el-input>
+        <el-col :span="6" v-if="dialogData.formType === 'edit'">
+          <el-form-item label="喷带时间" prop="castTime" class="dialog_field">
+            <el-input v-model="formData.castTime"></el-input>
           </el-form-item>
         </el-col>
+        <!-- 编辑结束 -->
       </el-row>
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-form-item label="喷带时间" prop="castTime" class="dialog_field">
-            <el-input v-model="formData.castTime"></el-input>
+          <el-form-item label="单炉投入" prop="alloyWeight" class="dialog_field">
+            <el-input v-model="formData.alloyWeight"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -161,7 +175,6 @@
           </el-col>
         </el-row>
       </section>
-      
     </el-form>
     <div slot="footer">
       <el-button @click="closeDialog">取消</el-button>
@@ -174,6 +187,7 @@
 import { positiveInteger, ltNumber } from '@/utils/validate';
 import urlmap from '@/utils/urlmap';
 import { mapState, mapActions } from 'vuex';
+import { cloneDeep } from 'lodash';
 
 const formConfig = {
   date: '',
@@ -184,6 +198,8 @@ const formConfig = {
   ribbonWidth: null,
   client: '',
   furnace: '',
+  theBeginfurnace: '',
+  heatNum: null,
   alloyWeight: null,
   castTime: '',
   rawWeight: '',
@@ -233,6 +249,8 @@ export default {
         ribbonWidth: null,
         client: '',
         furnace: '',
+        theBeginfurnace: '',
+        heatNum: null,
         alloyWeight: null,
         castTime: '',
         rawWeight: '',
@@ -262,6 +280,16 @@ export default {
           { required: true, message: '请填写炉号', trigger: 'blur' },
           { max: 20, message: '最多20位字符', trigger: 'blur' },
           { validator: checkFurnance, trigger: 'blur'}
+        ],
+        theBeginfurnace: [
+          { required: true, message: '请填写开始炉号', trigger: 'blur' },
+          { max: 20, message: '最多20位字符', trigger: 'blur' },
+          { validator: checkFurnance, trigger: 'blur'}
+        ],
+        heatNum: [
+          { required: true, message: '请填写计划炉次', trigger: 'blur' },
+          { validator: positiveInteger, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }   
         ],
         alloyWeight: [
           { validator: positiveInteger, trigger: 'blur' },
@@ -327,26 +355,93 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.loading = true;
+          let method = '';
+          let url = '';
+          let params = null;
 
-          this.formData.roleId = this.roleId;
-          this.formData.orderRibbonToughnessLevelsJson = JSON.stringify(this.formData.orderRibbonToughnessLevels);
-          this.formData.orderAppearenceLevelsJson = JSON.stringify(this.formData.orderAppearenceLevels);
-          this.formData.qualifiedRibbonToughnessLevelsJson = JSON.stringify(this.formData.qualifiedRibbonToughnessLevels);
-          this.formData.qualifiedAppearenceLevelsJson = JSON.stringify(this.formData.qualifiedAppearenceLevels);
+          if (this.dialogData.formType === 'create') { // 新增
+            method = 'post';
+            url = urlmap.addPlan;
+            let formData = [];
+            let _heatNum = this.formData.heatNum;
+            let fHead = this.formData.theBeginfurnace.substring(0, 12);
+            let fEnd = this.formData.theBeginfurnace.substring(12, 14);
+            while(_heatNum > 0) {
+              _heatNum--;
+              let clone = cloneDeep(this.formData);
+              clone.furnace = fHead + fEnd;
+              clone.castTime = this.setCastTime(fEnd);
+              formData.push(clone);
+              fEnd = (Number(fEnd) + 1) < 10 ? '0' + (Number(fEnd) + 1) : (Number(fEnd) + 1);
+            }
+            params = { formDataJson: JSON.stringify(formData) };
+          } else { // 编辑
+            method = 'put';
+            url = urlmap.updatePlan;
 
-          const { method, url } = this.dialogData.formType === 'create' ? { method: 'post', url: urlmap.addPlan } : { method: 'put', url: urlmap.updatePlan } ;
+            this.formData.roleId = this.roleId;
+            this.formData.orderRibbonToughnessLevelsJson = JSON.stringify(this.formData.orderRibbonToughnessLevels);
+            this.formData.orderAppearenceLevelsJson = JSON.stringify(this.formData.orderAppearenceLevels);
+            this.formData.qualifiedRibbonToughnessLevelsJson = JSON.stringify(this.formData.qualifiedRibbonToughnessLevels);
+            this.formData.qualifiedAppearenceLevelsJson = JSON.stringify(this.formData.qualifiedAppearenceLevels);
+            params = this.formData;
+          }
 
-          this.$http(method, url, this.formData).then(data => {
-            this.$emit('submit');
-          }).catch(err => {
-            console.log(err);
-          }).finally(() => {
-            this.loading = false;
-          });    
+          // this.$http(method, url, params).then(data => {
+          //   this.$emit('submit');
+          // }).catch(err => {
+          //   console.log(err);
+          // }).finally(() => {
+          //   this.loading = false;
+          // });    
         } else {
           return false;
         }
       })
+    },
+    setCastTime(fEnd) {
+      let time = '';
+      switch (Number(fEnd)) {
+        case 1:
+          time = '08:00-10:00';
+          break;
+        case 2:
+          time = '10:00-12:00';
+          break;
+        case 3:
+          time = '12:00-14:00';
+          break;
+        case 4:
+          time = '14:00-16:00';
+          break;
+        case 5:
+          time = '16:00-18:00';
+          break;
+        case 6:
+          time = '18:00-20:00';
+          break;
+        case 7:
+          time = '20:00-22:00';
+          break;
+        case 8:
+          time = '22:00-24:00';
+          break;
+        case 9:
+          time = '00:00-02:00';
+          break;
+        case 10:
+          time = '02:00-04:00';
+          break;
+        case 11:
+          time = '04:00-06:00';
+          break;
+        case 12:
+          time = '06:00-08:00';
+          break;
+        default:
+          break;
+      }
+      return time;
     }
   }
 }

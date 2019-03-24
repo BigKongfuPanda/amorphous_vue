@@ -151,17 +151,13 @@
             </div>
             <div v-else>
               <el-select size="mini" v-model="scope.row.ribbonToughness" placeholder="">
-                <el-option label="合格" value="合格"></el-option>
-                <el-option label="边脆" value="边脆"></el-option>
-                <el-option label="横撕脆" value="横撕脆"></el-option>
-                <el-option label="脆" value="脆"></el-option>
-                <el-option label="脆(>50)" value="脆(>50)"></el-option>
+                <el-option v-for="item in ribbonToughnessLevelList" :key="item._id" :label="item.ribbonToughness" :value="item.ribbonToughness"></el-option>
               </el-select>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="ribbonToughnessLevel" label="韧性等级" align="center" width="90px">
-          <template slot-scope="scope">
+          <!-- <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.ribbonToughnessLevel }}
             </div>
@@ -174,7 +170,7 @@
                 <el-option label="E" value="E"></el-option>
               </el-select>
             </div>
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column prop="appearence" label="外观" align="center" width="90px">
           <template slot-scope="scope">
@@ -318,6 +314,7 @@
 import qs from 'qs';
 import urlmap from '@/utils/urlmap';
 import { dateFormat } from '@/utils/common';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'melt',
@@ -343,6 +340,9 @@ export default {
       tableHeight: 550
     }
   },
+  computed: {
+    ...mapState([ 'ribbonToughnessLevelList' ])
+  },
   // 动态路由匹配
   beforeRouteUpdate(to, from, next) {
     this.castId = to.params.castId;
@@ -359,11 +359,13 @@ export default {
     this.isEditable = this.setEditable();
     this.isDeleteable = this.setDeleteable();
     this.getTableData();
+    this.getRibbonToughnessLevelList();
   },
   mounted () {
     this.tableHeight = window.innerHeight - this.$refs.table.$el.getBoundingClientRect().top;
   },
   methods: {
+    ...mapActions([ 'getRibbonToughnessLevelList' ]),
     dateFormat(row, column) {
       return dateFormat(row.castDate);
     },
@@ -466,6 +468,12 @@ export default {
       // 计算叠片系数和叠片等级 realRibbonWidth diameter coilWeight
       row.laminationFactor = ((row.coilWeight - 0.09)/(Math.PI * (row.diameter * row.diameter / 4 - 95 * 95 / 4) * 7.2) * Math.pow(10, 6) / row.realRibbonWidth).toFixed(2);
       row.laminationLevel = this.calcLaminationLevel(row.laminationFactor);
+
+      // 根据韧性描述判定韧性等级 ribbonToughnessLevel
+      row.ribbonToughnessLevel = this.ribbonToughnessLevelList.reduce((acc, cur) => {
+        acc[cur.ribbonToughness] = cur.ribbonToughnessLevel;
+        return acc;
+      }, {})[row.ribbonToughness];
 
       // 计算厚度最大偏差、平均厚度、厚度级别
       row.ribbonThickness1 = typeof row.ribbonThickness1 === 'string' ? Number(row.ribbonThickness1.trim()) : row.ribbonThickness1;

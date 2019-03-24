@@ -11,7 +11,8 @@ export default new Vuex.Store({
     ribbonTypeList: [], // 带材牌号列表
     ribbonWidthList: [], // 带材规格列表
     ribbonThicknessLevelList: [], // 带材厚度级别列表
-    laminationLevelList: [] // 带材叠片级别列表
+    laminationLevelList: [], // 带材叠片级别列表
+    ribbonToughnessLevelList: [] // 带材韧性级别列表
   },
   mutations: {
     // 获取带材牌号列表
@@ -29,6 +30,10 @@ export default new Vuex.Store({
     // 获取带材叠片级别列表
     SET_LAMINATIONLEVELLIST(state, list) {
       state.laminationLevelList = list;
+    },
+    // 获取带材韧性级别列表
+    SET_RIBBONTOUGHNESSLEVELLIST(state, list) {
+      state.ribbonToughnessLevelList = list;
     }
   },
   actions: {
@@ -72,6 +77,17 @@ export default new Vuex.Store({
           item.laminationLevelId = item._id;
         });
         commit('SET_LAMINATIONLEVELLIST', data.list);
+      }).catch(err => {
+        console.log(err);
+      });
+    },
+    // 获取带材韧性级别列表
+    getRibbonToughnessLevelList({ commit }) {
+      http('get', urlmap.queryRibbonToughnessLevel).then(data => {
+        data.list && data.list.forEach(item => {
+          item.ribbonToughnessLevelId = item._id;
+        });
+        commit('SET_RIBBONTOUGHNESSLEVELLIST', data.list);
       }).catch(err => {
         console.log(err);
       });

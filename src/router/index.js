@@ -11,6 +11,7 @@ import Cast from '@/pages/cast/cast.vue';
 import RibbonType from '@/pages/ribbonType/ribbonType.vue';
 import RibbonWidth from '@/pages/ribbonWidth/ribbonWidth.vue';
 import RibbonThicknessLevel from '@/pages/ribbonThicknessLevel/ribbonThicknessLevel.vue';
+import RibbonToughnessLevel from '@/pages/ribbonToughnessLevel/ribbonToughnessLevel.vue';
 import LaminationLevel from '@/pages/laminationLevel/laminationLevel.vue';
 import User from '@/pages/user/user.vue';
 import Roll from '@/pages/roll/roll.vue';
@@ -68,6 +69,12 @@ export default new Router({
           name: 'ribbonThicknessLevel',
           component: RibbonThicknessLevel,
           meta: { title: '带材厚度等级管理', icon: 'ribbonThicknessLevel' }
+        },
+        {
+          path: 'ribbonToughnessLevel',
+          name: 'ribbonToughnessLevel',
+          component: RibbonToughnessLevel,
+          meta: { title: '带材韧性等级管理', icon: 'ribbonToughnessLevel' }
         },
         {
           path: 'laminationLevel',

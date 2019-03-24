@@ -22,10 +22,9 @@
         <el-table-column prop="date" label="日期" align="center" width="110px"></el-table-column>
         <el-table-column prop="castId" label="机组" align="center" width="60px"></el-table-column>
         <el-table-column prop="team" label="班组" align="center" width="50px"></el-table-column>
-        <el-table-column prop="taskOrder" label="任务单号" align="center" min-width="100px"></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="80px"></el-table-column>
         <el-table-column prop="ribbonWidth" label="规格(mm)" align="center" width="90px"></el-table-column>
-        <el-table-column prop="client" label="客户" align="center" width="100px"></el-table-column>
+        <el-table-column prop="furnace" label="制带炉号" align="center" width="150px"></el-table-column>
         <el-table-column label="订单要求">
           <el-table-column label="带厚(μm)" align="center" width="90px">
             <template slot-scope="scope">
@@ -70,7 +69,8 @@
             </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column prop="furnace" label="制带炉号" align="center" width="150px"></el-table-column>
+        <el-table-column prop="taskOrder" label="任务单号" align="center" width="100px"></el-table-column>
+        <el-table-column prop="client" label="客户" align="center" width="100px"></el-table-column>
         <el-table-column prop="alloyWeight" label="单炉投入" align="center" width="80px"></el-table-column>
         <el-table-column prop="castTime" label="制带时间" align="center" width="110px"></el-table-column>
         <el-table-column prop="rawWeight" label="大盘毛重" align="center" width="80px"></el-table-column>

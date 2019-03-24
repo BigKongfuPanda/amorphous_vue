@@ -293,7 +293,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="time" label="检测时间" align="center" width=""></el-table-column>
+        <el-table-column prop="measureDate" label="检测时间" align="center" width="" :formatter="dateTimeFormat"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button>
@@ -316,7 +316,7 @@
 <script>
 import qs from 'qs';
 import urlmap from '@/utils/urlmap';
-import { dateFormat } from '@/utils/common';
+import { dateFormat, dateTimeFormat } from '@/utils/common';
 import { mapState, mapActions } from 'vuex';
 
 export default {
@@ -372,6 +372,9 @@ export default {
     ...mapActions([ 'getRibbonToughnessLevelList' ]),
     dateFormat(row, column) {
       return dateFormat(row.castDate);
+    },
+    dateTimeFormat(row, column) {
+      return row.measureDate? dateTimeFormat(row.measureDate) : '';
     },
     setEditable() {
       if (this.userinfo.roleId == 5 || this.userinfo.roleId == 1) { // 检测人员 或者厂长 可修改

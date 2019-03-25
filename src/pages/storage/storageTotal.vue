@@ -255,9 +255,7 @@ export default {
         data.list && data.list.forEach(item => {
           item.isEditing = false;
         });
-        this.tableData = data.list && data.list.filter(item => {
-          return (item.isStored == 1 || item.isStored == 2) && item.isMeasureConfirmed == 1;
-        });
+        this.tableData = data.list;
       }).catch((err) => {
         console.log(err);
       }).finally(() => {

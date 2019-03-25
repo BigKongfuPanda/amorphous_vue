@@ -293,7 +293,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="measureDate" label="检测时间" align="center" width="" :formatter="dateTimeFormat"></el-table-column>
+        <el-table-column prop="measureDate" label="检测时间" align="center" width="120px" :formatter="dateTimeFormat" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button>
@@ -499,18 +499,39 @@ export default {
 
       // 综合级别
       // 叠片系数不合格，或者外观等级为不合格，则综合级别为不合格
-      row.ribbonTotalLevel = row.laminationLevel === '不合格' || row.appearenceLevel === '不合格' || row.ribbonThicknessDeviation > 3 ? '不合格' : row.ribbonThicknessLevel + row.laminationLevel + row.ribbonToughnessLevel + row.appearenceLevel;
-      // 规格 为 32/35/40/42/45/50/，材质为 1K107B 的带材，如果韧性为D，则综合级别为不合格
-      if ([32, 35, 40, 42, 45, 50].includes(row.ribbonWidth) && row.ribbonTypeName == '1K107B' && row.ribbonToughnessLevel == 'D') {
+      row.ribbonTotalLevel = row.laminationLevel === '不合格' || row.appearenceLevel === '不合格' ? '不合格' : row.ribbonThicknessLevel + row.laminationLevel + row.ribbonToughnessLevel + row.appearenceLevel;
+      // 规格 为 32/35/40/42/45/50/，材质为 1K107B 的带材，如果韧性为D或E，则综合级别为不合格
+      if ([32, 35, 40, 42, 45, 50].includes(row.ribbonWidth) && row.ribbonTypeName == '1K107B' && ['D', 'E'].includes(row.ribbonToughnessLevel)) {
         row.ribbonTotalLevel = '不合格';
       }
-      // 如果厚度为20-22，则加G，厚度为23-24，加L
+      //如果带材厚度偏差大于3，同时韧性为D/E,此带材为不合格，否则加F
+      if (row.ribbonThicknessDeviation > 3 && ['D', 'E'].includes(row.ribbonToughnessLevel)) {
+        row.ribbonTotalLevel = '不合格';
+      }
+      // 如果带材韧性为D/E，同时带材宽度超出规格±0.2mm，此带材为不合格，否则加E，正偏差为+E,负偏差为-E
+      if (['D', 'E'].includes(row.ribbonToughnessLevel) && Math.abs(row.realRibbonWidth - row.ribbonWidth) > 0.2) {
+        row.ribbonTotalLevel = '不合格';        
+      }
+      
       if (row.ribbonTotalLevel !== '不合格') {
+        // 如果厚度为20-22，则加G，厚度为23-24，加L
         if (row.ribbonThickness >= 20 && row.ribbonThickness <= 22) {
           row.ribbonTotalLevel = row.ribbonTotalLevel + 'G';
         }
         if (row.ribbonThickness >= 23 && row.ribbonThickness <= 24) {
           row.ribbonTotalLevel = row.ribbonTotalLevel + 'L';
+        }
+        // 如果带材厚度偏差大于3，同时韧性为A,B,C,此带材加F
+        if (row.ribbonThicknessDeviation > 3 && ['A', 'B', 'C'].includes(row.ribbonToughnessLevel)) {
+          row.ribbonTotalLevel = row.ribbonTotalLevel + 'F';
+        }
+        // 如果带材韧性为A/B/C，同时带材宽度超出规格±0.2mm，加E，正偏差为+E,负偏差为-E
+        if (Math.abs(row.realRibbonWidth - row.ribbonWidth) > 0.2 && ['A', 'B', 'C'].includes(row.ribbonToughnessLevel)) {
+          if ((row.realRibbonWidth - row.ribbonWidth) < -0.2) {
+            row.ribbonTotalLevel = row.ribbonTotalLevel + '-E';
+          } else if ((row.realRibbonWidth - row.ribbonWidth) > 0.2) {
+            row.ribbonTotalLevel = row.ribbonTotalLevel + '+E';
+          }
         }
       }
 

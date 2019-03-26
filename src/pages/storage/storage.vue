@@ -53,8 +53,11 @@
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable">导出</el-button>
+        <el-button type="primary" icon="el-icon-menu" @click="allOutStoreHandler" v-if="isOutStoreable" class="pull_right">整托出库</el-button>
+        <el-button type="primary" icon="el-icon-rank" @click="batchOutStoreHandler" v-if="isOutStoreable" class="pull_right">批量出库</el-button>
       </el-col>
-      <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading"> 
+      <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading" @selection-change="handleSelectionChange"> 
+        <el-table-column type="selection" width="30" :selectable="setSelectable"></el-table-column>
         <el-table-column prop="inStoreDate" label="入库日期" align="center" :formatter="inStoreDateFormat" width="110px"></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="170px" fixed></el-table-column>
         <el-table-column prop="coilNumber" label="盘号" align="center" width="50px" fixed></el-table-column>
@@ -167,7 +170,8 @@ export default {
       isExportable: false,
       isEditable: false,
       isDeleteable: false,
-      tableHeight: 550
+      tableHeight: 550,
+      isOutStoreable: false
     }
   },
   computed: {
@@ -190,6 +194,7 @@ export default {
     this.isExportable = this.setExportable();
     this.isEditable = this.setEditable();
     this.isDeleteable = this.setDeleteable();
+    this.isOutStoreable = this.setOutStoreable();
     this.getTableData();
     this.getRibbonTypeList();
     this.getRibbonWidthList();
@@ -225,6 +230,13 @@ export default {
     },
     setExportable() {
       if ([1, 2, 3, 6].includes(this.userinfo.roleId)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    setOutStoreable() {
+      if (this.userinfo.roleId == 6) {//只有库房才能够出库操作
         return true;
       } else {
         return false;
@@ -336,6 +348,22 @@ export default {
       };
       const url = `${urlmap.exportStorage}?${qs.stringify(params)}`;
       window.open(url);
+    },
+    setSelectable(row, index) {
+      // 合格并且已经检测过了的，才可以被选中来入库
+      // if ([1, 2].includes(row.isStored) && !row.isMeasureConfirmed ) {
+      //   return true;
+      // }
+      return true;
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    allOutStoreHandler() {
+
+    },
+    batchOutStoreHandler() {
+
     }
   }
 }

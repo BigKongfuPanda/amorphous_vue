@@ -53,6 +53,7 @@
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable">导出</el-button>
+        <el-button type="primary" icon="el-icon-upload" @click="uploadExcel" v-if="userinfo.roleId == 5">批量入库</el-button>
         <el-button type="primary" icon="el-icon-menu" @click="allOutStoreHandler" v-if="isOutStoreable" class="pull_right">整托出库</el-button>
         <el-button type="primary" icon="el-icon-rank" @click="batchOutStoreHandler" v-if="isOutStoreable" class="pull_right">批量出库</el-button>
       </el-col>
@@ -134,6 +135,67 @@
         :page-size="pageConfig.pageSize"
         @current-change="handleCurrentChange"></el-pagination>
     </div>
+    <!-- 整托出库弹出框 -->
+    <el-dialog 
+      title="整托出库" 
+      :visible.sync="allOutStoreForm.visible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="closeAllOutDialog"
+      :center="true"
+      width="30%"
+      v-loading="loading"
+      element-loading-text="拼命加载中">
+      <el-form :model="allOutStoreForm" :rules="allOutStoreFormRules" ref="allOutStoreForm" label-width="100px" style="100%" @submit.native.prevent>
+        <el-form-item label="仓位：" prop="place">
+          <el-input v-model="allOutStoreForm.place"></el-input>
+        </el-form-item>
+        <el-form-item label="去向：" prop="takeBy">
+          <el-select v-model="allOutStoreForm.takeBy" placeholder="">
+            <el-option label="J" value="J"></el-option>
+            <el-option label="F" value="F"></el-option>
+            <el-option label="Z" value="Z"></el-option>
+            <el-option label="S" value="S"></el-option>
+            <el-option label="G" value="G"></el-option>
+            <el-option label="W" value="W"></el-option>
+            <el-option label="H" value="H"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button @click="closeAllOutDialog">取消</el-button>
+        <el-button type="primary" @click="submitAllOutForm">提交</el-button>
+      </div>
+    </el-dialog>
+    <!-- 批量出库弹出框 -->
+    <el-dialog 
+      title="批量出库" 
+      :visible.sync="batchOutStoreForm.visible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="closeBatchOutDialog"
+      :center="true"
+      width="30%"
+      v-loading="loading"
+      element-loading-text="拼命加载中">
+      <el-form :model="batchOutStoreForm" :rules="batchOutStoreFormRules" ref="batchOutStoreForm" label-width="100px" style="100%" @submit.native.prevent>
+        <el-form-item label="去向：" prop="takeBy">
+          <el-select v-model="batchOutStoreForm.takeBy" placeholder="">
+            <el-option label="J" value="J"></el-option>
+            <el-option label="F" value="F"></el-option>
+            <el-option label="Z" value="Z"></el-option>
+            <el-option label="S" value="S"></el-option>
+            <el-option label="G" value="G"></el-option>
+            <el-option label="W" value="W"></el-option>
+            <el-option label="H" value="H"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button @click="closeBatchOutDialog">取消</el-button>
+        <el-button type="primary" @click="submitBatchOutForm">提交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -171,7 +233,33 @@ export default {
       isEditable: false,
       isDeleteable: false,
       tableHeight: 550,
-      isOutStoreable: false
+      isOutStoreable: false,
+      // 整托盘出库
+      allOutStoreForm: {
+        loading: false,
+        visible: false,
+        place: '',
+        takeBy: ''
+      },
+      allOutStoreFormRules: {
+        place: [
+          { required: true, message: '请输入仓位', trigger: 'blur' },
+          { pattern: /^1-[1-9]{1,2}-[1-9]{1,2}$/, message: '格式错误', trigger: 'blur'}
+        ],
+        takeBy: [
+          { required: true, message: '请填写实际去向', trigger: 'blur' }
+        ]
+      },
+      batchOutStoreForm: {
+        loading: false,
+        visible: false,
+        takeBy: ''
+      },
+      batchOutStoreFormRules: {
+        takeBy: [
+          { required: true, message: '请填写实际去向', trigger: 'blur' }
+        ]
+      },
     }
   },
   computed: {
@@ -349,6 +437,9 @@ export default {
       const url = `${urlmap.exportStorage}?${qs.stringify(params)}`;
       window.open(url);
     },
+    uploadExcel() {
+      
+    },
     setSelectable(row, index) {
       // 合格并且已经检测过了的，才可以被选中来入库
       // if ([1, 2].includes(row.isStored) && !row.isMeasureConfirmed ) {
@@ -360,10 +451,78 @@ export default {
       this.multipleSelection = val;
     },
     allOutStoreHandler() {
-
+      this.allOutStoreForm.visible = true;
+    },
+    closeAllOutDialog() {
+      this.$refs.allOutStoreForm.resetFields();
+      this.allOutStoreForm.visible = false;
+    },
+    submitAllOutForm() {
+      this.$refs.allOutStoreForm.validate((valid) => {
+        if (valid) {
+          this.allOutStoreForm.loading = true;
+          let formData = {
+            place: this.allOutStoreForm.place,
+            takeBy: this.allOutStoreForm.takeBy,
+            type: 'all'
+          };
+          this.$http('PUT', urlmap.updateMeasure, formData).then(data => {
+            const params = {
+              current: 1
+            };
+            this.pageConfig.current = 1;
+            this.getTableData(params);
+          }).catch(err => {
+            console.log(err);
+          }).finally(() => {
+            this.allOutStoreForm.visible = false;
+            this.allOutStoreForm.loading = false;
+          });    
+        } else {
+          return false;
+        }
+      });
     },
     batchOutStoreHandler() {
-
+      if (this.multipleSelection && this.multipleSelection.length > 0) {
+        this.batchOutStoreForm.visible = true;
+      } else {
+        this.$alert('请选择要出库的带材', '提示');
+      }
+      
+    },
+    closeBatchOutDialog() {
+      this.$refs.batchOutStoreForm.resetFields();
+      this.batchOutStoreForm.visible = false;
+    },
+    submitBatchOutForm() {
+      this.$refs.batchOutStoreForm.validate((valid) => {
+        if (valid) {
+          this.batchOutStoreForm.loading = true;
+          this.multipleSelection && this.multipleSelection.forEach(item => {
+            item.takeBy = this.batchOutStoreForm.takeBy,
+            item.remainWeight = 0
+          });
+          let formData = {
+            dataJson: JSON.stringify(this.multipleSelection),
+            type: 'batch'
+          };
+          this.$http('PUT', urlmap.updateMeasure, formData).then(data => {
+            const params = {
+              current: 1
+            };
+            this.pageConfig.current = 1;
+            this.getTableData(params);
+          }).catch(err => {
+            console.log(err);
+          }).finally(() => {
+            this.batchOutStoreForm.visible = false;
+            this.batchOutStoreForm.loading = false;
+          });    
+        } else {
+          return false;
+        }
+      });
     }
   }
 }

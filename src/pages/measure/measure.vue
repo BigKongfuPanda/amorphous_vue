@@ -28,7 +28,7 @@
     </el-form>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-success" @click="measureConfirm">确认入库</el-button>
+        <el-button type="primary" icon="el-icon-success" @click="measureConfirm" v-if="isBatchInStored">确认入库</el-button>
         <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable" class="pull_right">导出</el-button>
       </el-col>
       <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading" @selection-change="handleSelectionChange"> 
@@ -341,7 +341,8 @@ export default {
       isEditable: false,
       isDeleteable: false,
       tableHeight: 550,
-      multipleSelection: []
+      multipleSelection: [],
+      isBatchInStored: false
     }
   },
   computed: {
@@ -354,6 +355,7 @@ export default {
     this.isExportable = this.setExportable();
     this.isEditable = this.setEditable();
     this.isDeleteable = this.setDeleteable();
+    this.isBatchInStored = this.setBatchInStored();
     next();
   },
   created () {
@@ -362,6 +364,7 @@ export default {
     this.isExportable = this.setExportable();
     this.isEditable = this.setEditable();
     this.isDeleteable = this.setDeleteable();
+    this.isBatchInStored = this.setBatchInStored();
     this.getTableData();
     this.getRibbonToughnessLevelList();
   },
@@ -392,6 +395,13 @@ export default {
     },
     setExportable() {
       if ([1, 2, 3, 5].includes(this.userinfo.roleId)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    setBatchInStored() {
+      if (this.userinfo.roleId == 5) {
         return true;
       } else {
         return false;
@@ -542,6 +552,7 @@ export default {
       // 是否入库：不合格不能入库，端面有问题的不能入库，不满足入库规则的不能入库
       if (row.ribbonTotalLevel === '不合格') {
         row.isStored = 3;
+        row.isMeasureConfirmed = 1;
       } else {
         // 入库分为：计划内入库和计划外入库
         row.isStored = this.setStoredType(row);

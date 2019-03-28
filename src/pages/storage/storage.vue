@@ -53,7 +53,7 @@
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable">导出</el-button>
-        <el-button type="primary" icon="el-icon-upload" @click="uploadExcel" v-if="userinfo.roleId == 5">批量入库</el-button>
+        <el-button type="primary" icon="el-icon-upload" @click="uploadExcelHandler" v-if="userinfo.roleId == 6">批量入库</el-button>
         <el-button type="primary" icon="el-icon-menu" @click="allOutStoreHandler" v-if="isOutStoreable" class="pull_right">整托出库</el-button>
         <el-button type="primary" icon="el-icon-rank" @click="batchOutStoreHandler" v-if="isOutStoreable" class="pull_right">批量出库</el-button>
       </el-col>
@@ -196,6 +196,33 @@
         <el-button type="primary" @click="submitBatchOutForm">提交</el-button>
       </div>
     </el-dialog>
+    <!-- 批量添加仓位弹出框 -->
+    <el-dialog 
+      title="批量入仓" 
+      :visible.sync="uploadExcelForm.visible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="closeUploadDialog"
+      :center="true"
+      width="40%"
+      v-loading="loading"
+      element-loading-text="拼命加载中">
+      <el-upload
+        class="upload-demo"
+        ref="upload"
+        :action="uploadExcelForm.url"
+        :file-list="uploadExcelForm.fileList"
+        :multiple="false"
+        :limit="1"
+        accept="xlsx"
+        :auto-upload="false">
+        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        <div slot="tip" class="el-upload__tip">只能上传xlsx文件，且不超过500kb</div>
+      </el-upload>
+      <div slot="footer">
+        <el-button type="primary" @click="submitUploadForm">上传提交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -260,6 +287,13 @@ export default {
           { required: true, message: '请填写实际去向', trigger: 'blur' }
         ]
       },
+      uploadExcelForm: {
+        loading: false,
+        visible: false,
+        // url: urlmap.uploadStorage,
+        url: 'http://localhost:8080/api/measure/uploadstorage',
+        fileList: []
+      }
     }
   },
   computed: {
@@ -437,8 +471,8 @@ export default {
       const url = `${urlmap.exportStorage}?${qs.stringify(params)}`;
       window.open(url);
     },
-    uploadExcel() {
-      
+    uploadExcelHandler() {
+
     },
     setSelectable(row, index) {
       // 合格并且已经检测过了的，才可以被选中来入库
@@ -489,7 +523,6 @@ export default {
       } else {
         this.$alert('请选择要出库的带材', '提示');
       }
-      
     },
     closeBatchOutDialog() {
       this.$refs.batchOutStoreForm.resetFields();
@@ -523,6 +556,22 @@ export default {
           return false;
         }
       });
+    },
+    uploadExcelHandler() {
+      this.uploadExcelForm.visible = true;
+      this.uploadExcelForm.fileList = [];
+    },
+    closeUploadDialog() {
+      this.uploadExcelForm.visible = false;
+    },
+    submitUploadForm() {
+      this.$refs.upload.submit();
+      this.uploadExcelForm.visible = false;
+      const params = {
+        current: 1
+      };
+      this.pageConfig.current = 1;
+      this.getTableData(params);
     }
   }
 }

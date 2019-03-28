@@ -27,6 +27,7 @@ export default {
   delMeasure: '/measure',
   exportMeasure: '/measure/exportmeasure',
   exportStorage: '/measure/exportstorage',
+  uploadStorage: '/measure/uploadstorage',
   queryRibbonWidth: '/ribbonWidth',
   addRibbonWidth: '/ribbonWidth',
   updateRibbonWidth: '/ribbonWidth',

@@ -215,6 +215,8 @@
         :multiple="false"
         :limit="1"
         accept=".xlsx"
+        :on-error="uploadErrorHanler"
+        :on-success="uploadSuccessHanler"
         :auto-upload="false">
         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
         <div slot="tip" class="el-upload__tip">只能上传xlsx文件，且不超过500kb</div>
@@ -290,8 +292,8 @@ export default {
       uploadExcelForm: {
         loading: false,
         visible: false,
-        url: urlmap.uploadStorage,
-        // url: 'http://localhost:8080/api/measure/uploadstorage',
+        // url: urlmap.uploadStorage,
+        url: 'http://localhost:8080/api/measure/uploadstorage',
         fileList: []
       }
     }
@@ -572,6 +574,29 @@ export default {
       };
       this.pageConfig.current = 1;
       this.getTableData(params);
+    },
+    uploadErrorHanler(error, file, fileList) {
+      this.$message({
+        message: `上传失败：${error.message}`,
+        type: 'error'
+      });
+    },
+    uploadSuccessHanler(res, file, fileList) {
+      if (res.status === 0) {
+        this.$message({
+          message: res.message,
+          type: 'success'
+        });
+      } else {
+        let html = '';
+        res.data.forEach(item => {
+          html += `<p>炉号：${item.furnace}，盘号：${item.coilNumber}</p>`
+        });
+        this.$alert(html, '以下带材添加仓位失败：', {
+          dangerouslyUseHTMLString: true,
+          type: 'warning'
+        });
+      }
     }
   }
 }

@@ -44,12 +44,15 @@
       <el-form-item label="仓位：">
         <el-input v-model="searchForm.place" placeholder="请输入仓位，以逗号分隔"></el-input>
       </el-form-item>
-      
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
         <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
+    <el-row class="total_data">
+      <el-col :span="4">总盘数：{{totalCoilNum}}</el-col>
+      <el-col :span="4">总重量(kg)：{{totalWeight}}</el-col>
+    </el-row>
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable">导出</el-button>
@@ -235,7 +238,7 @@ import { dateFormat } from '@/utils/common';
 import { mapState, mapActions } from 'vuex';
 
 export default {
-  name: 'melt',
+  name: 'storage',
   data () {
     return {
       userinfo: {},
@@ -252,6 +255,8 @@ export default {
         place: ''
       },
       loading: false,
+      totalCoilNum: null,
+      totalWeight: null,
       tableData: [],
       pageConfig: {
         total: 1,
@@ -292,8 +297,8 @@ export default {
       uploadExcelForm: {
         loading: false,
         visible: false,
-        // url: urlmap.uploadStorage,
-        url: 'http://localhost:8080/api/measure/uploadstorage',
+        url: urlmap.uploadStorage,
+        // url: 'http://localhost:8080/api/storage/uploadstorage',
         fileList: []
       }
     }
@@ -394,15 +399,16 @@ export default {
         ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
         ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
-        place: this.searchForm.place,
-        filterBy: 'storage' // 筛选库房所需的数据：入库且结余大于0
+        place: this.searchForm.place
       };
       Object.assign(params, _params);
-      this.$http('get', urlmap.queryMeasure, params).then(data => {
+      this.$http('get', urlmap.queryStorage, params).then(data => {
         this.pageConfig.total = data.count;
         data.list && data.list.forEach(item => {
           item.isEditing = false;
         });
+        this.totalCoilNum = data.totalCoilNum;
+        this.totalWeight = data.totalWeight;
         this.tableData = data.list;
       }).catch((err) => {
         console.log(err);
@@ -420,10 +426,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // 库房测的删除操作并非真正的删除数据，而是将当前带材的入库状态改为不入库，3；并且检测的确认状态也改为0
-        row.isStored = 3;
-        row.isMeasureConfirmed = 0;
-        this.$http('PUT', urlmap.updateMeasure, row).then(data => {
+        this.$http('PUT', urlmap.delStorage, { _id, furnace, coilNumber }).then(data => {
           this.getTableData();
         }).catch(error => {
           console.log(error);
@@ -467,8 +470,7 @@ export default {
         ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
         ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
-        place: this.searchForm.place,
-        filterBy: 'storage' // 筛选库房所需的数据：入库且结余大于0
+        place: this.searchForm.place
       };
       const url = `${urlmap.exportStorage}?${qs.stringify(params)}`;
       window.open(url);
@@ -602,6 +604,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.total_data {
+  height: 46px;
+  line-height: 46px;
+  background: #fff;
+  margin-top: 10px;
+  padding: 0 30px;
+}
 .upload {
   height: 100px;
 }

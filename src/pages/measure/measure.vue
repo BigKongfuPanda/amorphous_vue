@@ -814,7 +814,7 @@ export default {
     },
     measureConfirm() {
       if (this.multipleSelection.length === 0) {
-        return this.$alert('请选择要入库的带材', '提示');
+        return this.$alert('请选择要入库的带材', '提示', { type: 'warning' });
       }
       this.multipleSelection.forEach(row => {
         row.isMeasureConfirmed = 1; // 1-检测确认入库，0-还没有确认

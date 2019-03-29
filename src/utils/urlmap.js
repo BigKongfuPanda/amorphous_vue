@@ -21,13 +21,19 @@ export default {
   addCast: '/cast',
   updateCast: '/cast',
   delCast: '/cast',
+  // 检测
   queryMeasure: '/measure',
   addMeasure: '/measure',
   updateMeasure: '/measure',
   delMeasure: '/measure',
   exportMeasure: '/measure/exportmeasure',
-  exportStorage: '/measure/exportstorage',
-  uploadStorage: '/measure/uploadstorage',
+  // 库房
+  queryStorage: '/storage',
+  updateStorage: '/storage',
+  delStorage: '/storage',
+  exportStorage: '/storage/exportstorage',
+  uploadStorage: '/storage/uploadstorage',
+  
   queryRibbonWidth: '/ribbonWidth',
   addRibbonWidth: '/ribbonWidth',
   updateRibbonWidth: '/ribbonWidth',

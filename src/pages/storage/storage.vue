@@ -53,7 +53,7 @@
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable">导出</el-button>
-        <el-button type="primary" icon="el-icon-upload" @click="uploadExcelHandler" v-if="userinfo.roleId == 6">批量入库</el-button>
+        <el-button type="primary" icon="el-icon-upload" @click="uploadExcelHandler" v-if="userinfo.roleId == 6">批量入仓</el-button>
         <el-button type="primary" icon="el-icon-menu" @click="allOutStoreHandler" v-if="isOutStoreable" class="pull_right">整托出库</el-button>
         <el-button type="primary" icon="el-icon-rank" @click="batchOutStoreHandler" v-if="isOutStoreable" class="pull_right">批量出库</el-button>
       </el-col>
@@ -208,13 +208,13 @@
       v-loading="loading"
       element-loading-text="拼命加载中">
       <el-upload
-        class="upload-demo"
+        class="upload"
         ref="upload"
         :action="uploadExcelForm.url"
         :file-list="uploadExcelForm.fileList"
         :multiple="false"
         :limit="1"
-        accept="xlsx"
+        accept=".xlsx"
         :auto-upload="false">
         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
         <div slot="tip" class="el-upload__tip">只能上传xlsx文件，且不超过500kb</div>
@@ -290,8 +290,8 @@ export default {
       uploadExcelForm: {
         loading: false,
         visible: false,
-        // url: urlmap.uploadStorage,
-        url: 'http://localhost:8080/api/measure/uploadstorage',
+        url: urlmap.uploadStorage,
+        // url: 'http://localhost:8080/api/measure/uploadstorage',
         fileList: []
       }
     }
@@ -576,3 +576,8 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.upload {
+  height: 100px;
+}
+</style>

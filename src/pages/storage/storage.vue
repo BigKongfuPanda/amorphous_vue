@@ -15,6 +15,16 @@
           end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
+      <el-form-item label="出库日期：">
+        <el-date-picker
+          v-model="searchForm.outDate"
+          type="daterange"
+          :default-time="['00:00:00', '23:59:59']"
+          :clearable="false"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期">
+        </el-date-picker>
+      </el-form-item>
       <el-form-item label="炉号：">
         <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
       </el-form-item>
@@ -43,6 +53,12 @@
       </el-form-item>
       <el-form-item label="仓位：">
         <el-input v-model="searchForm.place" placeholder="请输入仓位，以逗号分隔"></el-input>
+      </el-form-item>
+      <el-form-item label="结余：">
+        <el-select v-model="searchForm.isRemain" placeholder="">
+          <el-option :value="0" label="=0"></el-option>
+          <el-option :value="1" label=">0"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
@@ -247,12 +263,14 @@ export default {
         caster: '',
         furnace: '',
         date: [],
+        outDate: [],
         ribbonTypeNames: [],
         ribbonWidths: [],
         ribbonTotalLevels: '',
         ribbonThicknessLevels: [],
         laminationLevels: [],
-        place: ''
+        place: '',
+        isRemain: 1
       },
       loading: false,
       totalCoilNum: null,
@@ -380,7 +398,7 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { caster: '', furnace: '', date: [], ribbonTypeNames: [], ribbonWidths: [], ribbonTotalLevels: '', ribbonThicknessLevels: [], laminationLevels: [], place: '' };
+      this.searchForm = { caster: '', furnace: '', date: [], outDate: [], ribbonTotalLevels: '', ribbonTypeNames: [], ribbonWidths: [],  ribbonThicknessLevels: [], laminationLevels: [], place: '', isRemain: 1 };
       const params = {
         current: 1
       };
@@ -392,6 +410,8 @@ export default {
         castId: this.castId,
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
+        outStartTime: this.searchForm.outDate[0],
+        outEndTime: this.searchForm.outDate[1],
         caster: this.searchForm.caster,
         furnace: this.searchForm.furnace,
         ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
@@ -399,7 +419,8 @@ export default {
         ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
         ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
-        place: this.searchForm.place
+        place: this.searchForm.place,
+        isRemain: this.searchForm.isRemain
       };
       Object.assign(params, _params);
       this.$http('get', urlmap.queryStorage, params).then(data => {
@@ -426,7 +447,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http('PUT', urlmap.delStorage, { _id, furnace, coilNumber }).then(data => {
+        this.$http('delete', urlmap.delStorage, { _id, furnace, coilNumber }).then(data => {
           this.getTableData();
         }).catch(error => {
           console.log(error);
@@ -446,7 +467,7 @@ export default {
       }
       
       // 发送请求，更新当前的数据
-      this.$http('PUT', urlmap.updateMeasure, row).then(data => {
+      this.$http('PUT', urlmap.updateStorage, row).then(data => {
 
       }).catch(error => {
         console.log(error);
@@ -463,6 +484,8 @@ export default {
         castId: this.castId,
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
+        outStartTime: this.searchForm.outDate[0],
+        outEndTime: this.searchForm.outDate[1],
         caster: this.searchForm.caster,
         furnace: this.searchForm.furnace,
         ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
@@ -470,13 +493,11 @@ export default {
         ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
         ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
-        place: this.searchForm.place
+        place: this.searchForm.place,
+        isRemain: this.searchForm.isRemain
       };
       const url = `${urlmap.exportStorage}?${qs.stringify(params)}`;
       window.open(url);
-    },
-    uploadExcelHandler() {
-
     },
     setSelectable(row, index) {
       // 合格并且已经检测过了的，才可以被选中来入库
@@ -504,7 +525,7 @@ export default {
             takeBy: this.allOutStoreForm.takeBy,
             type: 'all'
           };
-          this.$http('PUT', urlmap.updateMeasure, formData).then(data => {
+          this.$http('PUT', urlmap.updateStorage, formData).then(data => {
             const params = {
               current: 1
             };
@@ -544,7 +565,7 @@ export default {
             dataJson: JSON.stringify(this.multipleSelection),
             type: 'batch'
           };
-          this.$http('PUT', urlmap.updateMeasure, formData).then(data => {
+          this.$http('PUT', urlmap.updateStorage, formData).then(data => {
             const params = {
               current: 1
             };

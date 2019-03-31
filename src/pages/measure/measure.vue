@@ -21,6 +21,42 @@
       <el-form-item label="炉号：">
         <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
       </el-form-item>
+
+      <el-form-item label="材质：">
+        <el-select v-model="searchForm.ribbonTypeNames" placeholder="请选择" multiple collapse-tags>
+          <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="规格：">
+        <el-select v-model="searchForm.ribbonWidths" placeholder="请选择" multiple collapse-tags>
+          <el-option v-for="item in ribbonWidthList" :key="item.ribbonWidthId" :label="item.ribbonWidth" :value="item.ribbonWidth"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="厚度级别：">
+        <el-select v-model="searchForm.ribbonThicknessLevels" placeholder="请选择" multiple collapse-tags>
+          <el-option v-for="item in ribbonThicknessLevelList" :key="item.ribbonThicknessLevelId" :label="item.ribbonThicknessLevel" :value="item.ribbonThicknessLevel"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="叠片级别：">
+        <el-select v-model="searchForm.laminationLevels" placeholder="请选择" multiple collapse-tags>
+          <el-option v-for="item in laminationLevelList" :key="item.laminationLevelId" :label="item.laminationLevel" :value="item.laminationLevel"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="韧性级别：">
+        <el-select v-model="searchForm.ribbonToughnessLevels" placeholder="请选择" multiple collapse-tags>
+          <el-option v-for="item in ribbonToughnessLevelList" :key="item.ribbonToughnessLevelId" :label="item.ribbonToughnessLevel" :value="item.ribbonToughnessLevel"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="外观级别：">
+        <el-select v-model="searchForm.appearenceLevels" placeholder="请选择" multiple collapse-tags>
+          <el-option label="A" value="A"></el-option>
+          <el-option label="B" value="B"></el-option>
+          <el-option label="C" value="C"></el-option>
+          <el-option label="不合格" value="不合格"></el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
         <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
@@ -59,7 +95,7 @@
               {{ scope.row.ribbonThickness1 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness1"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness1" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
             </div>
           </template>
         </el-table-column>
@@ -69,7 +105,7 @@
               {{ scope.row.ribbonThickness2 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness2"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness2" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
             </div>
           </template>
         </el-table-column>
@@ -79,7 +115,7 @@
               {{ scope.row.ribbonThickness3 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness3"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness3" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
             </div>
           </template>
         </el-table-column>
@@ -89,7 +125,7 @@
               {{ scope.row.ribbonThickness4 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness4"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness4" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
             </div>
           </template>
         </el-table-column>
@@ -99,7 +135,7 @@
               {{ scope.row.ribbonThickness5 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness5"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness5" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
             </div>
           </template>
         </el-table-column>
@@ -109,7 +145,7 @@
               {{ scope.row.ribbonThickness6 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness6"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness6" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
             </div>
           </template>
         </el-table-column>
@@ -119,7 +155,7 @@
               {{ scope.row.ribbonThickness7 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness7"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness7" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
             </div>
           </template>
         </el-table-column>
@@ -129,7 +165,7 @@
               {{ scope.row.ribbonThickness8 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness8"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness8" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
             </div>
           </template>
         </el-table-column>
@@ -139,7 +175,7 @@
               {{ scope.row.ribbonThickness9 }}
             </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness9"></el-input>
+              <el-input size="mini" v-model="scope.row.ribbonThickness9" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
             </div>
           </template>
         </el-table-column>
@@ -328,7 +364,13 @@ export default {
       searchForm: {
         caster: '',
         furnace: '',
-        date: []
+        date: [],
+        ribbonTypeNames: [],
+        ribbonWidths: [],
+        ribbonThicknessLevels: [],
+        laminationLevels: [],
+        ribbonToughnessLevels: [],
+        appearenceLevels: []
       },
       loading: false,
       tableData: [],
@@ -346,7 +388,7 @@ export default {
     }
   },
   computed: {
-    ...mapState([ 'ribbonToughnessLevelList' ])
+    ...mapState(['ribbonToughnessLevelList', 'ribbonTypeList', 'ribbonWidthList', 'ribbonThicknessLevelList', 'laminationLevelList'])
   },
   // 动态路由匹配
   beforeRouteUpdate(to, from, next) {
@@ -367,12 +409,27 @@ export default {
     this.isBatchInStored = this.setBatchInStored();
     this.getTableData();
     this.getRibbonToughnessLevelList();
+    this.getRibbonTypeList();
+    this.getRibbonWidthList();
+    this.getRibbonThicknessLevelList();
+    this.getLaminationLevelList();
   },
   mounted () {
     this.tableHeight = window.innerHeight - this.$refs.table.$el.getBoundingClientRect().top;
   },
   methods: {
-    ...mapActions([ 'getRibbonToughnessLevelList' ]),
+    thicknessChangeHandler(e, row) {
+      let ribbonThicknessList = [row.ribbonThickness1, row.ribbonThickness2, row.ribbonThickness3, row.ribbonThickness4, row.ribbonThickness5, row.ribbonThickness6, row.ribbonThickness7, row.ribbonThickness8, row.ribbonThickness9];
+      ribbonThicknessList = ribbonThicknessList.map(item => {
+        if (item !== '') {
+          return Number(item);
+        }
+      }).filter(item => item !== undefined);
+      row.ribbonThicknessDeviation = this.calcMaxDeviation(ribbonThicknessList);
+      row.ribbonThickness = ribbonThicknessList.length > 0 ? (ribbonThicknessList.reduce((acc, cur) => acc + cur, 0) / ribbonThicknessList.length).toFixed(2) : 0;
+      row.ribbonThicknessLevel = this.calcribbonThicknessLevel(row.ribbonThickness);
+    },
+    ...mapActions([ 'getRibbonToughnessLevelList', 'getRibbonTypeList', 'getRibbonWidthList', 'getRibbonThicknessLevelList', 'getLaminationLevelList' ]),
     dateFormat(row, column) {
       return dateFormat(row.castDate);
     },
@@ -416,7 +473,7 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { caster: '', furnace: '', date: [] };
+      this.searchForm = { caster: '', furnace: '', date: [], ribbonTypeNames: [], ribbonWidths: [],  ribbonThicknessLevels: [], laminationLevels: [], ribbonToughnessLevels: [], appearenceLevels: [] };
       const params = {
         current: 1
       };
@@ -429,7 +486,13 @@ export default {
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
         caster: this.searchForm.caster,
-        furnace: this.searchForm.furnace
+        furnace: this.searchForm.furnace,
+        ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
+        ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths),
+        ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
+        laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
+        ribbonToughnessLevelJson: JSON.stringify(this.searchForm.ribbonToughnessLevels),
+        appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels)
       };
       Object.assign(params, _params);
       this.$http('get', urlmap.queryMeasure, params).then(data => {
@@ -589,7 +652,7 @@ export default {
         // 质量等级为良的带材质量：除去符合任务单要求的薄带（31**41**51**61**71**81**32**42**52**62**72**82**33**43**53**63**73**83**34**44**54**64**74**84**）还有德国法国的（22*B、23*B）
         // 质量等级为中的带材质量：除去好和良的其他入库。
         if (row.isStored === 2) {
-          if (/^[3-8][1-4][A-Z]{2,3}$/.test(row.ribbonTotalLevel) || /^2[2-3][A-C]BL?$/.test(row.ribbonTotalLevel)) {
+          if (/^[3-8][1-4][A-E][A-C]G?([+-]E)?F?$/.test(row.ribbonTotalLevel) || /^2[2-3][A-C]BL?([+-]E)?F?$/.test(row.ribbonTotalLevel)) {
             row.qualityOfFine = row.coilNetWeight;
           } else {
             row.qualityOfNormal = row.coilNetWeight;
@@ -626,15 +689,15 @@ export default {
     calcQualityOfABCDE(row) {
       // 计算各质量等级的重量
       // A: 32**,42**,52**,62**,72**,82**,33**,43**,53**,63**,73**,83**,34**,44**,54**,64**,74**,84**
-      const requireMentOfA = /^[3-8][2-4][A-Z]{2,3}$/;
+      const requireMentOfA = /^[3-8][2-4][A-E][A-C]G?([+-]E)?F?$/;
       // B: 31**,41**,51**,61**,71**,81**
-      const requireMentOfB = /^[3-8]1[A-Z]{2,3}$/;
+      const requireMentOfB = /^[3-8]1[A-E][A-C]G?([+-]E)?F?$/;
       // C: 30**,40**,50**,60**,70**,80**
-      const requireMentOfC = /^[3-8]0[A-Z]{2,3}$/;
+      const requireMentOfC = /^[3-8]0[A-E][A-C]G?([+-]E)?F?$/;
       // D: 21**,22**,23**,24**
-      const requireMentOfD = /^2[1-4][A-Z]{2,3}$/;
+      const requireMentOfD = /^2[1-4][A-E][A-C]L?([+-]E)?F?$/;
       // E: 11**,12**,13**,14**
-      const requireMentOfE = /^1[1-4][A-Z]{2,3}$/;
+      const requireMentOfE = /^1[1-4][A-E][A-C]([+-]E)?F?$/;
       const ribbonTotalLevel = row.ribbonTotalLevel;
       if (requireMentOfA.test(ribbonTotalLevel)) {
         row.qualityOfA = row.coilNetWeight;
@@ -798,7 +861,13 @@ export default {
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
         caster: this.searchForm.caster,
-        furnace: this.searchForm.furnace
+        furnace: this.searchForm.furnace,
+        ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
+        ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths),
+        ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
+        laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
+        ribbonToughnessLevelJson: JSON.stringify(this.searchForm.ribbonToughnessLevels),
+        appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels)
       };
       const url = `${urlmap.exportMeasure}?${qs.stringify(params)}`;
       window.open(url);
@@ -807,6 +876,8 @@ export default {
       // 合格并且已经检测过了的，才可以被选中来入库
       if ([1, 2].includes(row.isStored) && !row.isMeasureConfirmed ) {
         return true;
+      } else {
+        return false;
       }
     },
     handleSelectionChange(val) {

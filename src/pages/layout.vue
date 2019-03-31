@@ -105,7 +105,7 @@
             <el-menu-item index="/measure/9">9号机组</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="6">
+        <el-submenu index="6" v-if="roleId === 1 || roleId === 2 || roleId === 3 || roleId === 6">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>库房记录</span>
@@ -126,7 +126,7 @@
             <el-menu-item index="/storageTotal">库存总表</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="7">
+        <el-submenu index="7" v-if="roleId === 1 || roleId === 2 || roleId === 3 || roleId === 5 || roleId === 6">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>退货处理</span>
@@ -174,7 +174,7 @@
             <el-menu-item index="/ribbonToughnessLevel">韧性等级列表</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="10" v-if="roleId === 1">
+        <el-submenu index="10" v-if="roleId === 1 || roleId === 2 || roleId === 3">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>账号管理</span>

@@ -1,23 +1,10 @@
 <template>
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right" class="crumb">
-      <el-breadcrumb-item>检测记录</el-breadcrumb-item>
-      <el-breadcrumb-item>{{castId}}号机组</el-breadcrumb-item>
+      <el-breadcrumb-item>退货处理</el-breadcrumb-item>
+      <el-breadcrumb-item>退货操作</el-breadcrumb-item>
     </el-breadcrumb>
     <el-form class="search_bar" :model="searchForm" :inline="true">
-      <el-form-item label="生产日期：">
-        <el-date-picker
-          v-model="searchForm.date"
-          type="daterange"
-          :default-time="['00:00:00', '23:59:59']"
-          :clearable="false"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="喷带手：">
-        <el-input v-model="searchForm.caster" placeholder="请输入喷带手姓名"></el-input>
-      </el-form-item>
       <el-form-item label="炉号：">
         <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
       </el-form-item>
@@ -64,8 +51,7 @@
     </el-form>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-success" @click="measureConfirm" v-if="isBatchInStored">确认入库</el-button>
-        <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable" class="pull_right">导出</el-button>
+        <el-button type="primary" icon="el-icon-success" @click="measureConfirm" v-if="userinfo.roleId == 5">确认入库</el-button>
       </el-col>
       <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading" @selection-change="handleSelectionChange"> 
         <el-table-column type="selection" width="30" :selectable="setSelectable"></el-table-column>
@@ -73,10 +59,26 @@
         <el-table-column prop="coilNumber" label="盘号" align="center" width="50px" fixed></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="70px"></el-table-column>
         <el-table-column prop="ribbonWidth" label="规格" align="center" width="50px"></el-table-column>
-        <el-table-column prop="castDate" label="生产日期" align="center" :formatter="dateFormat" width="110px"></el-table-column>
-        <el-table-column prop="caster" label="喷带手" align="center" width="70px"></el-table-column>
-        <el-table-column prop="diameter" label="外径(mm)" align="center" width="90px"></el-table-column>
-        <el-table-column prop="coilWeight" label="重量(kg)" align="center" width="90px"></el-table-column>
+        <el-table-column prop="diameter" label="外径(mm)" align="center" width="90px">
+          <template slot-scope="scope">
+            <div v-if="scope.row.isEditing === false">
+              {{ scope.row.diameter }}
+            </div>
+            <div v-else>
+              <el-input size="mini" v-model="scope.row.diameter"></el-input>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="coilWeight" label="重量(kg)" align="center" width="90px">
+          <template slot-scope="scope">
+            <div v-if="scope.row.isEditing === false">
+              {{ scope.row.coilWeight }}
+            </div>
+            <div v-else>
+              <el-input size="mini" v-model="scope.row.coilWeight"></el-input>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="laminationFactor" label="叠片系数" align="center" width="80px"></el-table-column>
         <el-table-column prop="laminationLevel" label="叠片等级" align="center" width="80px"></el-table-column>
         <el-table-column prop="realRibbonWidth" label="实际带宽" align="center" width="80px">
@@ -195,20 +197,6 @@
           </template>
         </el-table-column>
         <el-table-column prop="ribbonToughnessLevel" label="韧性等级" align="center" width="90px">
-          <!-- <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
-              {{ scope.row.ribbonToughnessLevel }}
-            </div>
-            <div v-else>
-              <el-select size="mini" v-model="scope.row.ribbonToughnessLevel" placeholder="">
-                <el-option label="A" value="A"></el-option>
-                <el-option label="B" value="B"></el-option>
-                <el-option label="C" value="C"></el-option>
-                <el-option label="D" value="D"></el-option>
-                <el-option label="E" value="E"></el-option>
-              </el-select>
-            </div>
-          </template> -->
         </el-table-column>
         <el-table-column prop="appearence" label="外观" align="center" width="90px">
           <template slot-scope="scope">
@@ -287,18 +275,12 @@
         </el-table-column>
         <el-table-column prop="isStored" label="是否入库" align="center" width="100px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isMeasureConfirmed === 1">
+            <div>
               <span v-if="scope.row.isStored === 1">计划内入库</span>
               <span v-if="scope.row.isStored === 2">计划外入库</span>
               <span v-if="scope.row.isStored === 3" class="text_danger">否</span>
+              <span v-if="scope.row.isStored === 4" class="text_warn">退货入库</span>
             </div>
-            <!-- <div v-else>
-              <el-select v-model="scope.row.isStored" placeholder="" size="mini">
-                <el-option label="计划内入库" :value="1"></el-option>
-                <el-option label="计划外入库" :value="2"></el-option>
-                <el-option label="否" :value="3"></el-option>
-              </el-select>
-            </div> -->
           </template>
         </el-table-column>
         <el-table-column prop="unStoreReason" label="不入库原因" align="center" width="100px" :show-overflow-tooltip="true">
@@ -318,25 +300,22 @@
             </div>
             <div v-else>
               <el-select size="mini" v-model="scope.row.clients" placeholder="" multiple collapse-tags>
-                <el-option label="F" value="F" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="D" value="D" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="VM" value="VM" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="VS" value="VS" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="VD" value="VD" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="O" value="O" :disabled="scope.row.isFlat == '否'"></el-option>
+                <el-option label="F" value="F"></el-option>
+                <el-option label="D" value="D"></el-option>
+                <el-option label="VM" value="VM"></el-option>
+                <el-option label="VS" value="VS"></el-option>
+                <el-option label="VD" value="VD"></el-option>
+                <el-option label="O" value="O"></el-option>
                 <el-option label="Z" value="Z"></el-option>
-                <el-option label="X" value="X" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="P" value="P" :disabled="scope.row.isFlat == '否'"></el-option>
               </el-select>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="measureDate" label="检测时间" align="center" width="120px" :formatter="dateTimeFormat" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column label="操作" align="center" width="150px">
+        <el-table-column label="操作" align="center" width="80px">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button>
             <el-button size="mini" type="success" @click="save(scope.row)" v-else>保存</el-button>
-            <el-button size="mini" type="danger" @click="del(scope.row)" v-if="isDeleteable">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -354,7 +333,7 @@
 <script>
 import qs from 'qs';
 import urlmap from '@/utils/urlmap';
-import { dateFormat, dateTimeFormat } from '@/utils/common';
+import { dateTimeFormat } from '@/utils/common';
 import { mapState, mapActions } from 'vuex';
 
 export default {
@@ -364,9 +343,7 @@ export default {
       userinfo: {},
       castId: 6,
       searchForm: {
-        caster: '',
         furnace: '',
-        date: [],
         ribbonTypeNames: [],
         ribbonWidths: [],
         ribbonThicknessLevels: [],
@@ -381,12 +358,9 @@ export default {
         current: 1,
         pageSize: 10
       },
-      isExportable: false,
       isEditable: false,
-      isDeleteable: false,
       tableHeight: 550,
-      multipleSelection: [],
-      isBatchInStored: false
+      multipleSelection: []
     }
   },
   computed: {
@@ -396,19 +370,13 @@ export default {
   beforeRouteUpdate(to, from, next) {
     this.castId = to.params.castId;
     this.getTableData();
-    this.isExportable = this.setExportable();
     this.isEditable = this.setEditable();
-    this.isDeleteable = this.setDeleteable();
-    this.isBatchInStored = this.setBatchInStored();
     next();
   },
   created () {
     this.castId = this.$route.params.castId;
     this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
-    this.isExportable = this.setExportable();
     this.isEditable = this.setEditable();
-    this.isDeleteable = this.setDeleteable();
-    this.isBatchInStored = this.setBatchInStored();
     this.getTableData();
     this.getRibbonToughnessLevelList();
     this.getRibbonTypeList();
@@ -420,49 +388,14 @@ export default {
     this.tableHeight = window.innerHeight - this.$refs.table.$el.getBoundingClientRect().top;
   },
   methods: {
-    thicknessChangeHandler(e, row) {
-      let ribbonThicknessList = [row.ribbonThickness1, row.ribbonThickness2, row.ribbonThickness3, row.ribbonThickness4, row.ribbonThickness5, row.ribbonThickness6, row.ribbonThickness7, row.ribbonThickness8, row.ribbonThickness9];
-      ribbonThicknessList = ribbonThicknessList.map(item => {
-        if (item !== '') {
-          return Number(item);
-        }
-      }).filter(item => item !== undefined);
-      row.ribbonThicknessDeviation = this.calcMaxDeviation(ribbonThicknessList);
-      row.ribbonThickness = ribbonThicknessList.length > 0 ? (ribbonThicknessList.reduce((acc, cur) => acc + cur, 0) / ribbonThicknessList.length).toFixed(2) : 0;
-      row.ribbonThicknessLevel = this.calcribbonThicknessLevel(row.ribbonThickness);
-    },
     ...mapActions([ 'getRibbonToughnessLevelList', 'getRibbonTypeList', 'getRibbonWidthList', 'getRibbonThicknessLevelList', 'getLaminationLevelList' ]),
-    dateFormat(row, column) {
-      return dateFormat(row.castDate);
-    },
     dateTimeFormat(row, column) {
       return row.measureDate? dateTimeFormat(row.measureDate) : '';
     },
     setEditable() {
-      if (this.userinfo.roleId == 5 || this.userinfo.roleId == 1) { // 检测人员 或者厂长 可修改
+      if (this.userinfo.roleId == 5 || this.userinfo.roleId == 6) { // 检测人员 或者库房 可修改
         return true;
       } else { // 其他
-        return false;
-      }
-    },
-    setDeleteable() {
-      if (this.userinfo.roleId == 1) { // 厂长 可删除
-        return true;
-      } else { // 其他
-        return false;
-      }
-    },
-    setExportable() {
-      if ([1, 2, 3, 5].includes(this.userinfo.roleId)) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    setBatchInStored() {
-      if (this.userinfo.roleId == 5) {
-        return true;
-      } else {
         return false;
       }
     },
@@ -475,7 +408,7 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { caster: '', furnace: '', date: [], ribbonTypeNames: [], ribbonWidths: [],  ribbonThicknessLevels: [], laminationLevels: [], ribbonToughnessLevels: [], appearenceLevels: [] };
+      this.searchForm = { furnace: '', ribbonTypeNames: [], ribbonWidths: [],  ribbonThicknessLevels: [], laminationLevels: [], ribbonToughnessLevels: [], appearenceLevels: [] };
       const params = {
         current: 1
       };
@@ -485,9 +418,6 @@ export default {
     getTableData(params = {}) {
       const _params = {
         castId: this.castId,
-        startTime: this.searchForm.date[0],
-        endTime: this.searchForm.date[1],
-        caster: this.searchForm.caster,
         furnace: this.searchForm.furnace,
         ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
         ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths),
@@ -499,8 +429,13 @@ export default {
       Object.assign(params, _params);
       this.$http('get', urlmap.queryMeasure, params).then(data => {
         this.pageConfig.total = data.count;
-        data.list && data.list.forEach(item => {
+        data.list = data.list.filter(item => {
+          return [1,2,4].includes(item.isStored) && item.isMeasureConfirmed == 1;
+        });
+        
+        data.list.forEach(item => {
           item.isEditing = false;
+          item.isMeasureConfirmed = 0;
           item.storageRule = {
             orderThickness: item.orderThickness,
             orderLaminationFactor: item.orderLaminationFactor,
@@ -520,7 +455,7 @@ export default {
       });
     },
     edit(row) {
-      if ((row.isStored == 1 || row.isStored == 2) && row.isMeasureConfirmed == 1) {// 已经入库
+      if (row.isStored == 4 && row.isMeasureConfirmed == 1) {// 已经入库
         return this.$message({
           message: '该带材已经入库，您无权限操作，请联系库房主管人员！',
           type: 'error'
@@ -528,24 +463,36 @@ export default {
       }
       row.isEditing = true;
     },
-    del(row) {
-      const { _id, furnace, coilNumber } = row;
-      this.$confirm(`删除后数据无法恢复，确定删除 ${furnace} 的第 ${coilNumber} 盘吗？`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$http('delete', urlmap.delMeasure, {_id}).then(data => {
-          this.getTableData();
-        }).catch(error => {
-          console.log(error);
-        });
-      }).catch(() => {});
-    },
     save(row) {
       row.isEditing = false;
       // this.pageConfig.current = 1;
       // this.getTableData();
+
+       /** 
+       * 计算单盘净重，不同规格的内衬重量不同
+       * 内衬的规格和重量对应表
+       * 20.5: 0.05,
+        25.5: 0.06,
+        30: 0.08,
+        40: 0.12,
+        50: 0.12
+      */
+      let linerWeight = 0;
+      if (row.ribbonWidth < 25) {
+        linerWeight = 0.05;
+      } else if (row.ribbonWidth >= 25 && row.ribbonWidth < 30) {
+        linerWeight = 0.06;
+      } else if (row.ribbonWidth >= 30 && row.ribbonWidth < 40) {
+        linerWeight = 0.08;
+      } else if (row.ribbonWidth >= 40 && row.ribbonWidth < 50) {
+        linerWeight = 0.12;
+      } else if (row.ribbonWidth >= 50 && row.ribbonWidth < 58) {
+        linerWeight = 0.12;
+      } else if (row.ribbonWidth >= 58) { // 58mm 以上的使用两个 30 的内衬拼接起来
+        linerWeight = 0.08 * 2;
+      } 
+      row.coilNetWeight = (row.coilWeight - linerWeight).toFixed(2);
+      row.remainWeight = row.coilNetWeight;
       
       // 计算叠片系数和叠片等级 realRibbonWidth diameter coilWeight
       row.laminationFactor = ((row.coilWeight - 0.09)/(Math.PI * (row.diameter * row.diameter / 4 - 95 * 95 / 4) * 7.2) * Math.pow(10, 6) / row.realRibbonWidth).toFixed(2);
@@ -642,51 +589,12 @@ export default {
         row.isStored = 3;
         row.isMeasureConfirmed = 1;
       } else {
-        // 入库分为：计划内入库和计划外入库
-        row.isStored = this.setStoredType(row);
-        if (row.isStored === 1) {
-          row.inPlanStoredWeight = row.coilNetWeight;
-          // 符合订单非薄带重量：满足订单要求且厚度为2级别的带材重量
-          if (row.ribbonThicknessLevel === 2) {
-            row.inPlanThickRibbonWeight = row.coilNetWeight;
-          }
-        } else if (row.isStored === 2) {
-          row.outPlanStoredWeight = row.coilNetWeight;          
-        }
-
-        // 总入库重量
-        row.totalStoredWeight = (row.inPlanStoredWeight + row.outPlanStoredWeight).toFixed(2);
-
-        // 计算各质量等级的重量
-        this.calcQualityOfABCDE(row);
-        // 计算薄带和高叠片薄带的重量
-        this.calcThinRibbonWeight(row);
-        // // 质量等级为好的带材质量：A + 符合订单非薄带
-        // row.qualityOfGood = (row.qualityOfA + row.inPlanThickRibbonWeight).toFixed(2);
-        // // 质量等级为良的带材质量：B
-        // row.qualityOfFine = row.qualityOfB;
-        // // 质量等级为中的带材质量：30**、40**+ 计划外入库
-        // if (/^[3-4]0[A-Z]{2,3}$/.test(row.ribbonTotalLevel)) {
-        //   row.qualityOfNormal = row.coilNetWeight;
-        // } else if(row.isStored === 2) {
-        //   row.qualityOfNormal = row.outPlanStoredWeight;
-        // }
-
-        // 质量等级为好的带材质量：符合订单的带材
-        row.qualityOfGood = row.inPlanStoredWeight;
-        // 质量等级为良的带材质量：除去符合任务单要求的薄带（31**41**51**61**71**81**32**42**52**62**72**82**33**43**53**63**73**83**34**44**54**64**74**84**）还有德国法国的（22*B、23*B）
-        // 质量等级为中的带材质量：除去好和良的其他入库。
-        if (row.isStored === 2) {
-          if (/^[3-8][1-4][A-E][A-C]G?([+-]E)?F?$/.test(row.ribbonTotalLevel) || /^2[2-3][A-C]BL?([+-]E)?F?$/.test(row.ribbonTotalLevel)) {
-            row.qualityOfFine = row.coilNetWeight;
-          } else {
-            row.qualityOfNormal = row.coilNetWeight;
-          }
-        }
+        // 入库分为：计划内入库-1，计划外入库-2，退货入库-4, 不合格-3
+        row.isStored = 4;
       }
       
       // 发送请求，更新当前的数据
-      this.$http('PUT', urlmap.updateMeasure, row).then(data => {
+      this.$http('PUT', urlmap.updateReturnGoods, row).then(data => {
 
       }).catch(error => {
         console.log(error);
@@ -697,44 +605,6 @@ export default {
         current: val
       };
       this.getTableData(params);
-    },
-    calcThinRibbonWeight(row) {
-      if (row.ribbonThickness > 23) {
-        return;
-      }
-      // 高叠片薄带重量 ≤23, >=0.78
-      if (row.laminationFactor >= 0.78) {
-        return row.highFactorThinRibbonWeight = row.coilNetWeight;
-      }
-      // 薄带重量 ≤23, >=0.75
-      if (row.laminationFactor >= 0.75) {
-        row.thinRibbonWeight = row.coilNetWeight;
-      }
-    },
-    calcQualityOfABCDE(row) {
-      // 计算各质量等级的重量
-      // A: 32**,42**,52**,62**,72**,82**,33**,43**,53**,63**,73**,83**,34**,44**,54**,64**,74**,84**
-      const requireMentOfA = /^[3-8][2-4][A-E][A-C]G?([+-]E)?F?$/;
-      // B: 31**,41**,51**,61**,71**,81**
-      const requireMentOfB = /^[3-8]1[A-E][A-C]G?([+-]E)?F?$/;
-      // C: 30**,40**,50**,60**,70**,80**
-      const requireMentOfC = /^[3-8]0[A-E][A-C]G?([+-]E)?F?$/;
-      // D: 21**,22**,23**,24**
-      const requireMentOfD = /^2[1-4][A-E][A-C]L?([+-]E)?F?$/;
-      // E: 11**,12**,13**,14**
-      const requireMentOfE = /^1[1-4][A-E][A-C]([+-]E)?F?$/;
-      const ribbonTotalLevel = row.ribbonTotalLevel;
-      if (requireMentOfA.test(ribbonTotalLevel)) {
-        row.qualityOfA = row.coilNetWeight;
-      } else if (requireMentOfB.test(ribbonTotalLevel)) {
-        row.qualityOfB = row.coilNetWeight;
-      } else if (requireMentOfC.test(ribbonTotalLevel)) {
-        row.qualityOfC = row.coilNetWeight;
-      } else if (requireMentOfD.test(ribbonTotalLevel)) {
-        row.qualityOfD = row.coilNetWeight;
-      } else if (requireMentOfE.test(ribbonTotalLevel)) {
-        row.qualityOfE = row.coilNetWeight;
-      }
     },
     calcLaminationLevel(factor) {
       if (!factor) return '';
@@ -781,125 +651,9 @@ export default {
         return 8;
       }
     },
-    setStoredType(row) {
-      let inPlanFlag = true;
-      let outPlanFlag = true;
-      // 计划内：厚度
-      const ribbonThickness = row.ribbonThickness;
-      const orderThickness = row.orderThickness;
-      if (orderThickness.indexOf('≤') > -1) { // ≤23
-        const maxThickness = parseInt(orderThickness.substr(1));
-        if (ribbonThickness > maxThickness) {
-          // 厚度不符合符合计划内入库的要求
-          inPlanFlag = false;
-        }
-      } else if (orderThickness.indexOf('-') > -1) {
-        const maxThickness = orderThickness.split('-')[1];
-        const minThickness = orderThickness.split('-')[0];
-        if (ribbonThickness < minThickness || ribbonThickness > maxThickness) {
-          inPlanFlag = false;
-        }
-      }
-      // 计划内：叠片
-      const laminationFactor = row.laminationFactor;
-      const orderLaminationFactor = row.orderLaminationFactor;
-      if (orderLaminationFactor.indexOf('≥') > -1) { // ≥0.78
-        const minLaminationFactor = parseInt(orderLaminationFactor.substr(1));
-        if (laminationFactor < minLaminationFactor) {
-          // 叠片不符合符合计划内入库的要求
-          inPlanFlag = false;
-        }
-      } else if (orderLaminationFactor.indexOf('-') > -1) {
-        const maxLaminationFactor = orderLaminationFactor.split('-')[1];
-        const minLaminationFactor = orderLaminationFactor.split('-')[0];
-        if (laminationFactor < minLaminationFactor || laminationFactor > maxLaminationFactor) {
-          inPlanFlag = false;
-        }
-      }
-      // 计划内：韧性
-      const ribbonToughnessLevel = row.ribbonToughnessLevel;
-      const orderRibbonToughnessLevels = row.orderRibbonToughnessLevels;
-      if (!orderRibbonToughnessLevels.includes(ribbonToughnessLevel)) {
-        inPlanFlag = false;
-      }
-      // 计划内：外观
-      const appearenceLevel = row.appearenceLevel;
-      const orderAppearenceLevels = row.orderAppearenceLevels;
-      if (!orderAppearenceLevels.includes(appearenceLevel)) {
-        inPlanFlag = false;
-      }
-
-      if (inPlanFlag) {
-        return 1;
-      }
-
-      // 计划外：厚度
-      const qualifiedThickness = row.qualifiedThickness;
-      if (qualifiedThickness.indexOf('≤') > -1) { // ≤23
-        const maxThickness = parseInt(qualifiedThickness.substr(1));
-        if (ribbonThickness > maxThickness) {
-          // 厚度不符合符合计划外入库的要求
-          outPlanFlag = false;
-        }
-      } else if (qualifiedThickness.indexOf('-') > -1) {
-        const maxThickness = qualifiedThickness.split('-')[1];
-        const minThickness = qualifiedThickness.split('-')[0];
-        if (ribbonThickness < minThickness || ribbonThickness > maxThickness) {
-          outPlanFlag = false;
-        }
-      }
-      // 计划外：叠片
-      const qualifiedLaminationFactor = row.qualifiedLaminationFactor;
-      if (qualifiedLaminationFactor.indexOf('≥') > -1) { // ≥0.78
-        const minLaminationFactor = parseInt(qualifiedLaminationFactor.substr(1));
-        if (laminationFactor < minLaminationFactor) {
-          // 叠片不符合符合计划外入库的要求
-          outPlanFlag = false;
-        }
-      } else if (qualifiedLaminationFactor.indexOf('-') > -1) {
-        const maxLaminationFactor = qualifiedLaminationFactor.split('-')[1];
-        const minLaminationFactor = qualifiedLaminationFactor.split('-')[0];
-        if (laminationFactor < minLaminationFactor || laminationFactor > maxLaminationFactor) {
-          outPlanFlag = false;
-        }
-      }
-      // 计划外：韧性
-      const qualifiedRibbonToughnessLevels = row.qualifiedRibbonToughnessLevels;
-      if (!qualifiedRibbonToughnessLevels.includes(ribbonToughnessLevel)) {
-        outPlanFlag = false;
-      }
-      // 计划外：外观
-      const qualifiedAppearenceLevels = row.qualifiedAppearenceLevels;
-      if (!qualifiedAppearenceLevels.includes(appearenceLevel)) {
-        outPlanFlag = false;
-      }
-
-      if (outPlanFlag) {
-        return 2
-      }
-
-      return 3;
-    },
-    exportExcel() {
-      const params = {
-        castId: this.castId,
-        startTime: this.searchForm.date[0],
-        endTime: this.searchForm.date[1],
-        caster: this.searchForm.caster,
-        furnace: this.searchForm.furnace,
-        ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
-        ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths),
-        ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
-        laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
-        ribbonToughnessLevelJson: JSON.stringify(this.searchForm.ribbonToughnessLevels),
-        appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels)
-      };
-      const url = `${urlmap.exportMeasure}?${qs.stringify(params)}`;
-      window.open(url);
-    },
     setSelectable(row, index) {
       // 合格并且已经检测过了的，才可以被选中来入库
-      if ([1, 2].includes(row.isStored) && !row.isMeasureConfirmed ) {
+      if (row.isStored == 4 && !row.isMeasureConfirmed ) {
         return true;
       } else {
         return false;
@@ -907,6 +661,17 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+    },
+    thicknessChangeHandler(e, row) {
+      let ribbonThicknessList = [row.ribbonThickness1, row.ribbonThickness2, row.ribbonThickness3, row.ribbonThickness4, row.ribbonThickness5, row.ribbonThickness6, row.ribbonThickness7, row.ribbonThickness8, row.ribbonThickness9];
+      ribbonThicknessList = ribbonThicknessList.map(item => {
+        if (item !== '') {
+          return Number(item);
+        }
+      }).filter(item => item !== undefined);
+      row.ribbonThicknessDeviation = this.calcMaxDeviation(ribbonThicknessList);
+      row.ribbonThickness = ribbonThicknessList.length > 0 ? (ribbonThicknessList.reduce((acc, cur) => acc + cur, 0) / ribbonThicknessList.length).toFixed(2) : 0;
+      row.ribbonThicknessLevel = this.calcribbonThicknessLevel(row.ribbonThickness);
     },
     measureConfirm() {
       if (this.multipleSelection.length === 0) {
@@ -916,8 +681,8 @@ export default {
         row.isMeasureConfirmed = 1; // 1-检测确认入库，0-还没有确认
       });
       // 发送请求，更新当前的数据
-      this.$http('PUT', urlmap.updateMeasure, { dataJson: JSON.stringify(this.multipleSelection) }).then(data => {
-        this.getTableData();
+      this.$http('PUT', urlmap.updateReturnGoods, { dataJson: JSON.stringify(this.multipleSelection) }).then(data => {
+        // this.getTableData();
       }).catch(error => {
         console.log(error);
       });

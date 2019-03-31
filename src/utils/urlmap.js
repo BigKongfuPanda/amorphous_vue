@@ -33,7 +33,13 @@ export default {
   delStorage: '/storage',
   exportStorage: '/storage/exportstorage',
   uploadStorage: '/storage/uploadstorage',
-  
+  // 退货处理
+  queryReturnGoods: '/returnGoods',
+  addReturnGoods: '/returnGoods',
+  updateReturnGoods: '/returnGoods',
+  delReturnGoods: '/returnGoods',
+  exportReturnGoods: '/returnGoods/export',
+
   queryRibbonWidth: '/ribbonWidth',
   addRibbonWidth: '/ribbonWidth',
   updateRibbonWidth: '/ribbonWidth',

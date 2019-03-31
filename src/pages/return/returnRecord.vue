@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right" class="crumb">
-      <el-breadcrumb-item>检测记录</el-breadcrumb-item>
-      <el-breadcrumb-item>{{castId}}号机组</el-breadcrumb-item>
+      <el-breadcrumb-item>退货处理</el-breadcrumb-item>
+      <el-breadcrumb-item>退货记录</el-breadcrumb-item>
     </el-breadcrumb>
     <el-form class="search_bar" :model="searchForm" :inline="true">
       <el-form-item label="生产日期：">
@@ -65,7 +65,7 @@
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-success" @click="measureConfirm" v-if="isBatchInStored">确认入库</el-button>
-        <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable" class="pull_right">导出</el-button>
+        <!-- <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable" class="pull_right">导出</el-button> -->
       </el-col>
       <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading" @selection-change="handleSelectionChange"> 
         <el-table-column type="selection" width="30" :selectable="setSelectable"></el-table-column>
@@ -253,44 +253,13 @@
             <span :class="scope.row.ribbonTotalLevel === '不合格' ? 'text_danger' : '' ">{{scope.row.ribbonTotalLevel}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="入库规则" align="center" width="90px">
-          <template slot-scope="scope">
-            <el-popover placement="right" trigger="hover">
-              <table class="popover_table" cellpadding="0" cellspacing="0">
-                <thead>
-                  <th>类别</th>
-                  <th>带厚</th>
-                  <th>叠片</th>
-                  <th>韧性</th>
-                  <th>外观</th>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>计划内入库要求</td>
-                    <td>{{scope.row.storageRule.orderThickness}}</td>
-                    <td>{{scope.row.storageRule.orderLaminationFactor}}</td>
-                    <td>{{scope.row.storageRule.orderRibbonToughnessLevels.toString()}}</td>
-                    <td>{{scope.row.storageRule.orderAppearenceLevels.toString()}}</td>
-                  </tr>
-                  <tr>
-                    <td>计划外入库要求</td>
-                    <td>{{scope.row.storageRule.qualifiedThickness}}</td>
-                    <td>{{scope.row.storageRule.qualifiedLaminationFactor}}</td>
-                    <td>{{scope.row.storageRule.qualifiedRibbonToughnessLevels.toString()}}</td>
-                    <td>{{scope.row.storageRule.qualifiedAppearenceLevels.toString()}}</td>
-                  </tr>
-                </tbody>
-              </table>
-              <el-button slot="reference" size="mini" type="text">详情</el-button>
-            </el-popover>
-          </template>
-        </el-table-column>
         <el-table-column prop="isStored" label="是否入库" align="center" width="100px">
           <template slot-scope="scope">
             <div v-if="scope.row.isMeasureConfirmed === 1">
               <span v-if="scope.row.isStored === 1">计划内入库</span>
               <span v-if="scope.row.isStored === 2">计划外入库</span>
               <span v-if="scope.row.isStored === 3" class="text_danger">否</span>
+              <span v-if="scope.row.isStored === 4" class="text_warn">退货入库</span>
             </div>
             <!-- <div v-else>
               <el-select v-model="scope.row.isStored" placeholder="" size="mini">
@@ -318,27 +287,25 @@
             </div>
             <div v-else>
               <el-select size="mini" v-model="scope.row.clients" placeholder="" multiple collapse-tags>
-                <el-option label="F" value="F" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="D" value="D" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="VM" value="VM" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="VS" value="VS" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="VD" value="VD" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="O" value="O" :disabled="scope.row.isFlat == '否'"></el-option>
+                <el-option label="F" value="F"></el-option>
+                <el-option label="D" value="D"></el-option>
+                <el-option label="VM" value="VM"></el-option>
+                <el-option label="VS" value="VS"></el-option>
+                <el-option label="VD" value="VD"></el-option>
+                <el-option label="O" value="O"></el-option>
                 <el-option label="Z" value="Z"></el-option>
-                <el-option label="X" value="X" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="P" value="P" :disabled="scope.row.isFlat == '否'"></el-option>
               </el-select>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="measureDate" label="检测时间" align="center" width="120px" :formatter="dateTimeFormat" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column label="操作" align="center" width="150px">
+        <!-- <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button>
             <el-button size="mini" type="success" @click="save(scope.row)" v-else>保存</el-button>
             <el-button size="mini" type="danger" @click="del(scope.row)" v-if="isDeleteable">删除</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <el-pagination
         background
@@ -362,7 +329,6 @@ export default {
   data () {
     return {
       userinfo: {},
-      castId: 6,
       searchForm: {
         caster: '',
         furnace: '',
@@ -394,7 +360,6 @@ export default {
   },
   // 动态路由匹配
   beforeRouteUpdate(to, from, next) {
-    this.castId = to.params.castId;
     this.getTableData();
     this.isExportable = this.setExportable();
     this.isEditable = this.setEditable();
@@ -403,7 +368,6 @@ export default {
     next();
   },
   created () {
-    this.castId = this.$route.params.castId;
     this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
     this.isExportable = this.setExportable();
     this.isEditable = this.setEditable();
@@ -484,7 +448,6 @@ export default {
     },
     getTableData(params = {}) {
       const _params = {
-        castId: this.castId,
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
         caster: this.searchForm.caster,
@@ -497,20 +460,10 @@ export default {
         appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels)
       };
       Object.assign(params, _params);
-      this.$http('get', urlmap.queryMeasure, params).then(data => {
+      this.$http('get', urlmap.queryReturnGoods, params).then(data => {
         this.pageConfig.total = data.count;
         data.list && data.list.forEach(item => {
           item.isEditing = false;
-          item.storageRule = {
-            orderThickness: item.orderThickness,
-            orderLaminationFactor: item.orderLaminationFactor,
-            orderRibbonToughnessLevels: item.orderRibbonToughnessLevels,
-            orderAppearenceLevels: item.orderAppearenceLevels,
-            qualifiedThickness: item.qualifiedThickness,
-            qualifiedLaminationFactor: item.qualifiedLaminationFactor,
-            qualifiedRibbonToughnessLevels: item.qualifiedRibbonToughnessLevels,
-            qualifiedAppearenceLevels: item.qualifiedAppearenceLevels
-          };
         });
         this.tableData = data.list;
       }).catch((err) => {
@@ -520,27 +473,13 @@ export default {
       });
     },
     edit(row) {
-      if ((row.isStored == 1 || row.isStored == 2) && row.isMeasureConfirmed == 1) {// 已经入库
+      if (row.isStored == 4 && row.isMeasureConfirmed == 1) {// 已经入库
         return this.$message({
           message: '该带材已经入库，您无权限操作，请联系库房主管人员！',
           type: 'error'
         });
       }
       row.isEditing = true;
-    },
-    del(row) {
-      const { _id, furnace, coilNumber } = row;
-      this.$confirm(`删除后数据无法恢复，确定删除 ${furnace} 的第 ${coilNumber} 盘吗？`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$http('delete', urlmap.delMeasure, {_id}).then(data => {
-          this.getTableData();
-        }).catch(error => {
-          console.log(error);
-        });
-      }).catch(() => {});
     },
     save(row) {
       row.isEditing = false;
@@ -882,7 +821,6 @@ export default {
     },
     exportExcel() {
       const params = {
-        castId: this.castId,
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
         caster: this.searchForm.caster,
@@ -899,7 +837,7 @@ export default {
     },
     setSelectable(row, index) {
       // 合格并且已经检测过了的，才可以被选中来入库
-      if ([1, 2].includes(row.isStored) && !row.isMeasureConfirmed ) {
+      if ([1, 2, 4].includes(row.isStored) && !row.isMeasureConfirmed ) {
         return true;
       } else {
         return false;
@@ -916,7 +854,7 @@ export default {
         row.isMeasureConfirmed = 1; // 1-检测确认入库，0-还没有确认
       });
       // 发送请求，更新当前的数据
-      this.$http('PUT', urlmap.updateMeasure, { dataJson: JSON.stringify(this.multipleSelection) }).then(data => {
+      this.$http('PUT', urlmap.updateReturnGoods, { dataJson: JSON.stringify(this.multipleSelection) }).then(data => {
         this.getTableData();
       }).catch(error => {
         console.log(error);

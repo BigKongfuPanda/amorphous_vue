@@ -66,8 +66,8 @@
       </el-form-item>
     </el-form>
     <el-row class="total_data">
-      <el-col :span="4">总盘数：{{totalCoilNum}}</el-col>
-      <el-col :span="4">总重量(kg)：{{totalWeight}}</el-col>
+      <el-col :span="6">总盘数：{{totalCoilNum}}</el-col>
+      <el-col :span="6">总重量(kg)：{{totalWeight}}</el-col>
     </el-row>
     <div class="main_bd">
       <el-col class="table_hd">
@@ -92,6 +92,7 @@
             <span v-if="scope.row.isStored == 1">计划内入库</span>
             <span v-if="scope.row.isStored == 2">计划外入库</span>
             <span v-if="scope.row.isStored == 3">否</span>
+            <span v-if="scope.row.isStored == 4" class="text_warn">退货入库</span>
           </template>
         </el-table-column>
         <el-table-column prop="outStoreDate" label="出库日期" align="center" :formatter="outStoreDateFormat" width="110px"></el-table-column>

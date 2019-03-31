@@ -45,6 +45,12 @@
       <el-form-item label="重量：" prop="coilWeight">
         <el-input v-model="formData.coilWeight"></el-input>
       </el-form-item>
+      <el-form-item label="是否平整：" prop="isFlat">
+        <el-select v-model="formData.isFlat" placeholder="">
+          <el-option value="是" label="是"></el-option>
+          <el-option value="否" label="否"></el-option>
+        </el-select>
+      </el-form-item>
     </el-form>
     <div slot="footer">
       <el-button @click="closeDialog">取消</el-button>
@@ -61,6 +67,7 @@ const formConfig = {
   castId: 6,// 机组编号
   roller: '', // 重卷人员
   rollMachine: null, // 重卷机器
+  isFlat: '是', //是否平整
   furnace: '',// 制带炉号  06-20181120-01/01
   coilNumber: '',// 盘号
   diameter: '', //外径,mm
@@ -77,6 +84,7 @@ export default {
         castId: 6,// 机组编号
         roller: '', // 重卷人员
         rollMachine: null, // 重卷机器
+        isFlat: '是', //是否平整
         furnace: '',// 制带炉号  06-20181120-01/01
         coilNumber: '',// 盘号
         diameter: '', //外径,mm
@@ -105,6 +113,9 @@ export default {
           { required: true, message: '请填写重量', trigger: 'blur' },
           { validator: decimalFormat, trigger: 'blur' },
           { validator: ltNumber(99999), trigger: 'blur' }
+        ],
+        isFlat: [
+          { required: true, message: '请选择是否平整', trigger: 'blur' }
         ]
       }
     };

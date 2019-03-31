@@ -43,6 +43,9 @@ export default {
   .text_danger {
     color: #DB2023;
   }
+  .text_warn {
+    color: rgb(230, 162, 60);
+  }
   .el-aside {
     position: fixed;
     top: 0;

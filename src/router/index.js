@@ -21,6 +21,8 @@ import StorageTotal from '@/pages/storage/storageTotal.vue';
 import StatisticsOfRatio from '@/pages/statistics/statisticsOfRatio.vue';
 import StatisticsQuality from '@/pages/statistics/statisticsQuality.vue';
 import StatisticsOder from '@/pages/statistics/statisticsOder.vue';
+import ReturnTreatment from '@/pages/return/returnTreatment.vue';
+import ReturnRecord from '@/pages/return/returnRecord.vue';
 
 export default new Router({
   routes: [
@@ -129,6 +131,18 @@ export default new Router({
           name: 'statisticsOder',
           component: StatisticsOder,
           meta: { title: '订单统计表', icon: 'statisticsOder' }
+        },
+        {
+          path: 'returnTreatment',
+          name: 'returnTreatment',
+          component: ReturnTreatment,
+          meta: { title: '退货操作', icon: 'returnTreatment' }
+        },
+        {
+          path: 'returnRecord',
+          name: 'returnRecord',
+          component: ReturnRecord,
+          meta: { title: '退货记录', icon: 'returnRecord' }
         }
       ]
     }

@@ -621,6 +621,7 @@ export default {
           type: 'warning'
         });
       }
+      this.getTableData(params);
     }
   }
 }

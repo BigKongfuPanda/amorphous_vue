@@ -47,7 +47,6 @@ export default {
       this.$refs['ruleForm'].validate((valid) => {
         if(valid) {
           this.disabled = true;
-          console.log(this.form);
           this.$http('POST', urlmap.login, this.form).then(data => {
             const userinfo = JSON.stringify({username: this.form.username, roleId: data.roleId, adminname: data.adminname});
             localStorage.setItem('userinfo', userinfo);

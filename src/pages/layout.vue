@@ -105,7 +105,7 @@
             <el-menu-item index="/measure/9">9号机组</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="6">
+        <el-submenu index="6" v-if="roleId === 1 || roleId === 2 || roleId === 3 || roleId === 6">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>库房记录</span>
@@ -126,7 +126,19 @@
             <el-menu-item index="/storageTotal">库存总表</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="7" v-if="roleId === 1 || roleId === 2 || roleId === 3">
+        <el-submenu index="7" v-if="roleId === 1 || roleId === 2 || roleId === 3 || roleId === 5 || roleId === 6">
+          <template slot="title">
+            <i class="el-icon-location"></i>
+            <span>退货处理</span>
+          </template>
+          <router-link to="/returnTreatment">
+            <el-menu-item index="/returnTreatment">退货操作</el-menu-item>
+          </router-link>
+          <router-link to="returnRecord">
+            <el-menu-item index="returnRecord">退货记录</el-menu-item>
+          </router-link>
+        </el-submenu>
+        <el-submenu index="8" v-if="roleId === 1 || roleId === 2 || roleId === 3">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>数据统计</span>
@@ -141,7 +153,7 @@
             <el-menu-item index="/statisticsOder">订单统计表</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="8" v-if="roleId === 1 || roleId === 2 || roleId === 3">
+        <el-submenu index="9" v-if="roleId === 1 || roleId === 2 || roleId === 3">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>带材管理</span>
@@ -158,8 +170,11 @@
           <router-link to="/laminationLevel">
             <el-menu-item index="/laminationLevel">叠片等级列表</el-menu-item>
           </router-link>
+          <router-link to="/ribbonToughnessLevel">
+            <el-menu-item index="/ribbonToughnessLevel">韧性等级列表</el-menu-item>
+          </router-link>
         </el-submenu>
-        <el-submenu index="9" v-if="roleId === 1">
+        <el-submenu index="10" v-if="roleId === 1 || roleId === 2 || roleId === 3">
           <template slot="title">
             <i class="el-icon-location"></i>
             <span>账号管理</span>

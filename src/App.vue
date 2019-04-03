@@ -43,6 +43,9 @@ export default {
   .text_danger {
     color: #DB2023;
   }
+  .text_warn {
+    color: rgb(230, 162, 60);
+  }
   .el-aside {
     position: fixed;
     top: 0;
@@ -125,5 +128,11 @@ export default {
   }
   .el-select {
     width: 100%;
+  }
+  .pull_left {
+    float: left;
+  }
+  .pull_right {
+    float: right;
   }
 </style>

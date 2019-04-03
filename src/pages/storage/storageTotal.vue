@@ -250,14 +250,12 @@ export default {
         filterBy: 'storage' // 筛选库房所需的数据：入库且结余大于0
       };
       Object.assign(params, _params);
-      this.$http('get', urlmap.queryMeasure, params).then(data => {
+      this.$http('get', urlmap.queryStorage, params).then(data => {
         this.pageConfig.total = data.count;
         data.list && data.list.forEach(item => {
           item.isEditing = false;
         });
-        this.tableData = data.list && data.list.filter(item => {
-          return item.isStored == 1 || item.isStored == 2;
-        });
+        this.tableData = data.list;
       }).catch((err) => {
         console.log(err);
       }).finally(() => {
@@ -274,9 +272,10 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // 库房测的删除操作并非真正的删除数据，而是将当前带材的入库状态改为不入库，3
+        // 库房测的删除操作并非真正的删除数据，而是将当前带材的入库状态改为不入库，3；并且检测的确认状态也改为0
         row.isStored = 3;
-        this.$http('PUT', urlmap.updateMeasure, row).then(data => {
+        row.isMeasureConfirmed = 0;
+        this.$http('PUT', urlmap.updateStorage, row).then(data => {
           this.getTableData();
         }).catch(error => {
           console.log(error);
@@ -296,7 +295,7 @@ export default {
       }
       
       // 发送请求，更新当前的数据
-      this.$http('PUT', urlmap.updateMeasure, row).then(data => {
+      this.$http('PUT', urlmap.updateStorage, row).then(data => {
 
       }).catch(error => {
         console.log(error);
@@ -319,8 +318,7 @@ export default {
         ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
         ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
-        place: this.searchForm.place,
-        filterBy: 'storage' // 筛选库房所需的数据：入库且结余大于0
+        place: this.searchForm.place
       };
       const url = `${urlmap.exportStorage}?${qs.stringify(params)}`;
       window.open(url);

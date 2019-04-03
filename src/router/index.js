@@ -11,6 +11,7 @@ import Cast from '@/pages/cast/cast.vue';
 import RibbonType from '@/pages/ribbonType/ribbonType.vue';
 import RibbonWidth from '@/pages/ribbonWidth/ribbonWidth.vue';
 import RibbonThicknessLevel from '@/pages/ribbonThicknessLevel/ribbonThicknessLevel.vue';
+import RibbonToughnessLevel from '@/pages/ribbonToughnessLevel/ribbonToughnessLevel.vue';
 import LaminationLevel from '@/pages/laminationLevel/laminationLevel.vue';
 import User from '@/pages/user/user.vue';
 import Roll from '@/pages/roll/roll.vue';
@@ -20,6 +21,8 @@ import StorageTotal from '@/pages/storage/storageTotal.vue';
 import StatisticsOfRatio from '@/pages/statistics/statisticsOfRatio.vue';
 import StatisticsQuality from '@/pages/statistics/statisticsQuality.vue';
 import StatisticsOder from '@/pages/statistics/statisticsOder.vue';
+import ReturnTreatment from '@/pages/returnGoods/returnTreatment.vue';
+import ReturnRecord from '@/pages/returnGoods/returnRecord.vue';
 
 export default new Router({
   routes: [
@@ -68,6 +71,12 @@ export default new Router({
           name: 'ribbonThicknessLevel',
           component: RibbonThicknessLevel,
           meta: { title: '带材厚度等级管理', icon: 'ribbonThicknessLevel' }
+        },
+        {
+          path: 'ribbonToughnessLevel',
+          name: 'ribbonToughnessLevel',
+          component: RibbonToughnessLevel,
+          meta: { title: '带材韧性等级管理', icon: 'ribbonToughnessLevel' }
         },
         {
           path: 'laminationLevel',
@@ -122,6 +131,18 @@ export default new Router({
           name: 'statisticsOder',
           component: StatisticsOder,
           meta: { title: '订单统计表', icon: 'statisticsOder' }
+        },
+        {
+          path: 'returnTreatment',
+          name: 'returnTreatment',
+          component: ReturnTreatment,
+          meta: { title: '退货操作', icon: 'returnTreatment' }
+        },
+        {
+          path: 'returnRecord',
+          name: 'returnRecord',
+          component: ReturnRecord,
+          meta: { title: '退货记录', icon: 'returnRecord' }
         }
       ]
     }

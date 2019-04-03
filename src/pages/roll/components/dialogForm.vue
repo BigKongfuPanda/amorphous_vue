@@ -9,7 +9,7 @@
   width="30%"
   v-loading="loading"
   element-loading-text="拼命加载中">
-    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="100%" @submit.native.prevent>
+    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="100%" @keyup.enter.native="submitForm">
       <el-form-item label="重卷人员：" prop="roller">
         <span>{{formData.roller}}</span>
       </el-form-item>

@@ -21,8 +21,8 @@ import StorageTotal from '@/pages/storage/storageTotal.vue';
 import StatisticsOfRatio from '@/pages/statistics/statisticsOfRatio.vue';
 import StatisticsQuality from '@/pages/statistics/statisticsQuality.vue';
 import StatisticsOder from '@/pages/statistics/statisticsOder.vue';
-import ReturnTreatment from '@/pages/return/returnTreatment.vue';
-import ReturnRecord from '@/pages/return/returnRecord.vue';
+import ReturnTreatment from '@/pages/returnGoods/returnTreatment.vue';
+import ReturnRecord from '@/pages/returnGoods/returnRecord.vue';
 
 export default new Router({
   routes: [

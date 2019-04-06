@@ -100,6 +100,7 @@
         <el-col :span="6">
           <el-form-item label="开包次数" prop="castTimes">
             <el-select v-model="formData.castTimes" @change="castTimesChangeHandler">
+              <el-option label="0" :value="0"></el-option>
               <el-option label="1" :value="1"></el-option>
               <el-option label="2" :value="2"></el-option>
               <el-option label="3" :value="3"></el-option>

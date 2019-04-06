@@ -1,7 +1,7 @@
 <template>
   <div class="login_bg">
     <div class="login_form">
-      <el-form :model="form" :rules="rules" ref="ruleForm" label-width="80px" label-position="top">
+      <el-form :model="form" :rules="rules" ref="ruleForm" label-width="80px" label-position="top" @keyup.enter.native="login">
         <el-row class="login_hd">
           <h3>生产数据管理系统</h3>
         </el-row>
@@ -12,7 +12,7 @@
           <el-input v-model="form.password" type="password"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click.enter="login" class="login_btn" >登录</el-button>
+          <el-button type="primary" @click="login" class="login_btn" >登录</el-button>
         </el-form-item>
       </el-form>
     </div>

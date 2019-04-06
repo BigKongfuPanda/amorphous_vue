@@ -13,7 +13,7 @@
       <el-row :gutter="20">
         <el-col :span="6">
           <el-form-item label="日期" prop="date" class="dialog_field">
-            <el-date-picker v-model="formData.date" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" :editable="false" :clearable="false"></el-date-picker>
+            <el-date-picker v-model="formData.date" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" :editable="false" :clearable="false" @change="pick"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -345,6 +345,10 @@ export default {
     this.getRibbonWidthList();
   },
   methods: {
+    pick() {
+      let date = this.formData.date.replace(/-/g, '');
+      this.formData.theBeginfurnace = `0${this.formData.castId}-${date}-01`;
+    },
     ...mapActions([
       'getRibbonTypeList', 'getRibbonWidthList'
     ]),

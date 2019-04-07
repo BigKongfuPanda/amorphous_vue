@@ -364,21 +364,21 @@ export default {
         meltOutWeight: [
           { required: true, message: '请填写放钢重量', trigger: 'blur' },
           { validator: number, trigger: 'blur' },
-          { validator: ltNumber(300), trigger: 'blur' }
+          { validator: ltNumber(500), trigger: 'blur' }
         ],
         rawWeight: [
           { required: true, message: '请填写大盘毛重', trigger: 'blur' },
           { validator: number, trigger: 'blur' },
-          { validator: ltNumber(300), trigger: 'blur' }
+          { validator: ltNumber(500), trigger: 'blur' }
         ],
         remark: [
           { max: 50, message: '最多50位字符', trigger: 'blur' }
         ],
         castTimes: [{ required: true, message: '请选择开包次数', trigger: 'blur' }],
         uselessRibbonWeight: [
-          { required: true, message: '请填写大盘毛重', trigger: 'blur' },
+          { required: true, message: '请填写废带重量', trigger: 'blur' },
           { validator: number, trigger: 'blur' },
-          { validator: ltNumber(300), trigger: 'blur' }
+          { validator: ltNumber(500), trigger: 'blur' }
         ],
         team: [{ required: true, message: '请选择所在班组', trigger: 'blur' }]
       }

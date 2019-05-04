@@ -272,7 +272,7 @@
                     <td>{{scope.row.storageRule.orderRibbonToughnessLevels.toString()}}</td>
                     <td>{{scope.row.storageRule.orderAppearenceLevels.toString()}}</td>
                   </tr>
-                  <tr>
+                  <tr v-if="userinfo.roleId === 1 || userinfo.roleId === 2 || userinfo.roleId === 3 || userinfo.roleId === 5 || userinfo.roleId === 6">
                     <td>计划外入库要求</td>
                     <td>{{scope.row.storageRule.qualifiedThickness}}</td>
                     <td>{{scope.row.storageRule.qualifiedLaminationFactor}}</td>
@@ -354,7 +354,7 @@
 <script>
 import qs from 'qs';
 import urlmap from '@/utils/urlmap';
-import { dateFormat, dateTimeFormat } from '@/utils/common';
+import { dateFormat, dateTimeFormat, debounce } from '@/utils/common';
 import { mapState, mapActions } from 'vuex';
 
 export default {
@@ -417,7 +417,13 @@ export default {
     this.getLaminationLevelList();
   },
   mounted () {
-    this.tableHeight = window.innerHeight - this.$refs.table.$el.getBoundingClientRect().top;
+    const self = this;
+    self.$nextTick(() => {
+      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+    });
+    window.onresize = debounce(() => {
+      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+    }, 1000)
   },
   methods: {
     thicknessChangeHandler(e, row) {

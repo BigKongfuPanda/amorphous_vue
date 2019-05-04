@@ -200,6 +200,7 @@
           <el-col :span="6">
             <el-form-item label="抓取次数" class="dialog_field" :prop="'record.' + index + '.coilTimes'" :rules="[{ required: true, message: '请填写抓取次数', trigger: 'blur' }]">
               <el-select v-model="item.coilTimes">
+                <el-option label="0" value="0"></el-option>
                 <el-option label="1" value="1"></el-option>
                 <el-option label="2" value="2"></el-option>
                 <el-option label="3" value="3"></el-option>
@@ -409,8 +410,8 @@ export default {
       this.formData.nozzleNum = val; // 喷嘴杯的数量等于开包次数
       const _length = this.formData.record.length;
       if (val > _length) {
-        const clone = cloneDeep(defaultCastDetail);
         for(let i = 0; i < val - _length; i++) {
+          const clone = cloneDeep(defaultCastDetail);
           this.formData.record.push(clone);
         }
       } else if (val < _length) {

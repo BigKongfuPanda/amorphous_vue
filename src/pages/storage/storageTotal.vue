@@ -136,7 +136,7 @@
 <script>
 import qs from 'qs';
 import urlmap from '@/utils/urlmap';
-import { dateFormat } from '@/utils/common';
+import { dateFormat, debounce } from '@/utils/common';
 import { mapState, mapActions } from 'vuex';
 
 export default {
@@ -185,7 +185,13 @@ export default {
     this.getLaminationLevelList();
   },
   mounted () {
-    this.tableHeight = window.innerHeight - this.$refs.table.$el.getBoundingClientRect().top;
+    const self = this;
+    self.$nextTick(() => {
+      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+    });
+    window.onresize = debounce(() => {
+      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+    }, 1000)
   },
   methods: {
     ...mapActions([

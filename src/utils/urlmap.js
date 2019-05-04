@@ -5,6 +5,7 @@ export default {
   addPlan: '/plan',
   updatePlan: '/plan',
   delPlan: '/plan',
+  exportPlan: '/plan/export',
   queryRibbonType: '/ribbonType',
   addRibbonType: '/ribbonType',
   updateRibbonType: '/ribbonType',

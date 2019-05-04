@@ -186,7 +186,7 @@ export default {
     this.getRibbonWidthList();
   },
   mounted () {
-      this.tableHeight = window.innerHeight - this.$refs.table.$el.getBoundingClientRect().top;
+    this.tableHeight = window.innerHeight - this.$refs.table.$el.getBoundingClientRect().top;
   },
   methods: {
     ...mapActions([

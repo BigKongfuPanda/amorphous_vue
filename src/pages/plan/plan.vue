@@ -17,8 +17,9 @@
         <el-button type="primary" icon="el-icon-plus" @click="createPlan" v-if="roleId === 1 || roleId === 2">新增生产计划</el-button>
         <el-button type="primary" icon="el-icon-check" @click="approve" v-if="(roleId === 1 || roleId === 2) && tableData.length > 0 && !isApproved" :disabled="roleId === 2 && tableData.length > 0 && !isApproved">待审批</el-button>
         <el-button type="primary" icon="el-icon-check" v-if="(roleId === 1 || roleId === 2) && tableData.length > 0 && isApproved" disabled>已审批</el-button>
+        <el-button type="primary" icon="el-icon-download" @click="exportVisible = true" v-if="isExportable" class="pull_right">导出</el-button>
       </el-col>
-      <el-table :data=tableData stripe border style="width: 100%" v-loading="loading">
+      <el-table :data=tableData stripe border style="width: 100%" v-loading="loading" ref="table" :height="tableHeight">
         <el-table-column prop="date" label="日期" align="center" width="110px"></el-table-column>
         <el-table-column prop="castId" label="机组" align="center" width="60px"></el-table-column>
         <el-table-column prop="team" label="班组" align="center" width="50px"></el-table-column>
@@ -87,42 +88,59 @@
       </div>
     </div>
     <dialog-form v-if="dialogVisible" :dialogData="{ formType, dialogVisible, rowData}" @close="closeHandler" @submit="submitHandler"></dialog-form>
+    <excel-form v-if="exportVisible" :exportData="{ exportVisible, castId }" @closeExport=" exportVisible = false" @submitExport="exportVisible = false"></excel-form>
   </div>
 </template>
 
 <script>
-import { dateFormat, dateTimeFormat } from '@/utils/common';
+import { dateFormat, dateTimeFormat, debounce } from '@/utils/common';
 import urlmap from '@/utils/urlmap';
 import dialogForm from './components/dialogForm';
+import excelForm from './components/excelForm';
 
 export default {
   name: 'plan',
-  components: { dialogForm },
+  components: { dialogForm, excelForm },
   data() {
     return {
       searchForm: {
         date: dateFormat(new Date())
       },
       isApproved: false,
+      isExportable: false,
       dialogVisible: false,
+      exportVisible: false,
       formType: 'create',
       rowData: {},
       tableData: [],
       loading: true,
       castId: 6,
-      roleId: null
+      roleId: null,
+      tableHeight: 200
     }
   },
   // 动态路由匹配
   beforeRouteUpdate(to, from, next) {
     this.castId = to.params.castId;
     this.getTableData();
+    this.isExportable = this.setExportable();
     next();
   },
   created() {
     this.castId = this.$route.params.castId;
     this.getTableData();
     this.roleId = JSON.parse(localStorage.getItem('userinfo')).roleId;
+    // 必须在获取了 roleId 之后，再判断权限
+    this.isExportable = this.setExportable();
+  },
+  mounted () {
+    const self = this;
+    self.$nextTick(() => {
+      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+    });
+    window.onresize = debounce(() => {
+      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+    }, 1000)
   },
   computed: {
     pickerOptions() {
@@ -147,6 +165,13 @@ export default {
     },
     clickSearch() {
       this.getTableData();
+    },
+    setExportable() {
+      if ([1, 2, 3].includes(this.roleId)) {
+        return true;
+      } else {
+        return false;
+      }
     },
     getTableData() {
       const params = {

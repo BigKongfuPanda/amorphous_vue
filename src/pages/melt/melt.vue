@@ -41,7 +41,7 @@
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-plus" @click="createMelt" v-if="isAble">创建冶炼记录</el-button>
       </el-col>
-      <el-table :data="tableData" stripe border style="width:100%" v-loading="loading"> 
+      <el-table :data="tableData" stripe border style="width:100%" v-loading="loading" ref="table" :height="tableHeight">
         <el-table-column prop="createTime" label="冶炼日期" align="center" width="110px" :formatter="dateFormat" fixed></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="80px" fixed></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="170px" fixed></el-table-column>
@@ -87,7 +87,7 @@
 
 <script>
 import urlmap from '@/utils/urlmap';
-import { dateFormat, dateTimeFormat } from '@/utils/common';
+import { dateFormat, dateTimeFormat, debounce } from '@/utils/common';
 import dialogForm from './components/dialogForm.vue';
 import { mapState, mapActions } from 'vuex';
 
@@ -118,7 +118,8 @@ export default {
         total: 1,
         current: 1,
         pageSize: 10
-      }
+      },
+      tableHeight: 100
     }
   },
   computed: {
@@ -141,6 +142,15 @@ export default {
     this.isAble = this.setIsAble();
     this.getTableData();
     this.getRibbonTypeList();  
+  },
+  mounted () {
+    const self = this;
+    self.$nextTick(() => {
+      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+    });
+    window.onresize = debounce(() => {
+      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+    }, 1000)
   },
   methods: {
     ...mapActions([

@@ -33,7 +33,7 @@
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-plus" @click="add" v-if="isAddable">创建重卷记录</el-button>
       </el-col>
-      <el-table :data="tableData" stripe border style="width:100%" v-loading="loading"> 
+      <el-table :data="tableData" stripe border style="width:100%" v-loading="loading" ref="table" :height="tableHeight"> 
         <el-table-column prop="furnace" label="炉号" align="center" min-width="170px"></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" min-width="80px"></el-table-column>
         <el-table-column prop="ribbonWidth" label="规格" align="center"></el-table-column>
@@ -65,7 +65,7 @@
 
 <script>
 import urlmap from '@/utils/urlmap';
-import { dateFormat } from '@/utils/common';
+import { dateFormat, debounce } from '@/utils/common';
 import dialogForm from './components/dialogForm.vue';
 
 export default {
@@ -94,7 +94,8 @@ export default {
         total: 1,
         current: 1,
         pageSize: 10
-      }
+      },
+      tableHeight: 200
     }
   },
   // 动态路由匹配
@@ -113,6 +114,15 @@ export default {
     this.isAddable = this.setIsAddable(); 
     this.isEditable = this.setIsEditable(); 
     this.getTableData();    
+  },
+  mounted () {
+    const self = this;
+    self.$nextTick(() => {
+      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+    });
+    window.onresize = debounce(() => {
+      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+    }, 1000)
   },
   methods: {
     dateFormat(row, column) {

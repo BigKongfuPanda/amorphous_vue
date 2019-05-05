@@ -18,6 +18,7 @@ export default {
   addMelt: '/melt',
   updateMelt: '/melt',
   delMelt: '/melt',
+  exportMelt: '/melt/export',
   queryCast: '/cast',
   addCast: '/cast',
   updateCast: '/cast',

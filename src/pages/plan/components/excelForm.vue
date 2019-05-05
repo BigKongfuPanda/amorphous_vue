@@ -28,6 +28,7 @@
 
 <script>
 import urlmap from '@/utils/urlmap';
+import qs from 'qs';
 
 export default {
   props: {
@@ -59,7 +60,7 @@ export default {
             startTime: this.formData.date[0],
             endTime: this.formData.date[1]
           };
-          const url = `${urlmap.exportMeasure}?${qs.stringify(params)}`;
+          const url = `${urlmap.exportPlan}?${qs.stringify(params)}`;
           window.open(url);
           this.$emit('submitExport');
         } else {

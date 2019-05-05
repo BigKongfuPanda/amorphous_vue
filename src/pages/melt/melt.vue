@@ -40,6 +40,7 @@
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-plus" @click="createMelt" v-if="isAble">创建冶炼记录</el-button>
+        <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="userinfo.roleId === 1 || userinfo.roleId === 2 || userinfo.roleId === 3" class="pull_right">导出</el-button>
       </el-col>
       <el-table :data="tableData" stripe border style="width:100%" v-loading="loading" ref="table" :height="tableHeight">
         <el-table-column prop="createTime" label="冶炼日期" align="center" width="110px" :formatter="dateFormat" fixed></el-table-column>
@@ -55,6 +56,7 @@
         <el-table-column prop="mixAlloyNumber" label="回炉锭炉号" align="center" width="150px"></el-table-column>
         <el-table-column prop="mixAlloyWeight" label="回炉锭重量(kg)" align="center" width="120px"></el-table-column>
         <el-table-column prop="highNbNumber" label="高铌料炉号" align="center" width="150px"></el-table-column>
+        <el-table-column prop="highNbWeight" label="高铌料重量(kg)" align="center" width="120px"></el-table-column>
         <el-table-column prop="Si" label="硅(g)" align="center" width="60px"></el-table-column>
         <el-table-column prop="Ni" label="镍(g)" align="center" width="60px"></el-table-column>
         <el-table-column prop="Cu" label="铜(g)" align="center" width="60px"></el-table-column>
@@ -90,6 +92,7 @@ import urlmap from '@/utils/urlmap';
 import { dateFormat, dateTimeFormat, debounce } from '@/utils/common';
 import dialogForm from './components/dialogForm.vue';
 import { mapState, mapActions } from 'vuex';
+import qs from 'qs';
 
 export default {
   name: 'melt',
@@ -245,6 +248,20 @@ export default {
         current: val
       };
       this.getTableData(params);
+    },
+    exportExcel() {
+      const params = {
+        castId: this.castId,
+        startTime: this.searchForm.date[0],
+        endTime: this.searchForm.date[1],
+        melter: this.searchForm.melter,
+        ribbonTypeName: this.searchForm.ribbonTypeName,
+        bucket: this.searchForm.bucket,
+        newAlloyNumber: this.searchForm.newAlloyNumber,
+        oldAlloyNumber: this.searchForm.oldAlloyNumber
+      };
+      const url = `${urlmap.exportMelt}?${qs.stringify(params)}`;
+      window.open(url);
     }
   }
 }

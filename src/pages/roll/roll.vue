@@ -46,7 +46,7 @@
         <el-table-column prop="rollMachine" label="机器编号" align="center" width="110px"></el-table-column>
         <el-table-column prop="roller" label="重卷人员" align="center" width="110px"></el-table-column>
         <el-table-column prop="createdAt" label="重卷日期" align="center" :formatter="rollDateFormat" min-width="110px"></el-table-column>
-        <el-table-column prop="isFlat" label="是否平整" align="center" width="80px">
+        <el-table-column label="是否平整" align="center" width="80px">
           <template slot-scope="scope">
             <span :class="{text_danger: scope.row.isFlat === '否'}">{{scope.row.isFlat}}</span>
           </template>

@@ -75,6 +75,11 @@
         <el-table-column prop="alloyWeight" label="单炉投入" align="center" width="80px"></el-table-column>
         <el-table-column prop="castTime" label="制带时间" align="center" width="110px"></el-table-column>
         <el-table-column prop="rawWeight" label="大盘毛重" align="center" width="80px"></el-table-column>
+        <el-table-column label="实际规格(mm)" align="center" width="80px">
+          <template slot-scope="scope">
+            <span :class="{text_danger: scope.row.realRibbonWidth !== ribbonWidth}">{{scope.row.realRibbonWidth}}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope" v-if="roleId === 2">
             <el-button size="mini" type="primary" @click="editPlan(scope.row)">修改</el-button>

@@ -125,7 +125,7 @@
 
 <script>
 import urlmap from '@/utils/urlmap';
-import { dateFormat, dateTimeFormat } from '@/utils/common';
+import { dateFormat, dateTimeFormat, debounce } from '@/utils/common';
 import dialogForm from './components/dialogForm.vue';
 import { mapState, mapActions } from 'vuex';
 
@@ -186,7 +186,13 @@ export default {
     this.getRibbonWidthList();
   },
   mounted () {
-    this.tableHeight = window.innerHeight - this.$refs.table.$el.getBoundingClientRect().top;
+    const self = this;
+    self.$nextTick(() => {
+      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+    });
+    window.onresize = debounce(() => {
+      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+    }, 1000)
   },
   methods: {
     ...mapActions([

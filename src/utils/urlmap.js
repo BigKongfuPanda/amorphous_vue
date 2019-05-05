@@ -29,6 +29,7 @@ export default {
   updateMeasure: '/measure',
   delMeasure: '/measure',
   exportMeasure: '/measure/exportmeasure',
+  exportRoll: '/measure/exportroll',
   // 库房
   queryStorage: '/storage',
   updateStorage: '/storage',

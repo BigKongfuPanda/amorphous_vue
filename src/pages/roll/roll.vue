@@ -32,6 +32,7 @@
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-plus" @click="add" v-if="isAddable">创建重卷记录</el-button>
+        <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="userinfo.roleId === 1 || userinfo.roleId === 2 || userinfo.roleId === 3" class="pull_right">导出</el-button>
       </el-col>
       <el-table :data="tableData" stripe border style="width:100%" v-loading="loading" ref="table" :height="tableHeight"> 
         <el-table-column prop="furnace" label="炉号" align="center" min-width="170px"></el-table-column>
@@ -44,6 +45,12 @@
         <el-table-column prop="coilWeight" label="重量(kg)" align="center" width="110px"></el-table-column>
         <el-table-column prop="rollMachine" label="机器编号" align="center" width="110px"></el-table-column>
         <el-table-column prop="roller" label="重卷人员" align="center" width="110px"></el-table-column>
+        <el-table-column prop="createdAt" label="重卷日期" align="center" :formatter="rollDateFormat" min-width="110px"></el-table-column>
+        <el-table-column prop="isFlat" label="是否平整" align="center" width="80px">
+          <template slot-scope="scope">
+            <span :class="{text_danger: scope.row.isFlat === '否'}">{{scope.row.isFlat}}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="isEditable" :disabled="scope.row.roller !== userinfo.adminname && userinfo.roleId !== 1">修改</el-button>
@@ -67,6 +74,7 @@
 import urlmap from '@/utils/urlmap';
 import { dateFormat, debounce } from '@/utils/common';
 import dialogForm from './components/dialogForm.vue';
+import qs from 'qs';
 
 export default {
   name: 'melt',
@@ -127,6 +135,9 @@ export default {
   methods: {
     dateFormat(row, column) {
       return dateFormat(row.castDate);
+    },
+    rollDateFormat(row, column) {
+      return dateFormat(row.createdAt);
     },
     clickSearch() {
       // 重置当前页码为1
@@ -215,6 +226,18 @@ export default {
       } else { // 其他
         return false;
       }
+    },
+    exportExcel() {
+      const params = {
+        castId: this.castId,
+        startTime: this.searchForm.date[0],
+        endTime: this.searchForm.date[1],
+        caster: this.searchForm.caster,
+        furnace: this.searchForm.furnace,
+        roller: this.searchForm.roller
+      };
+      const url = `${urlmap.exportRoll}?${qs.stringify(params)}`;
+      window.open(url);
     }
   }
 }

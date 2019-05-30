@@ -376,6 +376,11 @@ export default {
               clone.furnace = fHead + fEnd;
               clone.castTime = this.setCastTime(fEnd);
               clone.roleId = this.roleId;
+              //将数组转成字符串
+              clone.orderRibbonToughnessLevels = clone.orderRibbonToughnessLevels.join();
+              clone.orderAppearenceLevels = clone.orderAppearenceLevels.join();
+              clone.qualifiedRibbonToughnessLevels = clone.qualifiedRibbonToughnessLevels.join();
+              clone.qualifiedAppearenceLevels = clone.qualifiedAppearenceLevels.join();
               formData.push(clone);
               fEnd = (Number(fEnd) + 1) < 10 ? '0' + (Number(fEnd) + 1) : (Number(fEnd) + 1);
             }
@@ -386,10 +391,15 @@ export default {
             url = urlmap.updatePlan;
 
             this.formData.roleId = this.roleId;
-            this.formData.orderRibbonToughnessLevelsJson = JSON.stringify(this.formData.orderRibbonToughnessLevels);
-            this.formData.orderAppearenceLevelsJson = JSON.stringify(this.formData.orderAppearenceLevels);
-            this.formData.qualifiedRibbonToughnessLevelsJson = JSON.stringify(this.formData.qualifiedRibbonToughnessLevels);
-            this.formData.qualifiedAppearenceLevelsJson = JSON.stringify(this.formData.qualifiedAppearenceLevels);
+            // this.formData.orderRibbonToughnessLevelsJson = JSON.stringify(this.formData.orderRibbonToughnessLevels);
+            // this.formData.orderAppearenceLevelsJson = JSON.stringify(this.formData.orderAppearenceLevels);
+            // this.formData.qualifiedRibbonToughnessLevelsJson = JSON.stringify(this.formData.qualifiedRibbonToughnessLevels);
+            // this.formData.qualifiedAppearenceLevelsJson = JSON.stringify(this.formData.qualifiedAppearenceLevels);
+
+            this.formData.orderRibbonToughnessLevels = this.formData.orderRibbonToughnessLevels.join();
+            this.formData.orderAppearenceLevels = this.formData.orderAppearenceLevels.join();
+            this.formData.qualifiedRibbonToughnessLevels = this.formData.qualifiedRibbonToughnessLevels.join();
+            this.formData.qualifiedAppearenceLevels = this.formData.qualifiedAppearenceLevels.join();
             params = this.formData;
           }
 

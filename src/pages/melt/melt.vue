@@ -220,13 +220,13 @@ export default {
       this.formType = 'edit';
     },
     del(row) {
-      const { _id, furnace } = row;
+      const { id, furnace } = row;
       this.$confirm(`删除后数据无法恢复，确定删除 ${furnace} 吗？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http('delete', urlmap.delMelt, {_id}).then(data => {
+        this.$http('delete', urlmap.delMelt, {id}).then(data => {
           this.getTableData();
         }).catch(error => {
           console.log(error);

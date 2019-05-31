@@ -40,8 +40,8 @@ export default new Vuex.Store({
     // 获取带材牌号列表
     getRibbonTypeList({ commit }) {
       http('get', urlmap.queryRibbonType).then(data => {
-        data.list && data.list.forEach(item => {
-          item.ribbonTypeId = item._id;
+        data.list && data.list.forEach((item, i) => {
+          item.ribbonTypeId = i + 1;
         });
         commit('SET_RIBBONTYPELIST', data.list);
       }).catch(err => {
@@ -52,7 +52,7 @@ export default new Vuex.Store({
     getRibbonWidthList({ commit }) {
       http('get', urlmap.queryRibbonWidth).then(data => {
         data.list && data.list.forEach(item => {
-          item.ribbonWidthId = item._id;
+          item.ribbonWidthId = i + 1;
         });
         commit('SET_RIBBONWIDTHLIST', data.list);
       }).catch(err => {
@@ -63,7 +63,7 @@ export default new Vuex.Store({
     getRibbonThicknessLevelList({ commit }) {
       http('get', urlmap.queryRibbonThicknessLevel).then(data => {
         data.list && data.list.forEach(item => {
-          item.ribbonThicknessLevelId = item._id;
+          item.ribbonThicknessLevelId = i + 1;
         });
         commit('SET_RIBBONTHICKNESSLEVELLIST', data.list);
       }).catch(err => {
@@ -74,7 +74,7 @@ export default new Vuex.Store({
     getLaminationLevelList({ commit }) {
       http('get', urlmap.queryLaminationLevel).then(data => {
         data.list && data.list.forEach(item => {
-          item.laminationLevelId = item._id;
+          item.laminationLevelId = i + 1;
         });
         commit('SET_LAMINATIONLEVELLIST', data.list);
       }).catch(err => {
@@ -85,7 +85,7 @@ export default new Vuex.Store({
     getRibbonToughnessLevelList({ commit }) {
       http('get', urlmap.queryRibbonToughnessLevel).then(data => {
         data.list && data.list.forEach(item => {
-          item.ribbonToughnessLevelId = item._id;
+          item.ribbonToughnessLevelId = i + 1;
         });
         commit('SET_RIBBONTOUGHNESSLEVELLIST', data.list);
       }).catch(err => {

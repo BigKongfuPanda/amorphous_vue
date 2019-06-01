@@ -40,9 +40,9 @@ export default new Vuex.Store({
     // 获取带材牌号列表
     getRibbonTypeList({ commit }) {
       http('get', urlmap.queryRibbonType).then(data => {
-        data.list && data.list.forEach((item, i) => {
-          item.ribbonTypeId = i + 1;
-        });
+        // data.list && data.list.forEach((item, i) => {
+        //   item.ribbonTypeId = i + 1;
+        // });
         commit('SET_RIBBONTYPELIST', data.list);
       }).catch(err => {
         console.log(err);
@@ -51,9 +51,9 @@ export default new Vuex.Store({
     // 获取带材规格列表
     getRibbonWidthList({ commit }) {
       http('get', urlmap.queryRibbonWidth).then(data => {
-        data.list && data.list.forEach(item => {
-          item.ribbonWidthId = i + 1;
-        });
+        // data.list && data.list.forEach(item => {
+        //   item.ribbonWidthId = i + 1;
+        // });
         commit('SET_RIBBONWIDTHLIST', data.list);
       }).catch(err => {
         console.log(err);
@@ -62,9 +62,9 @@ export default new Vuex.Store({
     // 获取带材厚度级别列表
     getRibbonThicknessLevelList({ commit }) {
       http('get', urlmap.queryRibbonThicknessLevel).then(data => {
-        data.list && data.list.forEach(item => {
-          item.ribbonThicknessLevelId = i + 1;
-        });
+        // data.list && data.list.forEach(item => {
+        //   item.ribbonThicknessLevelId = i + 1;
+        // });
         commit('SET_RIBBONTHICKNESSLEVELLIST', data.list);
       }).catch(err => {
         console.log(err);
@@ -73,9 +73,9 @@ export default new Vuex.Store({
     // 获取带材叠片级别列表
     getLaminationLevelList({ commit }) {
       http('get', urlmap.queryLaminationLevel).then(data => {
-        data.list && data.list.forEach(item => {
-          item.laminationLevelId = i + 1;
-        });
+        // data.list && data.list.forEach(item => {
+        //   item.laminationLevelId = i + 1;
+        // });
         commit('SET_LAMINATIONLEVELLIST', data.list);
       }).catch(err => {
         console.log(err);
@@ -84,9 +84,9 @@ export default new Vuex.Store({
     // 获取带材韧性级别列表
     getRibbonToughnessLevelList({ commit }) {
       http('get', urlmap.queryRibbonToughnessLevel).then(data => {
-        data.list && data.list.forEach(item => {
-          item.ribbonToughnessLevelId = i + 1;
-        });
+        // data.list && data.list.forEach(item => {
+        //   item.ribbonToughnessLevelId = i + 1;
+        // });
         commit('SET_RIBBONTOUGHNESSLEVELLIST', data.list);
       }).catch(err => {
         console.log(err);

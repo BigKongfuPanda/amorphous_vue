@@ -60,10 +60,10 @@ export default {
       this.rowData = row;
     },
     del(row) {
-      const { _id, ribbonToughness } = row;
+      const { ribbonToughnessLevelId, ribbonToughness } = row;
       this.$confirm(`删除后数据无法恢复，确定要删除 ${ribbonToughness} 吗？`, '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'})
       .then(() => {
-        this.$http('delete', urlmap.delRibbonToughnessLevel, { _id }).then(data => {
+        this.$http('delete', urlmap.delRibbonToughnessLevel, { ribbonToughnessLevelId }).then(data => {
           this.getRibbonToughnessLevelList();
         }).catch(err => {
           console.log(err);

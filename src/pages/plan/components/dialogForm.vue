@@ -202,7 +202,7 @@ const formConfig = {
   heatNum: null,
   alloyWeight: null,
   castTime: '',
-  rawWeight: '',
+  rawWeight: null,
   remark: '计划喷带12炉，如果有富余时间喷带按照当天最后一炉规定的要求生产。',
   fileNumber: '',
   orderThickness: '', // 订单要求：厚度
@@ -253,7 +253,7 @@ export default {
         heatNum: null,
         alloyWeight: null,
         castTime: '',
-        rawWeight: '',
+        rawWeight: null,
         remark: '',
         fileNumber: '',
         orderThickness: '', // 订单要求：厚度
@@ -292,6 +292,7 @@ export default {
           { validator: ltNumber(99999), trigger: 'blur' }   
         ],
         alloyWeight: [
+          { required: true, message: '请填写单炉投入重量', trigger: 'blur' },
           { validator: positiveInteger, trigger: 'blur' },
           { validator: ltNumber(99999), trigger: 'blur' }   
         ],

@@ -77,7 +77,7 @@
         <el-table-column prop="rawWeight" label="大盘毛重" align="center" width="80px"></el-table-column>
         <el-table-column label="实际规格(mm)" align="center" width="80px">
           <template slot-scope="scope">
-            <span :class="{text_danger: scope.row.realRibbonWidth !== ribbonWidth}">{{scope.row.realRibbonWidth}}</span>
+            <span :class="{text_danger: scope.row.realRibbonWidth !== scope.row.ribbonWidth}">{{scope.row.realRibbonWidth}}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="150px">
@@ -185,6 +185,12 @@ export default {
       };
       this.$http('get', urlmap.queryPlan, params).then(data => {
         let _list = data.list;
+        _list.forEach(row => {
+          row.orderRibbonToughnessLevels = row.orderRibbonToughnessLevels.split(',');
+          row.orderAppearenceLevels = row.orderAppearenceLevels.split(',');
+          row.qualifiedRibbonToughnessLevels = row.qualifiedRibbonToughnessLevels.split(',');
+          row.qualifiedAppearenceLevels = row.qualifiedAppearenceLevels.split(',');
+        });
         // 如果数组中每一条数据的 approved === 1 都成立，则表示该计划已经审批过
         this.isApproved = _list.every(item => item.approved === 1);
 
@@ -214,10 +220,10 @@ export default {
       this.formType = 'edit';
     },
     delPlan(row) {
-      const { id, furnace } = row;
+      const { planId, furnace } = row;
       this.$confirm(`删除后数据无法恢复，确定要删除 ${furnace} 吗？`, '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'})
       .then(() => {
-        this.$http('delete', urlmap.delPlan, {id}).then(data => {
+        this.$http('delete', urlmap.delPlan, {planId}).then(data => {
           this.getTableData();
         }).catch(err => {
           console.log(err);

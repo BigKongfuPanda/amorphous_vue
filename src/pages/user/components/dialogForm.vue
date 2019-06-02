@@ -8,7 +8,7 @@
   v-loading="loading"
   width="30%"
   element-loading-text="拼命加载中">
-    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="width: 100%" @submit.native.prevent> 
+    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="width: 100%" @keyup.enter.native="submitForm"> 
       <el-form-item label="角色：" prop="roleId">
         <el-select v-model="formData.roleId" placeholder="请选择">
           <el-option

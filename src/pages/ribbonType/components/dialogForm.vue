@@ -7,7 +7,7 @@
   :center="true"
   v-loading="loading"
   element-loading-text="拼命加载中">
-    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="width: 100%" @submit.native.prevent> 
+    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="width: 100%" @keyup.enter.native="submitForm"> 
       <el-form-item label="带材牌号：" prop="ribbonTypeName">
         <el-input v-model="formData.ribbonTypeName"></el-input>
       </el-form-item>

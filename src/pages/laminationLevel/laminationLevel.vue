@@ -63,7 +63,7 @@ export default {
       const { laminationLevelId, laminationLevel } = row;
       this.$confirm(`删除后数据无法恢复，确定要删除 ${laminationLevel} 吗？`, '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'})
       .then(() => {
-        this.$http('delete', urlmap.delLaminationLevel, { ribbonTypeId }).then(data => {
+        this.$http('delete', urlmap.delLaminationLevel, { laminationLevelId }).then(data => {
           this.getLaminationLevelList();
         }).catch(err => {
           console.log(err);

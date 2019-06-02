@@ -17,10 +17,10 @@
       </el-form-item>
       <el-form-item label="班组：">
         <el-select v-model="searchForm.team" placeholder="请选择班组">
-          <el-option label="甲" value="甲"></el-option>
-          <el-option label="乙" value="乙"></el-option>
-          <el-option label="丙" value="丙"></el-option>
-          <el-option label="丁" value="丁"></el-option>
+          <el-option :label="castId + '#-甲'" :value="castId + '#-甲'"></el-option>
+          <el-option :label="castId + '#-乙'" :value="castId + '#-乙'"></el-option>
+          <el-option :label="castId + '#-丙'" :value="castId + '#-丙'"></el-option>
+          <el-option :label="castId + '#-丁'" :value="castId + '#-丁'"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="喷带手：">
@@ -247,6 +247,10 @@ export default {
       Object.assign(params, _params);
       this.$http('get', urlmap.queryCast, params).then(data => {
         this.pageConfig.total = data.count;
+        // 将 record 转化为数组
+        data.list.forEach(item => {
+          item.record = JSON.parse(item.record);
+        });
         this.tableData = data.list;
       }).catch((err) => {
         console.log(err);

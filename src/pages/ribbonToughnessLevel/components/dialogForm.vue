@@ -7,12 +7,12 @@
   :center="true"
   v-loading="loading"
   element-loading-text="拼命加载中">
-    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="width: 100%" @submit.native.prevent> 
-      <el-form-item label="带材韧性：" prop="ribbonToughness">
-        <el-input v-model="formData.ribbonToughness"></el-input>
-      </el-form-item>
+    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="width: 100%" @keyup.enter.native="submitForm"> 
       <el-form-item label="韧性等级：" prop="ribbonToughnessLevel">
         <el-input v-model="formData.ribbonToughnessLevel"></el-input>
+      </el-form-item>
+      <el-form-item label="带材韧性：" prop="ribbonToughness">
+        <el-input v-model="formData.ribbonToughness"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer"> 

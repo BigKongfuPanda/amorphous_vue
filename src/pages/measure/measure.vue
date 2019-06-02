@@ -189,7 +189,7 @@
             </div>
             <div v-else>
               <el-select size="mini" v-model="scope.row.ribbonToughness" placeholder="">
-                <el-option v-for="item in ribbonToughnessLevelList" :key="item._id" :label="item.ribbonToughness" :value="item.ribbonToughness"></el-option>
+                <el-option v-for="item in ribbonToughnessLevelList" :key="item.ribbonToughnessLevelId" :label="item.ribbonToughness" :value="item.ribbonToughness"></el-option>
               </el-select>
             </div>
           </template>
@@ -510,12 +510,12 @@ export default {
           item.storageRule = {
             orderThickness: item.orderThickness,
             orderLaminationFactor: item.orderLaminationFactor,
-            orderRibbonToughnessLevels: item.orderRibbonToughnessLevels,
-            orderAppearenceLevels: item.orderAppearenceLevels,
+            orderRibbonToughnessLevels: item.orderRibbonToughnessLevels.split(','),
+            orderAppearenceLevels: item.orderAppearenceLevels.split(','),
             qualifiedThickness: item.qualifiedThickness,
             qualifiedLaminationFactor: item.qualifiedLaminationFactor,
-            qualifiedRibbonToughnessLevels: item.qualifiedRibbonToughnessLevels,
-            qualifiedAppearenceLevels: item.qualifiedAppearenceLevels
+            qualifiedRibbonToughnessLevels: item.qualifiedRibbonToughnessLevels.split(','),
+            qualifiedAppearenceLevels: item.qualifiedAppearenceLevels.split(',')
           };
         });
         this.tableData = data.list;
@@ -535,13 +535,13 @@ export default {
       row.isEditing = true;
     },
     del(row) {
-      const { _id, furnace, coilNumber } = row;
+      const { measureId, furnace, coilNumber } = row;
       this.$confirm(`删除后数据无法恢复，确定删除 ${furnace} 的第 ${coilNumber} 盘吗？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http('delete', urlmap.delMeasure, {_id}).then(data => {
+        this.$http('delete', urlmap.delMeasure, {measureId}).then(data => {
           this.getTableData();
         }).catch(error => {
           console.log(error);

@@ -517,6 +517,7 @@ export default {
             qualifiedRibbonToughnessLevels: item.qualifiedRibbonToughnessLevels.split(','),
             qualifiedAppearenceLevels: item.qualifiedAppearenceLevels.split(',')
           };
+          item.clients = item.clients ? item.clients.split(',') : [];
         });
         this.tableData = data.list;
       }).catch((err) => {
@@ -549,6 +550,7 @@ export default {
       }).catch(() => {});
     },
     save(row) {
+      row.clients = row.clients.join();
       row.isEditing = false;
       // this.pageConfig.current = 1;
       // this.getTableData();

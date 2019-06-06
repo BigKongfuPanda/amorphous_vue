@@ -448,13 +448,13 @@ export default {
       row.isEditing = true;
     },
     del(row) {
-      const { _id, furnace, coilNumber } = row;
+      const { storageId, furnace, coilNumber } = row;
       this.$confirm(`确定退库 ${furnace} 的第 ${coilNumber} 盘吗？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http('delete', urlmap.delStorage, { _id, furnace, coilNumber }).then(data => {
+        this.$http('delete', urlmap.delStorage, { storageId, furnace, coilNumber }).then(data => {
           this.getTableData();
         }).catch(error => {
           console.log(error);

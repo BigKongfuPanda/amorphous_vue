@@ -269,15 +269,15 @@
                     <td>计划内入库要求</td>
                     <td>{{scope.row.storageRule.orderThickness}}</td>
                     <td>{{scope.row.storageRule.orderLaminationFactor}}</td>
-                    <td>{{scope.row.storageRule.orderRibbonToughnessLevels.toString()}}</td>
-                    <td>{{scope.row.storageRule.orderAppearenceLevels.toString()}}</td>
+                    <td>{{scope.row.storageRule.orderRibbonToughnessLevels}}</td>
+                    <td>{{scope.row.storageRule.orderAppearenceLevels}}</td>
                   </tr>
                   <tr v-if="userinfo.roleId === 1 || userinfo.roleId === 2 || userinfo.roleId === 3 || userinfo.roleId === 5 || userinfo.roleId === 6">
                     <td>计划外入库要求</td>
                     <td>{{scope.row.storageRule.qualifiedThickness}}</td>
                     <td>{{scope.row.storageRule.qualifiedLaminationFactor}}</td>
-                    <td>{{scope.row.storageRule.qualifiedRibbonToughnessLevels.toString()}}</td>
-                    <td>{{scope.row.storageRule.qualifiedAppearenceLevels.toString()}}</td>
+                    <td>{{scope.row.storageRule.qualifiedRibbonToughnessLevels}}</td>
+                    <td>{{scope.row.storageRule.qualifiedAppearenceLevels}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -510,12 +510,12 @@ export default {
           item.storageRule = {
             orderThickness: item.orderThickness,
             orderLaminationFactor: item.orderLaminationFactor,
-            orderRibbonToughnessLevels: item.orderRibbonToughnessLevels.split(','),
-            orderAppearenceLevels: item.orderAppearenceLevels.split(','),
+            orderRibbonToughnessLevels: item.orderRibbonToughnessLevels,
+            orderAppearenceLevels: item.orderAppearenceLevels,
             qualifiedThickness: item.qualifiedThickness,
             qualifiedLaminationFactor: item.qualifiedLaminationFactor,
-            qualifiedRibbonToughnessLevels: item.qualifiedRibbonToughnessLevels.split(','),
-            qualifiedAppearenceLevels: item.qualifiedAppearenceLevels.split(',')
+            qualifiedRibbonToughnessLevels: item.qualifiedRibbonToughnessLevels,
+            qualifiedAppearenceLevels: item.qualifiedAppearenceLevels
           };
           item.clients = item.clients ? item.clients.split(',') : [];
         });
@@ -826,13 +826,13 @@ export default {
       }
       // 计划内：韧性
       const ribbonToughnessLevel = row.ribbonToughnessLevel;
-      const orderRibbonToughnessLevels = row.orderRibbonToughnessLevels;
+      const orderRibbonToughnessLevels = row.orderRibbonToughnessLevels.split(',');
       if (!orderRibbonToughnessLevels.includes(ribbonToughnessLevel)) {
         inPlanFlag = false;
       }
       // 计划内：外观
       const appearenceLevel = row.appearenceLevel;
-      const orderAppearenceLevels = row.orderAppearenceLevels;
+      const orderAppearenceLevels = row.orderAppearenceLevels.split(',');
       if (!orderAppearenceLevels.includes(appearenceLevel)) {
         inPlanFlag = false;
       }
@@ -872,12 +872,12 @@ export default {
         }
       }
       // 计划外：韧性
-      const qualifiedRibbonToughnessLevels = row.qualifiedRibbonToughnessLevels;
+      const qualifiedRibbonToughnessLevels = row.qualifiedRibbonToughnessLevels.split(',');
       if (!qualifiedRibbonToughnessLevels.includes(ribbonToughnessLevel)) {
         outPlanFlag = false;
       }
       // 计划外：外观
-      const qualifiedAppearenceLevels = row.qualifiedAppearenceLevels;
+      const qualifiedAppearenceLevels = row.qualifiedAppearenceLevels.split(',');
       if (!qualifiedAppearenceLevels.includes(appearenceLevel)) {
         outPlanFlag = false;
       }
@@ -922,6 +922,7 @@ export default {
       }
       this.multipleSelection.forEach(row => {
         row.isMeasureConfirmed = 1; // 1-检测确认入库，0-还没有确认
+        row.clients = row.clients.join();
       });
       // 发送请求，更新当前的数据
       this.$http('PUT', urlmap.updateMeasure, { dataJson: JSON.stringify(this.multipleSelection) }).then(data => {

@@ -272,7 +272,7 @@ export default {
       row.isEditing = true;
     },
     del(row) {
-      const { _id, furnace, coilNumber } = row;
+      const { storageId, furnace, coilNumber } = row;
       this.$confirm(`确定退库 ${furnace} 的第 ${coilNumber} 盘吗？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

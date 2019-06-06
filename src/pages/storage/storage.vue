@@ -448,13 +448,13 @@ export default {
       row.isEditing = true;
     },
     del(row) {
-      const { _id, furnace, coilNumber } = row;
+      const { storageId, furnace, coilNumber } = row;
       this.$confirm(`确定退库 ${furnace} 的第 ${coilNumber} 盘吗？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http('delete', urlmap.delStorage, { _id, furnace, coilNumber }).then(data => {
+        this.$http('delete', urlmap.delStorage, { storageId, furnace, coilNumber }).then(data => {
           this.getTableData();
         }).catch(error => {
           console.log(error);
@@ -564,12 +564,33 @@ export default {
       this.$refs.batchOutStoreForm.validate((valid) => {
         if (valid) {
           this.batchOutStoreForm.loading = true;
-          this.multipleSelection && this.multipleSelection.forEach(item => {
-            item.takeBy = this.batchOutStoreForm.takeBy,
-            item.remainWeight = 0
+          // this.multipleSelection && this.multipleSelection.forEach(item => {
+          //   item.takeBy = this.batchOutStoreForm.takeBy,
+          //   item.remainWeight = 0
+          // });
+          // let formData = {
+          //   dataJson: JSON.stringify(this.multipleSelection),
+          //   type: 'batch'
+          // };
+          // this.$http('PUT', urlmap.updateStorage, formData).then(data => {
+          //   const params = {
+          //     current: 1
+          //   };
+          //   this.pageConfig.current = 1;
+          //   this.getTableData(params);
+          // }).catch(err => {
+          //   console.log(err);
+          // }).finally(() => {
+          //   this.batchOutStoreForm.visible = false;
+          //   this.batchOutStoreForm.loading = false;
+          // }); 
+          let ids = [];
+          ids = this.multipleSelection && this.multipleSelection.map(item => {
+            return item.storageId;
           });
-          let formData = {
-            dataJson: JSON.stringify(this.multipleSelection),
+          const formData = {
+            ids: ids.join(),
+            takeBy: this.batchOutStoreForm.takeBy,
             type: 'batch'
           };
           this.$http('PUT', urlmap.updateStorage, formData).then(data => {
@@ -583,7 +604,7 @@ export default {
           }).finally(() => {
             this.batchOutStoreForm.visible = false;
             this.batchOutStoreForm.loading = false;
-          });    
+          }); 
         } else {
           return false;
         }

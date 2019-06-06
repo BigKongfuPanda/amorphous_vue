@@ -470,6 +470,7 @@ export default {
         this.pageConfig.total = data.count;
         data.list && data.list.forEach(item => {
           item.isEditing = false;
+          item.clients = item.clients.split(',');
         });
         this.tableData = data.list;
       }).catch((err) => {
@@ -489,6 +490,7 @@ export default {
     },
     save(row) {
       row.isEditing = false;
+      // row.clients = row.clients.join();
       // this.pageConfig.current = 1;
       // this.getTableData();
       

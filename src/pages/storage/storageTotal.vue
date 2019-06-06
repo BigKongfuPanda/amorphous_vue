@@ -102,7 +102,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="clients" label="检测判定去向" align="center" width="120px" :show-overflow-tooltip="true">
-          <template slot-scope="scope">{{scope.row.clients.toString()}}</template>
+          <template slot-scope="scope">{{scope.row.clients}}</template>
         </el-table-column>
         <el-table-column prop="shipRemark" label="发货备注" align="center" width="100px" :show-overflow-tooltip="true">
           <template slot-scope="scope">

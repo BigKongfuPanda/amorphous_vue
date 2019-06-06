@@ -353,6 +353,7 @@
 
 <script>
 import qs from 'qs';
+import { cloneDeep } from 'lodash';
 import urlmap from '@/utils/urlmap';
 import { dateFormat, dateTimeFormat, debounce } from '@/utils/common';
 import { mapState, mapActions } from 'vuex';
@@ -550,7 +551,6 @@ export default {
       }).catch(() => {});
     },
     save(row) {
-      row.clients = row.clients.join();
       row.isEditing = false;
       // this.pageConfig.current = 1;
       // this.getTableData();
@@ -693,8 +693,10 @@ export default {
         }
       }
       
+      const clone = cloneDeep(row);
+      clone.clients = clone.clients.join();
       // 发送请求，更新当前的数据
-      this.$http('PUT', urlmap.updateMeasure, row).then(data => {
+      this.$http('PUT', urlmap.updateMeasure, clone).then(data => {
 
       }).catch(error => {
         console.log(error);
@@ -917,15 +919,16 @@ export default {
       this.multipleSelection = val;
     },
     measureConfirm() {
-      if (this.multipleSelection.length === 0) {
+      const selectionList = cloneDeep(this.multipleSelection);
+      if (selectionList.length === 0) {
         return this.$alert('请选择要入库的带材', '提示', { type: 'warning' });
       }
-      this.multipleSelection.forEach(row => {
+      selectionList.forEach(row => {
         row.isMeasureConfirmed = 1; // 1-检测确认入库，0-还没有确认
         row.clients = row.clients.join();
       });
       // 发送请求，更新当前的数据
-      this.$http('PUT', urlmap.updateMeasure, { dataJson: JSON.stringify(this.multipleSelection) }).then(data => {
+      this.$http('PUT', urlmap.updateMeasure, { dataJson: JSON.stringify(selectionList) }).then(data => {
         this.getTableData();
       }).catch(error => {
         console.log(error);

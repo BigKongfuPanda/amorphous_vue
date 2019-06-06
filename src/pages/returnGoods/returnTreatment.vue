@@ -257,15 +257,15 @@
                     <td>计划内入库要求</td>
                     <td>{{scope.row.storageRule.orderThickness}}</td>
                     <td>{{scope.row.storageRule.orderLaminationFactor}}</td>
-                    <td>{{scope.row.storageRule.orderRibbonToughnessLevels.toString()}}</td>
-                    <td>{{scope.row.storageRule.orderAppearenceLevels.toString()}}</td>
+                    <td>{{scope.row.storageRule.orderRibbonToughnessLevels}}</td>
+                    <td>{{scope.row.storageRule.orderAppearenceLevels}}</td>
                   </tr>
                   <tr>
                     <td>计划外入库要求</td>
                     <td>{{scope.row.storageRule.qualifiedThickness}}</td>
                     <td>{{scope.row.storageRule.qualifiedLaminationFactor}}</td>
-                    <td>{{scope.row.storageRule.qualifiedRibbonToughnessLevels.toString()}}</td>
-                    <td>{{scope.row.storageRule.qualifiedAppearenceLevels.toString()}}</td>
+                    <td>{{scope.row.storageRule.qualifiedRibbonToughnessLevels}}</td>
+                    <td>{{scope.row.storageRule.qualifiedAppearenceLevels}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -332,6 +332,7 @@
 
 <script>
 import qs from 'qs';
+import {cloneDeep} from 'lodash';
 import urlmap from '@/utils/urlmap';
 import { dateTimeFormat, debounce } from '@/utils/common';
 import { mapState, mapActions } from 'vuex';
@@ -441,6 +442,7 @@ export default {
         
         data.list.forEach(item => {
           item.isEditing = false;
+          item.clients = item.clients.split(',');
           item.isMeasureConfirmed = 0;
           item.storageRule = {
             orderThickness: item.orderThickness,
@@ -599,8 +601,10 @@ export default {
         row.isStored = 4;
       }
       
+      const clone = cloneDeep(row);
+      clone.clients = clone.clients.join();
       // 发送请求，更新当前的数据
-      this.$http('PUT', urlmap.updateReturnGoods, row).then(data => {
+      this.$http('PUT', urlmap.updateReturnGoods, clone).then(data => {
 
       }).catch(error => {
         console.log(error);
@@ -680,14 +684,16 @@ export default {
       row.ribbonThicknessLevel = this.calcribbonThicknessLevel(row.ribbonThickness);
     },
     measureConfirm() {
-      if (this.multipleSelection.length === 0) {
+      const selection = cloneDeep(this.multipleSelection);
+      if (selection.length === 0) {
         return this.$alert('请选择要入库的带材', '提示', { type: 'warning' });
       }
-      this.multipleSelection.forEach(row => {
+      selection.forEach(row => {
         row.isMeasureConfirmed = 1; // 1-检测确认入库，0-还没有确认
+        row.clients = row.clients.join();
       });
       // 发送请求，更新当前的数据
-      this.$http('PUT', urlmap.updateReturnGoods, { dataJson: JSON.stringify(this.multipleSelection) }).then(data => {
+      this.$http('PUT', urlmap.updateReturnGoods, { dataJson: JSON.stringify(selection) }).then(data => {
         // this.getTableData();
       }).catch(error => {
         console.log(error);

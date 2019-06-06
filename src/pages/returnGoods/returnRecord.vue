@@ -320,6 +320,7 @@
 
 <script>
 import qs from 'qs';
+import { cloneDeep } from 'lodash';
 import urlmap from '@/utils/urlmap';
 import { dateFormat, dateTimeFormat, debounce } from '@/utils/common';
 import { mapState, mapActions } from 'vuex';
@@ -490,7 +491,6 @@ export default {
     },
     save(row) {
       row.isEditing = false;
-      // row.clients = row.clients.join();
       // this.pageConfig.current = 1;
       // this.getTableData();
       
@@ -631,9 +631,12 @@ export default {
           }
         }
       }
+
+      const clone = cloneDeep(row);
+      clone.clients = clone.clients.join();
       
       // 发送请求，更新当前的数据
-      this.$http('PUT', urlmap.updateMeasure, row).then(data => {
+      this.$http('PUT', urlmap.updateMeasure, clone).then(data => {
 
       }).catch(error => {
         console.log(error);

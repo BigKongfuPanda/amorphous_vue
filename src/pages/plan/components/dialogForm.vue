@@ -390,18 +390,18 @@ export default {
           } else { // 编辑
             method = 'put';
             url = urlmap.updatePlan;
-
-            this.formData.roleId = this.roleId;
+            const clone = cloneDeep(this.formData);
+            clone.roleId = this.roleId;
             // this.formData.orderRibbonToughnessLevelsJson = JSON.stringify(this.formData.orderRibbonToughnessLevels);
             // this.formData.orderAppearenceLevelsJson = JSON.stringify(this.formData.orderAppearenceLevels);
             // this.formData.qualifiedRibbonToughnessLevelsJson = JSON.stringify(this.formData.qualifiedRibbonToughnessLevels);
             // this.formData.qualifiedAppearenceLevelsJson = JSON.stringify(this.formData.qualifiedAppearenceLevels);
 
-            this.formData.orderRibbonToughnessLevels = this.formData.orderRibbonToughnessLevels.join();
-            this.formData.orderAppearenceLevels = this.formData.orderAppearenceLevels.join();
-            this.formData.qualifiedRibbonToughnessLevels = this.formData.qualifiedRibbonToughnessLevels.join();
-            this.formData.qualifiedAppearenceLevels = this.formData.qualifiedAppearenceLevels.join();
-            params = this.formData;
+            clone.orderRibbonToughnessLevels = clone.orderRibbonToughnessLevels.join();
+            clone.orderAppearenceLevels = clone.orderAppearenceLevels.join();
+            clone.qualifiedRibbonToughnessLevels = clone.qualifiedRibbonToughnessLevels.join();
+            clone.qualifiedAppearenceLevels = clone.qualifiedAppearenceLevels.join();
+            params = clone;
           }
 
           this.$http(method, url, params).then(data => {

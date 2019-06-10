@@ -167,109 +167,109 @@ export default {
       Object.assign(params, _params);
       if (this.searchForm.ratioType === 'byCaster') {
         this.$http('get', urlmap.queryStatisticsRatio, params).then(data => {
-          const list = data.list;
+          // const list = data.list;
 
-          // 第一次遍历，求出每一炉的各种重量
-          list.forEach(item => {
-            item.caster = item._id;
-            item.lowHeatNum = 0;
-            item.zeroHeatNum = 0;
-            item.uselessRibbonWeight = 0;
-            const furnaceList = item.furnaceList;
-            furnaceList.forEach(furnace => {
-              // 废带重量
-              item.uselessRibbonWeight += furnace.uselessRibbonWeight == undefined ? 0 : furnace.uselessRibbonWeight;
-              // 低产零产率：6,8,9机组 <= 80kg，7机组 <=50，算低产
-              if (furnace.rawWeight == 0) {
-                item.zeroHeatNum++;
-              }
-              if (furnace.castId === 7) {
-                if (furnace.rawWeight > 0 && furnace.rawWeight <= 50) {
-                  item.lowHeatNum++;
-                }
-              } else {
-                if (furnace.rawWeight > 0 && furnace.rawWeight <= 80) {
-                  item.lowHeatNum++;
-                }
-              }
-              item.lowAndZeroRatio = ((item.lowHeatNum + item.zeroHeatNum) * 100 / item.totalHeatNum).toFixed(2) + '%';
+          // // 第一次遍历，求出每一炉的各种重量
+          // list.forEach(item => {
+          //   item.caster = item._id;
+          //   item.lowHeatNum = 0;
+          //   item.zeroHeatNum = 0;
+          //   item.uselessRibbonWeight = 0;
+          //   const furnaceList = item.furnaceList;
+          //   furnaceList.forEach(furnace => {
+          //     // 废带重量
+          //     item.uselessRibbonWeight += furnace.uselessRibbonWeight == undefined ? 0 : furnace.uselessRibbonWeight;
+          //     // 低产零产率：6,8,9机组 <= 80kg，7机组 <=50，算低产
+          //     if (furnace.rawWeight == 0) {
+          //       item.zeroHeatNum++;
+          //     }
+          //     if (furnace.castId === 7) {
+          //       if (furnace.rawWeight > 0 && furnace.rawWeight <= 50) {
+          //         item.lowHeatNum++;
+          //       }
+          //     } else {
+          //       if (furnace.rawWeight > 0 && furnace.rawWeight <= 80) {
+          //         item.lowHeatNum++;
+          //       }
+          //     }
+          //     item.lowAndZeroRatio = ((item.lowHeatNum + item.zeroHeatNum) * 100 / item.totalHeatNum).toFixed(2) + '%';
 
-              furnace.coilNetWeight = 0;
-              furnace.inPlanStoredWeight = 0;
-              furnace.outPlanStoredWeight = 0;
-              furnace.totalStoredWeight = 0;
-              furnace.qualityOfA = 0;
-              furnace.qualityOfB = 0;
-              furnace.qualityOfC = 0;
-              furnace.qualityOfD = 0;
-              furnace.qualityOfE = 0;
-              furnace.qualityOfGood = 0;
-              furnace.qualityOfFine = 0;
-              furnace.qualityOfNormal = 0;
-              furnace.fromMeasure.forEach(measure => {
-                furnace.coilNetWeight += measure.coilNetWeight == undefined ? 0 : measure.coilNetWeight;
-                furnace.inPlanStoredWeight += measure.inPlanStoredWeight == undefined ? 0 : measure.inPlanStoredWeight;
-                furnace.outPlanStoredWeight += measure.outPlanStoredWeight == undefined ? 0 : measure.outPlanStoredWeight;
-                furnace.totalStoredWeight += measure.totalStoredWeight == undefined ? 0 : measure.totalStoredWeight;
-                furnace.qualityOfA += measure.qualityOfA == undefined ? 0 : measure.qualityOfA;
-                furnace.qualityOfB += measure.qualityOfB == undefined ? 0 : measure.qualityOfB;
-                furnace.qualityOfC += measure.qualityOfC == undefined ? 0 : measure.qualityOfC;
-                furnace.qualityOfD += measure.qualityOfD == undefined ? 0 : measure.qualityOfD;
-                furnace.qualityOfE += measure.qualityOfE == undefined ? 0 : measure.qualityOfE;
-                furnace.qualityOfGood += measure.qualityOfGood == undefined ? 0 : measure.qualityOfGood;
-                furnace.qualityOfFine += measure.qualityOfFine == undefined ? 0 : measure.qualityOfFine;
-                furnace.qualityOfNormal += measure.qualityOfNormal == undefined ? 0 : measure.qualityOfNormal;
-              });
-            });
-          });
+          //     furnace.coilNetWeight = 0;
+          //     furnace.inPlanStoredWeight = 0;
+          //     furnace.outPlanStoredWeight = 0;
+          //     furnace.totalStoredWeight = 0;
+          //     furnace.qualityOfA = 0;
+          //     furnace.qualityOfB = 0;
+          //     furnace.qualityOfC = 0;
+          //     furnace.qualityOfD = 0;
+          //     furnace.qualityOfE = 0;
+          //     furnace.qualityOfGood = 0;
+          //     furnace.qualityOfFine = 0;
+          //     furnace.qualityOfNormal = 0;
+          //     furnace.fromMeasure.forEach(measure => {
+          //       furnace.coilNetWeight += measure.coilNetWeight == undefined ? 0 : measure.coilNetWeight;
+          //       furnace.inPlanStoredWeight += measure.inPlanStoredWeight == undefined ? 0 : measure.inPlanStoredWeight;
+          //       furnace.outPlanStoredWeight += measure.outPlanStoredWeight == undefined ? 0 : measure.outPlanStoredWeight;
+          //       furnace.totalStoredWeight += measure.totalStoredWeight == undefined ? 0 : measure.totalStoredWeight;
+          //       furnace.qualityOfA += measure.qualityOfA == undefined ? 0 : measure.qualityOfA;
+          //       furnace.qualityOfB += measure.qualityOfB == undefined ? 0 : measure.qualityOfB;
+          //       furnace.qualityOfC += measure.qualityOfC == undefined ? 0 : measure.qualityOfC;
+          //       furnace.qualityOfD += measure.qualityOfD == undefined ? 0 : measure.qualityOfD;
+          //       furnace.qualityOfE += measure.qualityOfE == undefined ? 0 : measure.qualityOfE;
+          //       furnace.qualityOfGood += measure.qualityOfGood == undefined ? 0 : measure.qualityOfGood;
+          //       furnace.qualityOfFine += measure.qualityOfFine == undefined ? 0 : measure.qualityOfFine;
+          //       furnace.qualityOfNormal += measure.qualityOfNormal == undefined ? 0 : measure.qualityOfNormal;
+          //     });
+          //   });
+          // });
 
-          // 第二次遍历，求出部分的结果
-          list.forEach(item => {
-            item.coilNetWeight = 0;
-            item.inPlanStoredWeight = 0;
-            item.outPlanStoredWeight = 0;
-            item.totalStoredWeight = 0;
-            item.qualityOfA = 0;
-            item.qualityOfB = 0;
-            item.qualityOfC = 0;
-            item.qualityOfD = 0;
-            item.qualityOfE = 0;
-            item.qualityOfGood = 0;
-            item.qualityOfFine = 0;
-            item.qualityOfNormal = 0;
-            const furnaceList = item.furnaceList;
-            furnaceList.forEach(furnace => {
-              item.coilNetWeight += furnace.coilNetWeight;
-              item.inPlanStoredWeight += furnace.inPlanStoredWeight;
-              item.outPlanStoredWeight += furnace.outPlanStoredWeight;
-              item.totalStoredWeight += furnace.totalStoredWeight;
-              item.qualityOfA += furnace.qualityOfA;
-              item.qualityOfB += furnace.qualityOfB;
-              item.qualityOfC += furnace.qualityOfC;
-              item.qualityOfD += furnace.qualityOfD;
-              item.qualityOfE += furnace.qualityOfE;
-              item.qualityOfGood += furnace.qualityOfGood;
-              item.qualityOfFine += furnace.qualityOfFine;
-              item.qualityOfNormal += furnace.qualityOfNormal;
-            });
-          });
+          // // 第二次遍历，求出部分的结果
+          // list.forEach(item => {
+          //   item.coilNetWeight = 0;
+          //   item.inPlanStoredWeight = 0;
+          //   item.outPlanStoredWeight = 0;
+          //   item.totalStoredWeight = 0;
+          //   item.qualityOfA = 0;
+          //   item.qualityOfB = 0;
+          //   item.qualityOfC = 0;
+          //   item.qualityOfD = 0;
+          //   item.qualityOfE = 0;
+          //   item.qualityOfGood = 0;
+          //   item.qualityOfFine = 0;
+          //   item.qualityOfNormal = 0;
+          //   const furnaceList = item.furnaceList;
+          //   furnaceList.forEach(furnace => {
+          //     item.coilNetWeight += furnace.coilNetWeight;
+          //     item.inPlanStoredWeight += furnace.inPlanStoredWeight;
+          //     item.outPlanStoredWeight += furnace.outPlanStoredWeight;
+          //     item.totalStoredWeight += furnace.totalStoredWeight;
+          //     item.qualityOfA += furnace.qualityOfA;
+          //     item.qualityOfB += furnace.qualityOfB;
+          //     item.qualityOfC += furnace.qualityOfC;
+          //     item.qualityOfD += furnace.qualityOfD;
+          //     item.qualityOfE += furnace.qualityOfE;
+          //     item.qualityOfGood += furnace.qualityOfGood;
+          //     item.qualityOfFine += furnace.qualityOfFine;
+          //     item.qualityOfNormal += furnace.qualityOfNormal;
+          //   });
+          // });
 
-          // 第三次遍历，求出合格率直通率等
-          list.forEach(item => {
-            item.totalStoredWeight = item.totalStoredWeight.toFixed(2);
-            // 不合格重量
-            item.unqualifiedWeight = item.rawWeight - item.totalStoredWeight;
-            // 有效过钢率，卷曲率，合格率，直通率
-            item.qualifiedRatio = item.totalStoredWeight / item.rawWeight;
-            item.effectiveMeltRatio = (item.rawWeight + item.uselessRibbonWeight) / item.alloyTotalWeight;
-            item.rollRatio = item.rawWeight / (item.rawWeight + item.uselessRibbonWeight);
-            item.totalRatio = ((item.effectiveMeltRatio * item.rollRatio * item.qualifiedRatio) * 100).toFixed(2) + '%';
-            item.qualifiedRatio = (item.qualifiedRatio * 100).toFixed(2) + '%';
-            item.effectiveMeltRatio = (item.effectiveMeltRatio * 100).toFixed(2) + '%';
-            item.rollRatio = (item.rollRatio * 100).toFixed(2) + '%';
-            // 订单合格率
-            item.inPlanRatio = ((item.inPlanStoredWeight / item.rawWeight) * 100).toFixed(2) + '%';
-          });
+          // // 第三次遍历，求出合格率直通率等
+          // list.forEach(item => {
+          //   item.totalStoredWeight = item.totalStoredWeight.toFixed(2);
+          //   // 不合格重量
+          //   item.unqualifiedWeight = item.rawWeight - item.totalStoredWeight;
+          //   // 有效过钢率，卷曲率，合格率，直通率
+          //   item.qualifiedRatio = item.totalStoredWeight / item.rawWeight;
+          //   item.effectiveMeltRatio = (item.rawWeight + item.uselessRibbonWeight) / item.alloyTotalWeight;
+          //   item.rollRatio = item.rawWeight / (item.rawWeight + item.uselessRibbonWeight);
+          //   item.totalRatio = ((item.effectiveMeltRatio * item.rollRatio * item.qualifiedRatio) * 100).toFixed(2) + '%';
+          //   item.qualifiedRatio = (item.qualifiedRatio * 100).toFixed(2) + '%';
+          //   item.effectiveMeltRatio = (item.effectiveMeltRatio * 100).toFixed(2) + '%';
+          //   item.rollRatio = (item.rollRatio * 100).toFixed(2) + '%';
+          //   // 订单合格率
+          //   item.inPlanRatio = ((item.inPlanStoredWeight / item.rawWeight) * 100).toFixed(2) + '%';
+          // });
           this.tableDataByCaster = data.list;
         }).catch((err) => {
           console.log(err);
@@ -278,109 +278,109 @@ export default {
         });
       } else if(this.searchForm.ratioType === 'byTeam') {
         this.$http('get', urlmap.queryStatisticsRatio, params).then(data => {
-          const list = data.list;
+          // const list = data.list;
 
-          // 第一次遍历，求出每一炉的各种重量
-          list.forEach(item => {
-            item.team = item._id;
-            item.lowHeatNum = 0;
-            item.zeroHeatNum = 0;
-            item.uselessRibbonWeight = 0;
-            const furnaceList = item.furnaceList;
-            furnaceList.forEach(furnace => {
-              // 废带重量
-              item.uselessRibbonWeight += furnace.uselessRibbonWeight == undefined ? 0 : furnace.uselessRibbonWeight;
-              // 低产零产率：6,8,9机组 <= 80kg，7机组 <=50，算低产
-              if (furnace.rawWeight == 0) {
-                item.zeroHeatNum++;
-              }
-              if (furnace.castId === 7) {
-                if (furnace.rawWeight > 0 && furnace.rawWeight <= 50) {
-                  item.lowHeatNum++;
-                }
-              } else {
-                if (furnace.rawWeight > 0 && furnace.rawWeight <= 80) {
-                  item.lowHeatNum++;
-                }
-              }
-              item.lowAndZeroRatio = ((item.lowHeatNum + item.zeroHeatNum) * 100 / item.totalHeatNum).toFixed(2) + '%';
+          // // 第一次遍历，求出每一炉的各种重量
+          // list.forEach(item => {
+          //   item.team = item._id;
+          //   item.lowHeatNum = 0;
+          //   item.zeroHeatNum = 0;
+          //   item.uselessRibbonWeight = 0;
+          //   const furnaceList = item.furnaceList;
+          //   furnaceList.forEach(furnace => {
+          //     // 废带重量
+          //     item.uselessRibbonWeight += furnace.uselessRibbonWeight == undefined ? 0 : furnace.uselessRibbonWeight;
+          //     // 低产零产率：6,8,9机组 <= 80kg，7机组 <=50，算低产
+          //     if (furnace.rawWeight == 0) {
+          //       item.zeroHeatNum++;
+          //     }
+          //     if (furnace.castId === 7) {
+          //       if (furnace.rawWeight > 0 && furnace.rawWeight <= 50) {
+          //         item.lowHeatNum++;
+          //       }
+          //     } else {
+          //       if (furnace.rawWeight > 0 && furnace.rawWeight <= 80) {
+          //         item.lowHeatNum++;
+          //       }
+          //     }
+          //     item.lowAndZeroRatio = ((item.lowHeatNum + item.zeroHeatNum) * 100 / item.totalHeatNum).toFixed(2) + '%';
 
-              furnace.coilNetWeight = 0;
-              furnace.inPlanStoredWeight = 0;
-              furnace.outPlanStoredWeight = 0;
-              furnace.totalStoredWeight = 0;
-              furnace.qualityOfA = 0;
-              furnace.qualityOfB = 0;
-              furnace.qualityOfC = 0;
-              furnace.qualityOfD = 0;
-              furnace.qualityOfE = 0;
-              furnace.qualityOfGood = 0;
-              furnace.qualityOfFine = 0;
-              furnace.qualityOfNormal = 0;
-              furnace.fromMeasure.forEach(measure => {
-                furnace.coilNetWeight += measure.coilNetWeight == undefined ? 0 : measure.coilNetWeight;
-                furnace.inPlanStoredWeight += measure.inPlanStoredWeight == undefined ? 0 : measure.inPlanStoredWeight;
-                furnace.outPlanStoredWeight += measure.outPlanStoredWeight == undefined ? 0 : measure.outPlanStoredWeight;
-                furnace.totalStoredWeight += measure.totalStoredWeight == undefined ? 0 : measure.totalStoredWeight;
-                furnace.qualityOfA += measure.qualityOfA == undefined ? 0 : measure.qualityOfA;
-                furnace.qualityOfB += measure.qualityOfB == undefined ? 0 : measure.qualityOfB;
-                furnace.qualityOfC += measure.qualityOfC == undefined ? 0 : measure.qualityOfC;
-                furnace.qualityOfD += measure.qualityOfD == undefined ? 0 : measure.qualityOfD;
-                furnace.qualityOfE += measure.qualityOfE == undefined ? 0 : measure.qualityOfE;
-                furnace.qualityOfGood += measure.qualityOfGood == undefined ? 0 : measure.qualityOfGood;
-                furnace.qualityOfFine += measure.qualityOfFine == undefined ? 0 : measure.qualityOfFine;
-                furnace.qualityOfNormal += measure.qualityOfNormal == undefined ? 0 : measure.qualityOfNormal;
-              });
-            });
-          });
+          //     furnace.coilNetWeight = 0;
+          //     furnace.inPlanStoredWeight = 0;
+          //     furnace.outPlanStoredWeight = 0;
+          //     furnace.totalStoredWeight = 0;
+          //     furnace.qualityOfA = 0;
+          //     furnace.qualityOfB = 0;
+          //     furnace.qualityOfC = 0;
+          //     furnace.qualityOfD = 0;
+          //     furnace.qualityOfE = 0;
+          //     furnace.qualityOfGood = 0;
+          //     furnace.qualityOfFine = 0;
+          //     furnace.qualityOfNormal = 0;
+          //     furnace.fromMeasure.forEach(measure => {
+          //       furnace.coilNetWeight += measure.coilNetWeight == undefined ? 0 : measure.coilNetWeight;
+          //       furnace.inPlanStoredWeight += measure.inPlanStoredWeight == undefined ? 0 : measure.inPlanStoredWeight;
+          //       furnace.outPlanStoredWeight += measure.outPlanStoredWeight == undefined ? 0 : measure.outPlanStoredWeight;
+          //       furnace.totalStoredWeight += measure.totalStoredWeight == undefined ? 0 : measure.totalStoredWeight;
+          //       furnace.qualityOfA += measure.qualityOfA == undefined ? 0 : measure.qualityOfA;
+          //       furnace.qualityOfB += measure.qualityOfB == undefined ? 0 : measure.qualityOfB;
+          //       furnace.qualityOfC += measure.qualityOfC == undefined ? 0 : measure.qualityOfC;
+          //       furnace.qualityOfD += measure.qualityOfD == undefined ? 0 : measure.qualityOfD;
+          //       furnace.qualityOfE += measure.qualityOfE == undefined ? 0 : measure.qualityOfE;
+          //       furnace.qualityOfGood += measure.qualityOfGood == undefined ? 0 : measure.qualityOfGood;
+          //       furnace.qualityOfFine += measure.qualityOfFine == undefined ? 0 : measure.qualityOfFine;
+          //       furnace.qualityOfNormal += measure.qualityOfNormal == undefined ? 0 : measure.qualityOfNormal;
+          //     });
+          //   });
+          // });
 
-          // 第二次遍历，求出部分的结果
-          list.forEach(item => {
-            item.coilNetWeight = 0;
-            item.inPlanStoredWeight = 0;
-            item.outPlanStoredWeight = 0;
-            item.totalStoredWeight = 0;
-            item.qualityOfA = 0;
-            item.qualityOfB = 0;
-            item.qualityOfC = 0;
-            item.qualityOfD = 0;
-            item.qualityOfE = 0;
-            item.qualityOfGood = 0;
-            item.qualityOfFine = 0;
-            item.qualityOfNormal = 0;
-            const furnaceList = item.furnaceList;
-            furnaceList.forEach(furnace => {
-              item.coilNetWeight += furnace.coilNetWeight;
-              item.inPlanStoredWeight += furnace.inPlanStoredWeight;
-              item.outPlanStoredWeight += furnace.outPlanStoredWeight;
-              item.totalStoredWeight += furnace.totalStoredWeight;
-              item.qualityOfA += furnace.qualityOfA;
-              item.qualityOfB += furnace.qualityOfB;
-              item.qualityOfC += furnace.qualityOfC;
-              item.qualityOfD += furnace.qualityOfD;
-              item.qualityOfE += furnace.qualityOfE;
-              item.qualityOfGood += furnace.qualityOfGood;
-              item.qualityOfFine += furnace.qualityOfFine;
-              item.qualityOfNormal += furnace.qualityOfNormal;
-            });
-          });
+          // // 第二次遍历，求出部分的结果
+          // list.forEach(item => {
+          //   item.coilNetWeight = 0;
+          //   item.inPlanStoredWeight = 0;
+          //   item.outPlanStoredWeight = 0;
+          //   item.totalStoredWeight = 0;
+          //   item.qualityOfA = 0;
+          //   item.qualityOfB = 0;
+          //   item.qualityOfC = 0;
+          //   item.qualityOfD = 0;
+          //   item.qualityOfE = 0;
+          //   item.qualityOfGood = 0;
+          //   item.qualityOfFine = 0;
+          //   item.qualityOfNormal = 0;
+          //   const furnaceList = item.furnaceList;
+          //   furnaceList.forEach(furnace => {
+          //     item.coilNetWeight += furnace.coilNetWeight;
+          //     item.inPlanStoredWeight += furnace.inPlanStoredWeight;
+          //     item.outPlanStoredWeight += furnace.outPlanStoredWeight;
+          //     item.totalStoredWeight += furnace.totalStoredWeight;
+          //     item.qualityOfA += furnace.qualityOfA;
+          //     item.qualityOfB += furnace.qualityOfB;
+          //     item.qualityOfC += furnace.qualityOfC;
+          //     item.qualityOfD += furnace.qualityOfD;
+          //     item.qualityOfE += furnace.qualityOfE;
+          //     item.qualityOfGood += furnace.qualityOfGood;
+          //     item.qualityOfFine += furnace.qualityOfFine;
+          //     item.qualityOfNormal += furnace.qualityOfNormal;
+          //   });
+          // });
 
-          // 第三次遍历，求出合格率直通率等
-          list.forEach(item => {
-            item.totalStoredWeight = item.totalStoredWeight.toFixed(2);
-            // 不合格重量
-            item.unqualifiedWeight = item.rawWeight - item.totalStoredWeight;
-            // 有效过钢率，卷曲率，合格率，直通率
-            item.qualifiedRatio = item.totalStoredWeight / item.rawWeight;
-            item.effectiveMeltRatio = (item.rawWeight + item.uselessRibbonWeight) / item.alloyTotalWeight;
-            item.rollRatio = item.rawWeight / (item.rawWeight + item.uselessRibbonWeight);
-            item.totalRatio = ((item.effectiveMeltRatio * item.rollRatio * item.qualifiedRatio) * 100).toFixed(2) + '%';
-            item.qualifiedRatio = (item.qualifiedRatio * 100).toFixed(2) + '%';
-            item.effectiveMeltRatio = (item.effectiveMeltRatio * 100).toFixed(2) + '%';
-            item.rollRatio = (item.rollRatio * 100).toFixed(2) + '%';
-            // 订单合格率
-            item.inPlanRatio = ((item.inPlanStoredWeight / item.rawWeight) * 100).toFixed(2) + '%';
-          });
+          // // 第三次遍历，求出合格率直通率等
+          // list.forEach(item => {
+          //   item.totalStoredWeight = item.totalStoredWeight.toFixed(2);
+          //   // 不合格重量
+          //   item.unqualifiedWeight = item.rawWeight - item.totalStoredWeight;
+          //   // 有效过钢率，卷曲率，合格率，直通率
+          //   item.qualifiedRatio = item.totalStoredWeight / item.rawWeight;
+          //   item.effectiveMeltRatio = (item.rawWeight + item.uselessRibbonWeight) / item.alloyTotalWeight;
+          //   item.rollRatio = item.rawWeight / (item.rawWeight + item.uselessRibbonWeight);
+          //   item.totalRatio = ((item.effectiveMeltRatio * item.rollRatio * item.qualifiedRatio) * 100).toFixed(2) + '%';
+          //   item.qualifiedRatio = (item.qualifiedRatio * 100).toFixed(2) + '%';
+          //   item.effectiveMeltRatio = (item.effectiveMeltRatio * 100).toFixed(2) + '%';
+          //   item.rollRatio = (item.rollRatio * 100).toFixed(2) + '%';
+          //   // 订单合格率
+          //   item.inPlanRatio = ((item.inPlanStoredWeight / item.rawWeight) * 100).toFixed(2) + '%';
+          // });
           this.tableDataByTeam = data.list;
         }).catch((err) => {
           console.log(err);
@@ -389,109 +389,109 @@ export default {
         });
       } else if(this.searchForm.ratioType === 'byCastId') {
         this.$http('get', urlmap.queryStatisticsRatio, params).then(data => {
-          const list = data.list;
+          // const list = data.list;
 
-          // 第一次遍历，求出每一炉的各种重量
-          list.forEach(item => {
-            item.castId = item._id;
-            item.lowHeatNum = 0;
-            item.zeroHeatNum = 0;
-            item.uselessRibbonWeight = 0;
-            const furnaceList = item.furnaceList;
-            furnaceList.forEach(furnace => {
-              // 废带重量
-              item.uselessRibbonWeight += furnace.uselessRibbonWeight == undefined ? 0 : furnace.uselessRibbonWeight;
-              // 低产零产率：6,8,9机组 <= 80kg，7机组 <=50，算低产
-              if (furnace.rawWeight == 0) {
-                item.zeroHeatNum++;
-              }
-              if (furnace.castId === 7) {
-                if (furnace.rawWeight > 0 && furnace.rawWeight <= 50) {
-                  item.lowHeatNum++;
-                }
-              } else {
-                if (furnace.rawWeight > 0 && furnace.rawWeight <= 80) {
-                  item.lowHeatNum++;
-                }
-              }
-              item.lowAndZeroRatio = ((item.lowHeatNum + item.zeroHeatNum) * 100 / item.totalHeatNum).toFixed(2) + '%';
+          // // 第一次遍历，求出每一炉的各种重量
+          // list.forEach(item => {
+          //   item.castId = item._id;
+          //   item.lowHeatNum = 0;
+          //   item.zeroHeatNum = 0;
+          //   item.uselessRibbonWeight = 0;
+          //   const furnaceList = item.furnaceList;
+          //   furnaceList.forEach(furnace => {
+          //     // 废带重量
+          //     item.uselessRibbonWeight += furnace.uselessRibbonWeight == undefined ? 0 : furnace.uselessRibbonWeight;
+          //     // 低产零产率：6,8,9机组 <= 80kg，7机组 <=50，算低产
+          //     if (furnace.rawWeight == 0) {
+          //       item.zeroHeatNum++;
+          //     }
+          //     if (furnace.castId === 7) {
+          //       if (furnace.rawWeight > 0 && furnace.rawWeight <= 50) {
+          //         item.lowHeatNum++;
+          //       }
+          //     } else {
+          //       if (furnace.rawWeight > 0 && furnace.rawWeight <= 80) {
+          //         item.lowHeatNum++;
+          //       }
+          //     }
+          //     item.lowAndZeroRatio = ((item.lowHeatNum + item.zeroHeatNum) * 100 / item.totalHeatNum).toFixed(2) + '%';
 
-              furnace.coilNetWeight = 0;
-              furnace.inPlanStoredWeight = 0;
-              furnace.outPlanStoredWeight = 0;
-              furnace.totalStoredWeight = 0;
-              furnace.qualityOfA = 0;
-              furnace.qualityOfB = 0;
-              furnace.qualityOfC = 0;
-              furnace.qualityOfD = 0;
-              furnace.qualityOfE = 0;
-              furnace.qualityOfGood = 0;
-              furnace.qualityOfFine = 0;
-              furnace.qualityOfNormal = 0;
-              furnace.fromMeasure.forEach(measure => {
-                furnace.coilNetWeight += measure.coilNetWeight == undefined ? 0 : measure.coilNetWeight;
-                furnace.inPlanStoredWeight += measure.inPlanStoredWeight == undefined ? 0 : measure.inPlanStoredWeight;
-                furnace.outPlanStoredWeight += measure.outPlanStoredWeight == undefined ? 0 : measure.outPlanStoredWeight;
-                furnace.totalStoredWeight += measure.totalStoredWeight == undefined ? 0 : measure.totalStoredWeight;
-                furnace.qualityOfA += measure.qualityOfA == undefined ? 0 : measure.qualityOfA;
-                furnace.qualityOfB += measure.qualityOfB == undefined ? 0 : measure.qualityOfB;
-                furnace.qualityOfC += measure.qualityOfC == undefined ? 0 : measure.qualityOfC;
-                furnace.qualityOfD += measure.qualityOfD == undefined ? 0 : measure.qualityOfD;
-                furnace.qualityOfE += measure.qualityOfE == undefined ? 0 : measure.qualityOfE;
-                furnace.qualityOfGood += measure.qualityOfGood == undefined ? 0 : measure.qualityOfGood;
-                furnace.qualityOfFine += measure.qualityOfFine == undefined ? 0 : measure.qualityOfFine;
-                furnace.qualityOfNormal += measure.qualityOfNormal == undefined ? 0 : measure.qualityOfNormal;
-              });
-            });
-          });
+          //     furnace.coilNetWeight = 0;
+          //     furnace.inPlanStoredWeight = 0;
+          //     furnace.outPlanStoredWeight = 0;
+          //     furnace.totalStoredWeight = 0;
+          //     furnace.qualityOfA = 0;
+          //     furnace.qualityOfB = 0;
+          //     furnace.qualityOfC = 0;
+          //     furnace.qualityOfD = 0;
+          //     furnace.qualityOfE = 0;
+          //     furnace.qualityOfGood = 0;
+          //     furnace.qualityOfFine = 0;
+          //     furnace.qualityOfNormal = 0;
+          //     furnace.fromMeasure.forEach(measure => {
+          //       furnace.coilNetWeight += measure.coilNetWeight == undefined ? 0 : measure.coilNetWeight;
+          //       furnace.inPlanStoredWeight += measure.inPlanStoredWeight == undefined ? 0 : measure.inPlanStoredWeight;
+          //       furnace.outPlanStoredWeight += measure.outPlanStoredWeight == undefined ? 0 : measure.outPlanStoredWeight;
+          //       furnace.totalStoredWeight += measure.totalStoredWeight == undefined ? 0 : measure.totalStoredWeight;
+          //       furnace.qualityOfA += measure.qualityOfA == undefined ? 0 : measure.qualityOfA;
+          //       furnace.qualityOfB += measure.qualityOfB == undefined ? 0 : measure.qualityOfB;
+          //       furnace.qualityOfC += measure.qualityOfC == undefined ? 0 : measure.qualityOfC;
+          //       furnace.qualityOfD += measure.qualityOfD == undefined ? 0 : measure.qualityOfD;
+          //       furnace.qualityOfE += measure.qualityOfE == undefined ? 0 : measure.qualityOfE;
+          //       furnace.qualityOfGood += measure.qualityOfGood == undefined ? 0 : measure.qualityOfGood;
+          //       furnace.qualityOfFine += measure.qualityOfFine == undefined ? 0 : measure.qualityOfFine;
+          //       furnace.qualityOfNormal += measure.qualityOfNormal == undefined ? 0 : measure.qualityOfNormal;
+          //     });
+          //   });
+          // });
 
-          // 第二次遍历，求出部分的结果
-          list.forEach(item => {
-            item.coilNetWeight = 0;
-            item.inPlanStoredWeight = 0;
-            item.outPlanStoredWeight = 0;
-            item.totalStoredWeight = 0;
-            item.qualityOfA = 0;
-            item.qualityOfB = 0;
-            item.qualityOfC = 0;
-            item.qualityOfD = 0;
-            item.qualityOfE = 0;
-            item.qualityOfGood = 0;
-            item.qualityOfFine = 0;
-            item.qualityOfNormal = 0;
-            const furnaceList = item.furnaceList;
-            furnaceList.forEach(furnace => {
-              item.coilNetWeight += furnace.coilNetWeight;
-              item.inPlanStoredWeight += furnace.inPlanStoredWeight;
-              item.outPlanStoredWeight += furnace.outPlanStoredWeight;
-              item.totalStoredWeight += furnace.totalStoredWeight;
-              item.qualityOfA += furnace.qualityOfA;
-              item.qualityOfB += furnace.qualityOfB;
-              item.qualityOfC += furnace.qualityOfC;
-              item.qualityOfD += furnace.qualityOfD;
-              item.qualityOfE += furnace.qualityOfE;
-              item.qualityOfGood += furnace.qualityOfGood;
-              item.qualityOfFine += furnace.qualityOfFine;
-              item.qualityOfNormal += furnace.qualityOfNormal;
-            });
-          });
+          // // 第二次遍历，求出部分的结果
+          // list.forEach(item => {
+          //   item.coilNetWeight = 0;
+          //   item.inPlanStoredWeight = 0;
+          //   item.outPlanStoredWeight = 0;
+          //   item.totalStoredWeight = 0;
+          //   item.qualityOfA = 0;
+          //   item.qualityOfB = 0;
+          //   item.qualityOfC = 0;
+          //   item.qualityOfD = 0;
+          //   item.qualityOfE = 0;
+          //   item.qualityOfGood = 0;
+          //   item.qualityOfFine = 0;
+          //   item.qualityOfNormal = 0;
+          //   const furnaceList = item.furnaceList;
+          //   furnaceList.forEach(furnace => {
+          //     item.coilNetWeight += furnace.coilNetWeight;
+          //     item.inPlanStoredWeight += furnace.inPlanStoredWeight;
+          //     item.outPlanStoredWeight += furnace.outPlanStoredWeight;
+          //     item.totalStoredWeight += furnace.totalStoredWeight;
+          //     item.qualityOfA += furnace.qualityOfA;
+          //     item.qualityOfB += furnace.qualityOfB;
+          //     item.qualityOfC += furnace.qualityOfC;
+          //     item.qualityOfD += furnace.qualityOfD;
+          //     item.qualityOfE += furnace.qualityOfE;
+          //     item.qualityOfGood += furnace.qualityOfGood;
+          //     item.qualityOfFine += furnace.qualityOfFine;
+          //     item.qualityOfNormal += furnace.qualityOfNormal;
+          //   });
+          // });
 
-          // 第三次遍历，求出合格率直通率等
-          list.forEach(item => {
-            item.totalStoredWeight = item.totalStoredWeight.toFixed(2);
-            // 不合格重量
-            item.unqualifiedWeight = item.rawWeight - item.totalStoredWeight;
-            // 有效过钢率，卷曲率，合格率，直通率
-            item.qualifiedRatio = item.totalStoredWeight / item.rawWeight;
-            item.effectiveMeltRatio = (item.rawWeight + item.uselessRibbonWeight) / item.alloyTotalWeight;
-            item.rollRatio = item.rawWeight / (item.rawWeight + item.uselessRibbonWeight);
-            item.totalRatio = ((item.effectiveMeltRatio * item.rollRatio * item.qualifiedRatio) * 100).toFixed(2) + '%';
-            item.qualifiedRatio = (item.qualifiedRatio * 100).toFixed(2) + '%';
-            item.effectiveMeltRatio = (item.effectiveMeltRatio * 100).toFixed(2) + '%';
-            item.rollRatio = (item.rollRatio * 100).toFixed(2) + '%';
-            // 订单合格率
-            item.inPlanRatio = ((item.inPlanStoredWeight / item.rawWeight) * 100).toFixed(2) + '%';
-          });
+          // // 第三次遍历，求出合格率直通率等
+          // list.forEach(item => {
+          //   item.totalStoredWeight = item.totalStoredWeight.toFixed(2);
+          //   // 不合格重量
+          //   item.unqualifiedWeight = item.rawWeight - item.totalStoredWeight;
+          //   // 有效过钢率，卷曲率，合格率，直通率
+          //   item.qualifiedRatio = item.totalStoredWeight / item.rawWeight;
+          //   item.effectiveMeltRatio = (item.rawWeight + item.uselessRibbonWeight) / item.alloyTotalWeight;
+          //   item.rollRatio = item.rawWeight / (item.rawWeight + item.uselessRibbonWeight);
+          //   item.totalRatio = ((item.effectiveMeltRatio * item.rollRatio * item.qualifiedRatio) * 100).toFixed(2) + '%';
+          //   item.qualifiedRatio = (item.qualifiedRatio * 100).toFixed(2) + '%';
+          //   item.effectiveMeltRatio = (item.effectiveMeltRatio * 100).toFixed(2) + '%';
+          //   item.rollRatio = (item.rollRatio * 100).toFixed(2) + '%';
+          //   // 订单合格率
+          //   item.inPlanRatio = ((item.inPlanStoredWeight / item.rawWeight) * 100).toFixed(2) + '%';
+          // });
           this.tableDataByCastId = data.list;
         }).catch((err) => {
           console.log(err);

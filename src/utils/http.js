@@ -27,14 +27,18 @@ axios.interceptors.response.use(function (response) {
     }
     
     if(_data.status != 0) {
-        return Message({
+        Message({
             message: _data.message,
             type: 'error'
         });
+        return {
+            status: -1,
+            message: _data.message
+        };
     }
 
     // GET 请求不会弹框
-    if (method !== 'GET') {
+    if (method !== 'GET' && _data.status == 0) {
         Message({
             message: _data.message,
             type: 'success'

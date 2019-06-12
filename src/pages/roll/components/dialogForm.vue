@@ -165,10 +165,12 @@ export default {
             const { method, url } = this.dialogData.formType === 'add' ? { method: 'POST', url: urlmap.addMeasure } : { method: 'PUT', url: urlmap.updateMeasure };
 
             this.$http(method, url, params).then(data => {
-              this.formData.coilNumber++;
-              this.formData.coilWeight = null;
-              this.formData.diameter = null;
-              this.$emit('submit');
+              if (data.status !== -1) {
+                this.formData.coilNumber++;
+                this.formData.coilWeight = null;
+                this.formData.diameter = null;
+                this.$emit('submit');
+              }
             }).catch((error) => {
               console.log(error);
             }).finally(() => {

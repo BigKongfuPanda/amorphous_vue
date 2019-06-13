@@ -164,6 +164,12 @@ export default {
             // 发送提交的请求
             const { method, url } = this.dialogData.formType === 'add' ? { method: 'POST', url: urlmap.addMeasure } : { method: 'PUT', url: urlmap.updateMeasure };
 
+            // 过滤掉值为 null 或者 undefined 的参数，以免存入数据库的时候，发生错误
+            Object.keys(params).forEach(key => {
+              if (params[key] == null) {
+                delete params[key];
+              }
+            });
             this.$http(method, url, params).then(data => {
               if (data.status !== -1) {
                 this.formData.coilNumber++;

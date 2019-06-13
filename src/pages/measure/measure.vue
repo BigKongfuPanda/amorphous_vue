@@ -641,7 +641,7 @@ export default {
         }
       }
 
-      if (row.ribbonThicknessLevel == '' || row.laminationLevel === '' || row.ribbonToughnessLevel == '' || row.appearenceLevel == '') {
+      if (['', undefined, null].includes(row.ribbonThicknessLevel) || ['', undefined, null].includes(row.laminationLevel) || ['', undefined, null].includes(row.ribbonToughnessLevel) || ['', undefined, null].includes(row.appearenceLevel)) {
         row.ribbonTotalLevel = '';
       }
 

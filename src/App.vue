@@ -40,6 +40,9 @@ export default {
       padding: 0;
       box-sizing: border-box;
   }
+  html {
+    font-size: 14px;
+  }
   .text_danger {
     color: #DB2023;
   }

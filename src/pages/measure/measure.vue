@@ -695,6 +695,13 @@ export default {
       
       const clone = cloneDeep(row);
       clone.clients = clone.clients.join();
+
+      // 去掉值为null或者undefined的参数
+      Object.keys(clone).forEach(key => {
+        if (clone[key] == null) {
+          delete clone[key];
+        }
+      });
       // 发送请求，更新当前的数据
       this.$http('PUT', urlmap.updateMeasure, clone).then(data => {
 

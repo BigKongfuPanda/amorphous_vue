@@ -134,8 +134,8 @@
           <router-link to="/returnTreatment">
             <el-menu-item index="/returnTreatment">退货操作</el-menu-item>
           </router-link>
-          <router-link to="returnRecord">
-            <el-menu-item index="returnRecord">退货记录</el-menu-item>
+          <router-link to="/returnRecord">
+            <el-menu-item index="/returnRecord">退货记录</el-menu-item>
           </router-link>
         </el-submenu>
         <el-submenu index="8" v-if="roleId === 1 || roleId === 2 || roleId === 3">

@@ -17,7 +17,7 @@
       >
         <el-submenu index="1">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="el-icon-tickets"></i>
             <span>生产计划</span>
           </template>
           <router-link to="/plan/6">
@@ -35,7 +35,7 @@
         </el-submenu>
         <el-submenu index="2">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="el-icon-tickets"></i>
             <span>冶炼记录</span>
           </template>
           <router-link to="/melt/6">
@@ -53,7 +53,7 @@
         </el-submenu>
         <el-submenu index="3">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="el-icon-tickets"></i>
             <span>喷带记录</span>
           </template>
           <router-link to="/cast/6">
@@ -71,7 +71,7 @@
         </el-submenu>
         <el-submenu index="4">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="el-icon-tickets"></i>
             <span>重卷记录</span>
           </template>
           <router-link to="/roll/6">
@@ -89,7 +89,7 @@
         </el-submenu>
         <el-submenu index="5">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="el-icon-tickets"></i>
             <span>检测记录</span>
           </template>
           <router-link to="/measure/6">
@@ -107,7 +107,7 @@
         </el-submenu>
         <el-submenu index="6" v-if="roleId === 1 || roleId === 2 || roleId === 3 || roleId === 6">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="el-icon-tickets"></i>
             <span>库房记录</span>
           </template>
           <router-link to="/storage/6">
@@ -128,7 +128,7 @@
         </el-submenu>
         <el-submenu index="7" v-if="roleId === 1 || roleId === 2 || roleId === 3 || roleId === 5 || roleId === 6">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="el-icon-tickets"></i>
             <span>退货处理</span>
           </template>
           <router-link to="/returnTreatment">
@@ -140,7 +140,7 @@
         </el-submenu>
         <el-submenu index="8" v-if="roleId === 1 || roleId === 2 || roleId === 3">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="el-icon-tickets"></i>
             <span>数据统计</span>
           </template>
           <router-link to="/statisticsOfRatio">
@@ -155,7 +155,7 @@
         </el-submenu>
         <el-submenu index="9" v-if="roleId === 1 || roleId === 2 || roleId === 3">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="el-icon-tickets"></i>
             <span>带材管理</span>
           </template>
           <router-link to="/ribbonType">
@@ -176,7 +176,7 @@
         </el-submenu>
         <el-submenu index="10" v-if="roleId === 1 || roleId === 2 || roleId === 3">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="el-icon-tickets"></i>
             <span>账号管理</span>
           </template>
           <router-link to="/user">

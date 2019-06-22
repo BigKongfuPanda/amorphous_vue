@@ -610,10 +610,10 @@ export default {
       
       if (row.ribbonTotalLevel !== '不合格') {
         // 如果厚度为20-22，则加G，厚度为23-24，加L
-        if (row.ribbonThickness >= 20 && row.ribbonThickness <= 22) {
+        if (row.ribbonThickness >= 20 && row.ribbonThickness < 22) {
           row.ribbonTotalLevel = row.ribbonTotalLevel + 'G';
         }
-        if (row.ribbonThickness >= 23 && row.ribbonThickness <= 24) {
+        if (row.ribbonThickness >= 23 && row.ribbonThickness < 24) {
           row.ribbonTotalLevel = row.ribbonTotalLevel + 'L';
         }
         // 如果带材厚度偏差大于3，同时韧性为A,B,C,此带材加F

@@ -4,46 +4,49 @@
       <el-breadcrumb-item>喷带记录</el-breadcrumb-item>
       <el-breadcrumb-item>{{castId}}号机组</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-form class="search_bar" :model="searchForm" :inline="true">
-      <el-form-item label="喷带日期：">
-        <el-date-picker
-          v-model="searchForm.date"
-          type="daterange"
-          :default-time="['00:00:00', '23:59:59']"
-          :clearable="false"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="班组：">
-        <el-select v-model="searchForm.team" placeholder="请选择班组">
-          <el-option :label="castId + '#-甲'" :value="castId + '#-甲'"></el-option>
-          <el-option :label="castId + '#-乙'" :value="castId + '#-乙'"></el-option>
-          <el-option :label="castId + '#-丙'" :value="castId + '#-丙'"></el-option>
-          <el-option :label="castId + '#-丁'" :value="castId + '#-丁'"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="喷带手：">
-        <el-input v-model="searchForm.caster" placeholder="请输入喷带手姓名"></el-input>
-      </el-form-item>
-      <el-form-item label="炉号：">
-        <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
-      </el-form-item>
-      <el-form-item label="材质：">
-        <el-select v-model="searchForm.ribbonTypeName" placeholder="请选择">
-          <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="规格：">
-        <el-select v-model="searchForm.ribbonWidths" placeholder="请选择" multiple collapse-tags>
-          <el-option v-for="item in ribbonWidthList" :key="item.ribbonWidthId" :label="item.ribbonWidth" :value="item.ribbonWidth"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
-        <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <Collapse>
+      <el-form class="search_bar" :model="searchForm" :inline="true">
+        <el-form-item label="喷带日期：">
+          <el-date-picker
+            v-model="searchForm.date"
+            type="daterange"
+            :default-time="['00:00:00', '23:59:59']"
+            :clearable="false"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="班组：">
+          <el-select v-model="searchForm.team" placeholder="请选择班组">
+            <el-option :label="castId + '#-甲'" :value="castId + '#-甲'"></el-option>
+            <el-option :label="castId + '#-乙'" :value="castId + '#-乙'"></el-option>
+            <el-option :label="castId + '#-丙'" :value="castId + '#-丙'"></el-option>
+            <el-option :label="castId + '#-丁'" :value="castId + '#-丁'"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="喷带手：">
+          <el-input v-model="searchForm.caster" placeholder="请输入喷带手姓名"></el-input>
+        </el-form-item>
+        <el-form-item label="炉号：">
+          <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
+        </el-form-item>
+        <el-form-item label="材质：">
+          <el-select v-model="searchForm.ribbonTypeName" placeholder="请选择">
+            <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="规格：">
+          <el-select v-model="searchForm.ribbonWidths" placeholder="请选择" multiple collapse-tags>
+            <el-option v-for="item in ribbonWidthList" :key="item.ribbonWidthId" :label="item.ribbonWidth" :value="item.ribbonWidth"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </Collapse>
+    
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-plus" @click="add" v-if="isAddAble">创建喷带记录</el-button>
@@ -127,12 +130,13 @@
 import urlmap from '@/utils/urlmap';
 import { dateFormat, dateTimeFormat, debounce } from '@/utils/common';
 import dialogForm from './components/dialogForm.vue';
+import Collapse from '@/components/collapse.vue';
 import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'cast',
   components: {
-    dialogForm
+    dialogForm, Collapse
   },
   data () {
     return {

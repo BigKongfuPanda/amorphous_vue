@@ -70,11 +70,11 @@ export default {
     line-height: 30px;
     background-color: #fff;
     padding: 0 20px;
+    margin-bottom: 10px;
   }
   .search_bar {
     background-color: #fff;
     padding: 10px 20px;
-    margin-top: 10px;
     .el-form-item {
       margin-bottom: 0;
     }

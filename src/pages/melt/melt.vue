@@ -149,10 +149,12 @@ export default {
   mounted () {
     const self = this;
     self.$nextTick(() => {
-      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+      // self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+      self.tableHeight = window.innerHeight - 100;
     });
     window.onresize = debounce(() => {
-      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+      // self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+      self.tableHeight = window.innerHeight - 100;
     }, 1000)
   },
   methods: {

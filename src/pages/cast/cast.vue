@@ -46,10 +46,9 @@
         </el-form-item>
       </el-form>
     </Collapse>
-    
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-plus" @click="add" v-if="isAddAble">创建喷带记录</el-button>
+        <el-button type="primary" size="small" icon="el-icon-plus" @click="add" v-if="isAddAble">创建喷带记录</el-button>
       </el-col>
       <el-table :data="tableData" ref="table"  stripe border style="width:100%" :height="tableHeight" v-loading="loading">
         <el-table-column type="expand" label="展开" width="50px">
@@ -192,10 +191,12 @@ export default {
   mounted () {
     const self = this;
     self.$nextTick(() => {
-      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+      // self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+      self.tableHeight = window.innerHeight - 100;
     });
     window.onresize = debounce(() => {
-      self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+      // self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
+      self.tableHeight = window.innerHeight - 100;
     }, 1000)
   },
   methods: {

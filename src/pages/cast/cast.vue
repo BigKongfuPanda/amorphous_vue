@@ -41,8 +41,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
-          <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
+          <el-button type="primary" icon="el-icon-search" size="small" @click="clickSearch">搜索</el-button>
+          <el-button type="primary" icon="el-icon-refresh" size="small" @click="reset">重置</el-button>
         </el-form-item>
       </el-form>
     </Collapse>

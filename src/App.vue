@@ -41,7 +41,7 @@ export default {
       box-sizing: border-box;
   }
   html {
-    font-size: 14px;
+    font-size: 12px;
   }
   .text_danger {
     color: #DB2023;
@@ -95,6 +95,15 @@ export default {
     color: #606266;
     p:first-of-type {
       margin-bottom: 5px;
+    }
+  }
+  .el-table {
+    font-size: 12px;
+    th, td {
+      padding: 5px 0;
+      .cell {
+        padding: 0;
+      }
     }
   }
   .el-dialog__header {

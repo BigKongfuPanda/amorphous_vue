@@ -145,12 +145,12 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="6">
-            <el-form-item label="接钢前包温" class="dialog_field" :prop="'record.' + index + '.tundishTemperatureWithoutMelt'" :rules="[{ required: true, message: '请填写接钢前包温', trigger: 'blur' }, { pattern: /^[1-9]\d{0,8}$/, message: '请输入9位以内正整数, 如 1350,...', trigger: 'blur' }]">
+            <el-form-item label="接钢前包温" class="dialog_field" :prop="'record.' + index + '.tundishTemperatureWithoutMelt'" :rules="[{ required: true, message: '请填写接钢前包温', trigger: 'blur' }, { pattern: /^[1-9\/]\d{0,8}$/, message: '请输入9位以内正整数, 如 1350,...', trigger: 'blur' }]">
               <el-input v-model="item.tundishTemperatureWithoutMelt"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="接钢后包温" class="dialog_field" :prop="'record.' + index + '.tundishTemperatureWithMelt'" :rules="[{ required: true, message: '请填写接钢后包温', trigger: 'blur' }, { pattern: /^[1-9]\d{0,8}$/, message: '请输入9位以内正整数, 如 1350,...', trigger: 'blur' }]">
+            <el-form-item label="接钢后包温" class="dialog_field" :prop="'record.' + index + '.tundishTemperatureWithMelt'" :rules="[{ required: true, message: '请填写接钢后包温', trigger: 'blur' }, { pattern: /^[1-9\/]\d{0,8}$/, message: '请输入9位以内正整数, 如 1350,...', trigger: 'blur' }]">
               <el-input v-model="item.tundishTemperatureWithMelt"></el-input>
             </el-form-item>
           </el-col>
@@ -222,8 +222,8 @@
       </section>
     </el-form>
     <div slot="footer">
-      <el-button @click="closeDialog">取消</el-button>
-      <el-button type="primary" @click="submitForm">提交</el-button>
+      <el-button @click="closeDialog" size="small">取消</el-button>
+      <el-button type="primary" @click="submitForm" size="small">提交</el-button>
     </div>
   </el-dialog>
 </template>

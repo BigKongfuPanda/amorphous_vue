@@ -186,15 +186,15 @@
       </el-menu>
     </el-aside>
     <el-container :style="{marginLeft: mgleft}">
-      <el-header>
+      <el-header style="height: 50px">
         <div class="logo"></div>
         <div class="signout">
           <label>
             当前用户：
             <span style="margin-right: 20px">{{adminname}}</span>
           </label>
-          <el-button type="primary" @click="modifyPwd" :disabled="isDisabled">修改密码</el-button>
-          <el-button type="danger" @click="signout" :disabled="isDisabled">退出登录</el-button>
+          <el-button type="primary" @click="modifyPwd" :disabled="isDisabled" size="small">修改密码</el-button>
+          <el-button type="danger" @click="signout" :disabled="isDisabled" size="small">退出登录</el-button>
         </div>
       </el-header>
       <el-main class="main">
@@ -353,8 +353,8 @@ export default {
   width: 180px;
 }
 .aside_title {
-  height: 60px;
-  line-height: 60px;
+  height: 50px;
+  line-height: 50px;
   text-align: center;
   img {
     width: 20px;
@@ -364,6 +364,7 @@ export default {
 .main {
   background-color: #f0f2f5;
   min-height: 650px;
+  padding: 10px;
 }
 .el-menu.el-menu--horizontal {
   border-bottom: none;
@@ -371,7 +372,7 @@ export default {
 .logo {
   float: left;
   width: 150px;
-  height: 60px;
+  height: 50px;
   background: url("../assets/logo.png") no-repeat 8px center;
 }
 .signout {

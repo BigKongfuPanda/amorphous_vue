@@ -32,6 +32,9 @@ export default {
     height: 20px;
     line-height: 20px;
   }
+  /deep/ .el-collapse-item__content {
+    padding-bottom: 0;
+  }
 }
 </style>
 

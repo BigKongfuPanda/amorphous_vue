@@ -98,7 +98,6 @@ export default {
     }
   }
   .el-table {
-    font-size: 12px;
     th, td {
       padding: 5px 0;
       .cell {

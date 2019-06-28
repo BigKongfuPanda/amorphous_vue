@@ -139,6 +139,7 @@ export default {
       Object.assign(params, _params);
       this.$http('get', urlmap.queryStatisticsQuality, params).then(data => {
         this.pageConfig.total = data.count;
+        this.pageConfig.pageSize = data.limit;
         // data.list.forEach(item => {
         //   const fromMeasure = item.fromMeasure;
         //   item.totalStoredWeight = this.calcSum(fromMeasure, 'totalStoredWeight');

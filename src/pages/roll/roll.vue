@@ -4,31 +4,33 @@
       <el-breadcrumb-item>重卷记录</el-breadcrumb-item>
       <el-breadcrumb-item>{{castId}}号机组</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-form class="search_bar" :model="searchForm" :inline="true">
-      <el-form-item label="生产日期：">
-        <el-date-picker
-          v-model="searchForm.date"
-          type="daterange"
-          :default-time="['00:00:00', '23:59:59']"
-          :clearable="false"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="喷带手：">
-        <el-input v-model="searchForm.caster" placeholder="请输入喷带手姓名"></el-input>
-      </el-form-item>
-      <el-form-item label="炉号：">
-        <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
-      </el-form-item>
-      <el-form-item label="重卷：">
-        <el-input v-model="searchForm.roller" placeholder="请输入重卷人姓名"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
-        <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <Collapse>
+      <el-form class="search_bar" :model="searchForm" :inline="true">
+        <el-form-item label="生产日期：">
+          <el-date-picker
+            v-model="searchForm.date"
+            type="daterange"
+            :default-time="['00:00:00', '23:59:59']"
+            :clearable="false"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="喷带手：">
+          <el-input v-model="searchForm.caster" placeholder="请输入喷带手姓名"></el-input>
+        </el-form-item>
+        <el-form-item label="炉号：">
+          <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
+        </el-form-item>
+        <el-form-item label="重卷：">
+          <el-input v-model="searchForm.roller" placeholder="请输入重卷人姓名"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </Collapse>
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-plus" @click="add" v-if="isAddable">创建重卷记录</el-button>
@@ -74,12 +76,13 @@
 import urlmap from '@/utils/urlmap';
 import { dateFormat, debounce } from '@/utils/common';
 import dialogForm from './components/dialogForm.vue';
+import Collapse from '@/components/collapse.vue';
 import qs from 'qs';
 
 export default {
   name: 'melt',
   components: {
-    dialogForm
+    dialogForm, Collapse
   },
   data () {
     return {
@@ -169,6 +172,7 @@ export default {
       Object.assign(params, _params);
       this.$http('get', urlmap.queryMeasure, params).then(data => {
         this.pageConfig.total = data.count;
+        this.pageConfig.pageSize = data.limit;
         this.tableData = data.list;
       }).catch((err) => {
         console.log(err);
@@ -216,14 +220,14 @@ export default {
       this.getTableData(params);
     },
     setIsAddable() {
-      if (this.userinfo.roleId == 4) { // 重卷人员可修改
+      if (this.userinfo.roleId == 4 || this.userinfo.roleId == 15) { // 重卷人员可修改
         return true;
       } else { // 其他
         return false;
       }
     },
     setIsEditable() {
-      if (this.userinfo.roleId == 4 || this.userinfo.roleId == 1) { // 重卷人员 或者厂长 可修改
+      if (this.userinfo.roleId == 4 || this.userinfo.roleId == 15 || this.userinfo.roleId == 1) { // 重卷人员 或者厂长 可修改
         return true;
       } else { // 其他
         return false;

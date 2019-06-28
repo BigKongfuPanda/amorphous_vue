@@ -16,6 +16,7 @@
             <span v-if="scope.row.roleId === 1">厂长</span>
             <span v-if="scope.row.roleId === 2">生产计划</span>
             <span v-if="scope.row.roleId === 3">普通管理员</span>
+            <span v-if="scope.row.roleId === 15">重卷组长</span>
             <span v-if="scope.row.roleId === 4">重卷</span>
             <span v-if="scope.row.roleId === 5">检测</span>
             <span v-if="scope.row.roleId === 6">库房</span>

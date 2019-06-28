@@ -11,7 +11,7 @@ import store from './store';
 import { http } from './utils/http';
 
 Vue.config.productionTip = false;
-Vue.use(ElementUI);
+Vue.use(ElementUI, { size: 'small' });
 Vue.prototype.$http = http;
 
 /* eslint-disable no-new */

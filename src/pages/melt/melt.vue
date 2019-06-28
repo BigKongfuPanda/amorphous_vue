@@ -4,39 +4,41 @@
       <el-breadcrumb-item>冶炼记录</el-breadcrumb-item>
       <el-breadcrumb-item>{{castId}}号机组</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-form class="search_bar" :model="searchForm" :inline="true">
-      <el-form-item label="冶炼日期：">
-        <el-date-picker
-          v-model="searchForm.date"
-          type="daterange"
-          :default-time="['00:00:00', '23:59:59']"
-          :clearable="false"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="冶炼人：">
-        <el-input v-model="searchForm.melter" placeholder="请输入冶炼人姓名"></el-input>
-      </el-form-item>
-      <el-form-item label="材质：">
-        <el-select v-model="searchForm.ribbonTypeName" placeholder="请选择">
-          <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="桶号：">
-        <el-input v-model="searchForm.bucket" placeholder="请输入桶号"></el-input>
-      </el-form-item>
-      <el-form-item label="新料：">
-        <el-input v-model="searchForm.newAlloyNumber" placeholder="请输入新料炉号"></el-input>
-      </el-form-item>
-      <el-form-item label="加工料：">
-        <el-input v-model="searchForm.oldAlloyNumber" placeholder="请输入加工料炉号"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
-        <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <Collapse>
+      <el-form class="search_bar" :model="searchForm" :inline="true">
+        <el-form-item label="冶炼日期：">
+          <el-date-picker
+            v-model="searchForm.date"
+            type="daterange"
+            :default-time="['00:00:00', '23:59:59']"
+            :clearable="false"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="冶炼人：">
+          <el-input v-model="searchForm.melter" placeholder="请输入冶炼人姓名"></el-input>
+        </el-form-item>
+        <el-form-item label="材质：">
+          <el-select v-model="searchForm.ribbonTypeName" placeholder="请选择">
+            <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="桶号：">
+          <el-input v-model="searchForm.bucket" placeholder="请输入桶号"></el-input>
+        </el-form-item>
+        <el-form-item label="新料：">
+          <el-input v-model="searchForm.newAlloyNumber" placeholder="请输入新料炉号"></el-input>
+        </el-form-item>
+        <el-form-item label="加工料：">
+          <el-input v-model="searchForm.oldAlloyNumber" placeholder="请输入加工料炉号"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </Collapse>
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-plus" @click="createMelt" v-if="isAble">创建冶炼记录</el-button>
@@ -91,13 +93,14 @@
 import urlmap from '@/utils/urlmap';
 import { dateFormat, dateTimeFormat, debounce } from '@/utils/common';
 import dialogForm from './components/dialogForm.vue';
+import Collapse from '@/components/collapse.vue';
 import { mapState, mapActions } from 'vuex';
 import qs from 'qs';
 
 export default {
   name: 'melt',
   components: {
-    dialogForm
+    dialogForm, Collapse
   },
   data () {
     return {
@@ -205,6 +208,7 @@ export default {
       Object.assign(params, _params);
       this.$http('get', urlmap.queryMelt, params).then(data => {
         this.pageConfig.total = data.count;
+        this.pageConfig.pageSize = data.limit;
         this.tableData = data.list;
       }).catch((err) => {
         console.log(err);

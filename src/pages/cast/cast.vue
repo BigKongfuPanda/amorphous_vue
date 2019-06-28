@@ -252,6 +252,7 @@ export default {
       Object.assign(params, _params);
       this.$http('get', urlmap.queryCast, params).then(data => {
         this.pageConfig.total = data.count;
+        this.pageConfig.pageSize = data.limit;
         // 将 record 转化为数组
         data.list.forEach(item => {
           item.record = JSON.parse(item.record);

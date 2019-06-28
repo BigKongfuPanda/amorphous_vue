@@ -41,7 +41,7 @@ export default {
       box-sizing: border-box;
   }
   html {
-    font-size: 12px;
+    font-size: 12px !important;
   }
   .text_danger {
     color: #DB2023;

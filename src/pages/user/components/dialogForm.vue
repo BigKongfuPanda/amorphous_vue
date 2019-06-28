@@ -45,6 +45,7 @@ const formConfig = {
 const roleList = [
   { id: 2, name: '生产计划' },
   { id: 3, name: '普通管理员' },
+  { id: 15, name: '重卷组长' },
   { id: 4, name: '重卷' },
   { id: 5, name: '检测' },
   { id: 6, name: '库房' },

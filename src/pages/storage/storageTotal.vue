@@ -4,51 +4,53 @@
       <el-breadcrumb-item>库存记录</el-breadcrumb-item>
       <el-breadcrumb-item>库存总表</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-form class="search_bar" :model="searchForm" :inline="true">
-      <el-form-item label="入库日期：">
-        <el-date-picker
-          v-model="searchForm.date"
-          type="daterange"
-          :default-time="['00:00:00', '23:59:59']"
-          :clearable="false"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="炉号：">
-        <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
-      </el-form-item>
-      <el-form-item label="材质：">
-        <el-select v-model="searchForm.ribbonTypeNames" placeholder="请选择" multiple collapse-tags>
-          <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="规格：">
-        <el-select v-model="searchForm.ribbonWidths" placeholder="请选择" multiple collapse-tags>
-          <el-option v-for="item in ribbonWidthList" :key="item.ribbonWidthId" :label="item.ribbonWidth" :value="item.ribbonWidth"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="厚度级别：">
-        <el-select v-model="searchForm.ribbonThicknessLevels" placeholder="请选择" multiple collapse-tags>
-          <el-option v-for="item in ribbonThicknessLevelList" :key="item.ribbonThicknessLevelId" :label="item.ribbonThicknessLevel" :value="item.ribbonThicknessLevel"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="叠片级别：">
-        <el-select v-model="searchForm.laminationLevels" placeholder="请选择" multiple collapse-tags>
-          <el-option v-for="item in laminationLevelList" :key="item.laminationLevelId" :label="item.laminationLevel" :value="item.laminationLevel"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="综合级别：">
-        <el-input v-model="searchForm.ribbonTotalLevels" placeholder="请输入综合级别，以逗号分隔"></el-input>
-      </el-form-item>
-      <el-form-item label="仓位：">
-        <el-input v-model="searchForm.place" placeholder="请输入仓位，以逗号分隔"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
-        <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <Collapse>
+      <el-form class="search_bar" :model="searchForm" :inline="true">
+        <el-form-item label="入库日期：">
+          <el-date-picker
+            v-model="searchForm.date"
+            type="daterange"
+            :default-time="['00:00:00', '23:59:59']"
+            :clearable="false"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="炉号：">
+          <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
+        </el-form-item>
+        <el-form-item label="材质：">
+          <el-select v-model="searchForm.ribbonTypeNames" placeholder="请选择" multiple collapse-tags>
+            <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="规格：">
+          <el-select v-model="searchForm.ribbonWidths" placeholder="请选择" multiple collapse-tags>
+            <el-option v-for="item in ribbonWidthList" :key="item.ribbonWidthId" :label="item.ribbonWidth" :value="item.ribbonWidth"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="厚度级别：">
+          <el-select v-model="searchForm.ribbonThicknessLevels" placeholder="请选择" multiple collapse-tags>
+            <el-option v-for="item in ribbonThicknessLevelList" :key="item.ribbonThicknessLevelId" :label="item.ribbonThicknessLevel" :value="item.ribbonThicknessLevel"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="叠片级别：">
+          <el-select v-model="searchForm.laminationLevels" placeholder="请选择" multiple collapse-tags>
+            <el-option v-for="item in laminationLevelList" :key="item.laminationLevelId" :label="item.laminationLevel" :value="item.laminationLevel"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="综合级别：">
+          <el-input v-model="searchForm.ribbonTotalLevels" placeholder="请输入综合级别，以逗号分隔"></el-input>
+        </el-form-item>
+        <el-form-item label="仓位：">
+          <el-input v-model="searchForm.place" placeholder="请输入仓位，以逗号分隔"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </Collapse>
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable">导出</el-button>
@@ -138,9 +140,11 @@ import qs from 'qs';
 import urlmap from '@/utils/urlmap';
 import { dateFormat, debounce } from '@/utils/common';
 import { mapState, mapActions } from 'vuex';
+import Collapse from '@/components/collapse.vue';
 
 export default {
   name: 'melt',
+  components: {Collapse},
   data () {
     return {
       userinfo: {},
@@ -260,6 +264,7 @@ export default {
       Object.assign(params, _params);
       this.$http('get', urlmap.queryStorage, params).then(data => {
         this.pageConfig.total = data.count;
+        this.pageConfig.pageSize = data.limit;
         data.list && data.list.forEach(item => {
           item.isEditing = false;
         });

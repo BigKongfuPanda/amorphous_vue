@@ -213,6 +213,21 @@ const formConfig = {
   qualifiedLaminationFactor: '', // 入库要求：叠片系数
   qualifiedRibbonToughnessLevels: [], // 入库要求：韧性
   qualifiedAppearenceLevels: [], // 入库要求：外观
+
+  // qualifiedDemands: [
+  //   {
+  //     qualifiedThickness: '', // 入库要求：厚度
+  //     qualifiedLaminationFactor: '', // 入库要求：叠片系数
+  //     qualifiedRibbonToughnessLevels: [], // 入库要求：韧性
+  //     qualifiedAppearenceLevels: [], // 入库要求：外观
+  //   },
+  //   {
+  //     qualifiedThickness: '', // 入库要求：厚度
+  //     qualifiedLaminationFactor: '', // 入库要求：叠片系数
+  //     qualifiedRibbonToughnessLevels: [], // 入库要求：韧性
+  //     qualifiedAppearenceLevels: [], // 入库要求：外观
+  //   }
+  // ]
 };
 
 export default {

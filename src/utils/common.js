@@ -18,3 +18,11 @@ export function debounce(fn, delay = 1000) {
     }, delay);
   }
 }
+
+// 在自然时间的基础上加 8小时
+// export function fixedTime(date) {
+//   if (date != undefined) {
+//     const timestamp = new Date(date).getTime() + 8 * 60 * 60 * 1000;
+//     return moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
+//   }
+// }

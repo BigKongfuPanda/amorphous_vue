@@ -151,11 +151,12 @@ export default {
   },
   computed: {
     pickerOptions() {
+      const self = this;
       return {
         disabledDate(time) {
           let date = new Date();
           date.setDate(date.getDate() + 1);
-          return time.getTime() >= date.getTime();
+          return [1, 2, 3].includes(Number(self.roleId)) ? false : time.getTime() >= date.getTime();
         }
       }
     }

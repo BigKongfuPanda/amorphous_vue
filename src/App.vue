@@ -99,11 +99,14 @@ export default {
   }
   .el-table {
     th, td {
-      padding: 5px 0;
+      padding: 0;
       .cell {
         padding: 0;
       }
     }
+  }
+  .el-table--border th:first-child .cell, .el-table--border td:first-child .cell {
+    padding-left: 0;
   }
   .el-dialog__header {
     background: #8093FF;

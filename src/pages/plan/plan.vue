@@ -48,28 +48,52 @@
             </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column label="计划外入库要求" v-if="roleId === 1 || roleId === 2 || roleId === 3">
+        <el-table-column label="计划外入库要求" v-if="roleId == 1 || roleId == 2 || roleId == 3">
           <el-table-column label="带厚(μm)" align="center" width="90px">
             <template slot-scope="scope">
-              <span>{{scope.row.qualifiedThickness}}</span>
+              <span>{{scope.row.qualifiedDemands[0].qualifiedThickness}}</span>
             </template>
           </el-table-column>
           <el-table-column label="叠片" align="center" width="80px">
             <template slot-scope="scope">
-              <span>{{scope.row.qualifiedLaminationFactor}}</span>
+              <span>{{scope.row.qualifiedDemands[0].qualifiedLaminationFactor}}</span>
             </template>
           </el-table-column>
           <el-table-column label="韧性" align="center" width="80px">
             <template slot-scope="scope">
-              <span>{{scope.row.qualifiedRibbonToughnessLevels.toString()}}</span>
+              <span>{{scope.row.qualifiedDemands[0].qualifiedRibbonToughnessLevels.toString()}}</span>
             </template>
           </el-table-column>
           <el-table-column label="外观" align="center" width="80px">
             <template slot-scope="scope">
-              <span>{{scope.row.qualifiedAppearenceLevels.toString()}}</span>
+              <span>{{scope.row.qualifiedDemands[0].qualifiedAppearenceLevels.toString()}}</span>
             </template>
           </el-table-column>
         </el-table-column>
+
+        <el-table-column label="计划外入库要求" v-if="roleId == 1 || roleId == 2 || roleId == 3">
+          <el-table-column label="带厚(μm)" align="center" width="90px">
+            <template slot-scope="scope">
+              <span>{{scope.row.qualifiedDemands[1] && scope.row.qualifiedDemands[1].qualifiedThickness}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="叠片" align="center" width="80px">
+            <template slot-scope="scope">
+              <span>{{scope.row.qualifiedDemands[1] && scope.row.qualifiedDemands[1].qualifiedLaminationFactor}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="韧性" align="center" width="80px">
+            <template slot-scope="scope">
+              <span>{{scope.row.qualifiedDemands[1] && scope.row.qualifiedDemands[1].qualifiedRibbonToughnessLevels.toString()}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="外观" align="center" width="80px">
+            <template slot-scope="scope">
+              <span>{{scope.row.qualifiedDemands[1] && scope.row.qualifiedDemands[1].qualifiedAppearenceLevels.toString()}}</span>
+            </template>
+          </el-table-column>
+        </el-table-column>
+
         <el-table-column prop="taskOrder" label="任务单号" align="center" width="100px"></el-table-column>
         <el-table-column prop="client" label="客户" align="center" width="100px"></el-table-column>
         <el-table-column prop="alloyWeight" label="单炉投入" align="center" width="80px"></el-table-column>
@@ -191,8 +215,9 @@ export default {
         _list.forEach(row => {
           row.orderRibbonToughnessLevels = row.orderRibbonToughnessLevels.split(',');
           row.orderAppearenceLevels = row.orderAppearenceLevels.split(',');
-          row.qualifiedRibbonToughnessLevels = row.qualifiedRibbonToughnessLevels.split(',');
-          row.qualifiedAppearenceLevels = row.qualifiedAppearenceLevels.split(',');
+          // row.qualifiedRibbonToughnessLevels = row.qualifiedRibbonToughnessLevels.split(',');
+          // row.qualifiedAppearenceLevels = row.qualifiedAppearenceLevels.split(',');
+          row.qualifiedDemands = JSON.parse(row.qualifiedDemands);
         });
         // 如果数组中每一条数据的 approved === 1 都成立，则表示该计划已经审批过
         this.isApproved = _list.every(item => item.approved === 1);

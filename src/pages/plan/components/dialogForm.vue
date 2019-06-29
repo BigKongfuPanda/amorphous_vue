@@ -135,16 +135,17 @@
         </el-row>
       </section>
       <section class="requirement_detail">
-        <h3 class="requirement_hd">此类带材入库规范</h3>
-        <el-row :gutter="20">
+        <h3 class="requirement_hd">此类带材入库规范<i class="el-icon-circle-plus" @click="addRequirement"></i></h3>
+        <el-row :gutter="20" v-for="(item, index) in formData.qualifiedDemands" :key="index" class="requirement_row">
+          <i class="el-icon-remove" @click="delRequirement"></i>
           <el-col :span="6">
-            <el-form-item label="带厚(μm)" prop="qualifiedThickness" class="dialog_field">
-              <el-input v-model="formData.qualifiedThickness"></el-input>
+            <el-form-item label="带厚(μm)" class="dialog_field" :prop="'qualifiedDemands.' + index + '.qualifiedThickness'" :rules="[{ required: true, message: '请填写带厚', trigger: 'blur' }, { max: 50, message: '最多50位字符', trigger: 'blur' }, { pattern: /^([1-3]\d-[1-3]\d|≤[1-3]\d)$/, message: '格式错误，20-23或者≤23', trigger: 'blur' }]">
+              <el-input v-model="item.qualifiedThickness"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="叠片系数" prop="qualifiedLaminationFactor" class="dialog_field">
-              <el-select v-model="formData.qualifiedLaminationFactor" placeholder="">
+            <el-form-item label="叠片系数" class="dialog_field" :prop="'qualifiedDemands.' + index + '.qualifiedLaminationFactor'" :rules="[{ required: true, message: '请选择叠片系数', trigger: 'blur' }]">
+              <el-select v-model="item.qualifiedLaminationFactor" placeholder="">
                 <el-option label="≥0.75" value="≥0.75"></el-option>
                 <el-option label="≥0.78" value="≥0.78"></el-option>
                 <el-option label="≥0.80" value="≥0.80"></el-option>
@@ -154,8 +155,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="韧性" prop="qualifiedRibbonToughnessLevels" class="dialog_field">
-              <el-select v-model="formData.qualifiedRibbonToughnessLevels" placeholder="" multiple collapse-tags>
+            <el-form-item label="韧性" class="dialog_field" :prop="'qualifiedDemands.' + index + '.qualifiedRibbonToughnessLevels'" :rules="[{ required: true, message: '请选择韧性', trigger: 'blur' }]">
+              <el-select v-model="item.qualifiedRibbonToughnessLevels" placeholder="" multiple collapse-tags>
                 <el-option label="A" value="A"></el-option>
                 <el-option label="B" value="B"></el-option>
                 <el-option label="C" value="C"></el-option>
@@ -165,8 +166,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="外观" prop="qualifiedAppearenceLevels" class="dialog_field">
-              <el-select v-model="formData.qualifiedAppearenceLevels" placeholder="" multiple collapse-tags>
+            <el-form-item label="外观" class="dialog_field" :prop="'qualifiedDemands.' + index + '.qualifiedAppearenceLevels'" :rules="[{ required: true, message: '请选择外观', trigger: 'blur' }]">
+              <el-select v-model="item.qualifiedAppearenceLevels" placeholder="" multiple collapse-tags>
                 <el-option label="A" value="A"></el-option>
                 <el-option label="B" value="B"></el-option>
                 <el-option label="C" value="C"></el-option>
@@ -209,25 +210,14 @@ const formConfig = {
   orderLaminationFactor: '', // 订单要求：叠片系数
   orderRibbonToughnessLevels: [], // 订单要求：韧性
   orderAppearenceLevels: [], // 订单要求：外观
-  qualifiedThickness: '', // 入库要求：厚度
-  qualifiedLaminationFactor: '', // 入库要求：叠片系数
-  qualifiedRibbonToughnessLevels: [], // 入库要求：韧性
-  qualifiedAppearenceLevels: [], // 入库要求：外观
-
-  // qualifiedDemands: [
-  //   {
-  //     qualifiedThickness: '', // 入库要求：厚度
-  //     qualifiedLaminationFactor: '', // 入库要求：叠片系数
-  //     qualifiedRibbonToughnessLevels: [], // 入库要求：韧性
-  //     qualifiedAppearenceLevels: [], // 入库要求：外观
-  //   },
-  //   {
-  //     qualifiedThickness: '', // 入库要求：厚度
-  //     qualifiedLaminationFactor: '', // 入库要求：叠片系数
-  //     qualifiedRibbonToughnessLevels: [], // 入库要求：韧性
-  //     qualifiedAppearenceLevels: [], // 入库要求：外观
-  //   }
-  // ]
+  qualifiedDemands: [
+    {
+      qualifiedThickness: '', // 入库要求：厚度
+      qualifiedLaminationFactor: '', // 入库要求：叠片系数
+      qualifiedRibbonToughnessLevels: [], // 入库要求：韧性
+      qualifiedAppearenceLevels: [], // 入库要求：外观
+    }
+  ]
 };
 
 export default {
@@ -275,10 +265,18 @@ export default {
         orderLaminationFactor: '', // 订单要求：叠片系数
         orderRibbonToughnessLevels: [], // 订单要求：韧性
         orderAppearenceLevels: [], // 订单要求：外观
-        qualifiedThickness: '', // 入库要求：厚度
-        qualifiedLaminationFactor: '', // 入库要求：叠片系数
-        qualifiedRibbonToughnessLevels: [], // 入库要求：韧性
-        qualifiedAppearenceLevels: [], // 入库要求：外观
+        // qualifiedThickness: '', // 入库要求：厚度
+        // qualifiedLaminationFactor: '', // 入库要求：叠片系数
+        // qualifiedRibbonToughnessLevels: [], // 入库要求：韧性
+        // qualifiedAppearenceLevels: [], // 入库要求：外观
+        qualifiedDemands: [
+          {
+            qualifiedThickness: '', // 入库要求：厚度
+            qualifiedLaminationFactor: '', // 入库要求：叠片系数
+            qualifiedRibbonToughnessLevels: [], // 入库要求：韧性
+            qualifiedAppearenceLevels: [], // 入库要求：外观
+          }
+        ]
       },
       rules: {
         date: [{ required: true, message: '请选择日期', trigger: 'blur' }],
@@ -328,20 +326,20 @@ export default {
         orderAppearenceLevels: [
           { required: true, message: '请选择外观等级', trigger: 'blur' }
         ],
-        qualifiedThickness: [
-          { required: true, message: '请填写带厚', trigger: 'blur' },
-          { max: 50, message: '最多50位字符', trigger: 'blur' },
-          { pattern: /^([1-3]\d-[1-3]\d|≤[1-3]\d)$/, message: '格式错误，20-23或者≤23', trigger: 'blur' },
-        ],
-        qualifiedLaminationFactor: [
-          { required: true, message: '请选择叠片系数', trigger: 'blur' }
-        ],
-        qualifiedRibbonToughnessLevels: [
-          { required: true, message: '请选择韧性等级', trigger: 'blur' }
-        ],
-        qualifiedAppearenceLevels: [
-          { required: true, message: '请选择外观等级', trigger: 'blur' }
-        ]
+        // qualifiedThickness: [
+        //   { required: true, message: '请填写带厚', trigger: 'blur' },
+        //   { max: 50, message: '最多50位字符', trigger: 'blur' },
+        //   { pattern: /^([1-3]\d-[1-3]\d|≤[1-3]\d)$/, message: '格式错误，20-23或者≤23', trigger: 'blur' },
+        // ],
+        // qualifiedLaminationFactor: [
+        //   { required: true, message: '请选择叠片系数', trigger: 'blur' }
+        // ],
+        // qualifiedRibbonToughnessLevels: [
+        //   { required: true, message: '请选择韧性等级', trigger: 'blur' }
+        // ],
+        // qualifiedAppearenceLevels: [
+        //   { required: true, message: '请选择外观等级', trigger: 'blur' }
+        // ]
       }
     }
   },
@@ -371,6 +369,17 @@ export default {
     closeDialog() {
       this.$emit('close');
     },
+    addRequirement() {
+      this.formData.qualifiedDemands.length < 2 && this.formData.qualifiedDemands.push({
+        qualifiedThickness: '', // 入库要求：厚度
+        qualifiedLaminationFactor: '', // 入库要求：叠片系数
+        qualifiedRibbonToughnessLevels: [], // 入库要求：韧性
+        qualifiedAppearenceLevels: [] // 入库要求：外观
+      });
+    },
+    delRequirement() {
+      this.formData.qualifiedDemands.length === 2 && this.formData.qualifiedDemands.pop();
+    },
     submitForm() {
       this.$refs.form.validate((valid) => {
         if (valid) {
@@ -395,8 +404,9 @@ export default {
               //将数组转成字符串
               clone.orderRibbonToughnessLevels = clone.orderRibbonToughnessLevels.join();
               clone.orderAppearenceLevels = clone.orderAppearenceLevels.join();
-              clone.qualifiedRibbonToughnessLevels = clone.qualifiedRibbonToughnessLevels.join();
-              clone.qualifiedAppearenceLevels = clone.qualifiedAppearenceLevels.join();
+              // clone.qualifiedRibbonToughnessLevels = clone.qualifiedRibbonToughnessLevels.join();
+              // clone.qualifiedAppearenceLevels = clone.qualifiedAppearenceLevels.join();
+              clone.qualifiedDemands = JSON.stringify(clone.qualifiedDemands);
               formData.push(clone);
               fEnd = (Number(fEnd) + 1) < 10 ? '0' + (Number(fEnd) + 1) : (Number(fEnd) + 1);
             }
@@ -491,6 +501,29 @@ export default {
     transform: translateX(-50%);
     background-color: #fff;
     padding: 0 10px;
+    .el-icon-circle-plus {
+      position: absolute;
+      top: 2px;
+      margin-left: 5px;
+      &:hover {
+        color: #fff;
+        background: #409EFF;
+        cursor: pointer;
+      }
+    }
+  }
+  .requirement_row {
+    position: relative;
+    .el-icon-remove {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      &:hover {
+        color: #fff;
+        background: #409EFF;
+        cursor: pointer;
+      }
+    }
   }
 }
 </style>

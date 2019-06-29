@@ -274,12 +274,19 @@
                     <td>{{scope.row.storageRule.orderRibbonToughnessLevels}}</td>
                     <td>{{scope.row.storageRule.orderAppearenceLevels}}</td>
                   </tr>
-                  <tr v-if="userinfo.roleId === 1 || userinfo.roleId === 2 || userinfo.roleId === 3 || userinfo.roleId === 5 || userinfo.roleId === 6">
+                  <!-- <tr v-if="userinfo.roleId === 1 || userinfo.roleId === 2 || userinfo.roleId === 3 || userinfo.roleId === 5 || userinfo.roleId === 6">
                     <td>计划外入库要求</td>
                     <td>{{scope.row.storageRule.qualifiedThickness}}</td>
                     <td>{{scope.row.storageRule.qualifiedLaminationFactor}}</td>
                     <td>{{scope.row.storageRule.qualifiedRibbonToughnessLevels}}</td>
                     <td>{{scope.row.storageRule.qualifiedAppearenceLevels}}</td>
+                  </tr> -->
+                  <tr v-for="(item, index) in scope.row.storageRule.qualifiedDemands" :key="index">
+                    <td>计划外入库要求</td>
+                    <td>{{item.qualifiedThickness}}</td>
+                    <td>{{item.qualifiedLaminationFactor}}</td>
+                    <td>{{item.qualifiedRibbonToughnessLevels}}</td>
+                    <td>{{item.qualifiedAppearenceLevels}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -522,10 +529,11 @@ export default {
             orderLaminationFactor: item.orderLaminationFactor,
             orderRibbonToughnessLevels: item.orderRibbonToughnessLevels,
             orderAppearenceLevels: item.orderAppearenceLevels,
-            qualifiedThickness: item.qualifiedThickness,
-            qualifiedLaminationFactor: item.qualifiedLaminationFactor,
-            qualifiedRibbonToughnessLevels: item.qualifiedRibbonToughnessLevels,
-            qualifiedAppearenceLevels: item.qualifiedAppearenceLevels
+            // qualifiedThickness: item.qualifiedThickness,
+            // qualifiedLaminationFactor: item.qualifiedLaminationFactor,
+            // qualifiedRibbonToughnessLevels: item.qualifiedRibbonToughnessLevels,
+            // qualifiedAppearenceLevels: item.qualifiedAppearenceLevels,
+            qualifiedDemands: [1, 2, 3, 5, 6, 15].includes(Number(this.roleId)) ? JSON.parse(item.qualifiedDemands) : []
           };
           item.clients = item.clients ? item.clients.split(',') : [];
         });
@@ -592,10 +600,15 @@ export default {
       // 综合级别
       // 叠片系数不合格，或者外观等级为不合格，则综合级别为不合格
       row.ribbonTotalLevel = row.laminationLevel === '不合格' || row.appearenceLevel === '不合格' ? '不合格' : row.ribbonThicknessLevel + row.laminationLevel + row.ribbonToughnessLevel + row.appearenceLevel;
-      // 规格 为 32/35/40/42/45/50/，材质为 1K107B 的带材，如果韧性为D或E，则综合级别为不合格
-      if ([32, 35, 40, 42, 45, 50].includes(row.ribbonWidth) && row.ribbonTypeName == '1K107B' && ['D', 'E'].includes(row.ribbonToughnessLevel)) {
+      // 判断是否满足生产计划规定的入库标准，如果不满足则为不合格
+      const storedType = this.setStoredType();
+      if (storedType === 3) {
         row.ribbonTotalLevel = '不合格';
       }
+      // 规格 为 32/35/40/42/45/50/，材质为 1K107B 的带材，如果韧性为D或E，则综合级别为不合格
+      // if ([32, 35, 40, 42, 45, 50].includes(row.ribbonWidth) && row.ribbonTypeName == '1K107B' && ['D', 'E'].includes(row.ribbonToughnessLevel)) {
+      //   row.ribbonTotalLevel = '不合格';
+      // }
       //如果带材厚度偏差大于3，同时韧性为D/E,此带材为不合格，否则加F
       if (row.ribbonThicknessDeviation > 3 && ['D', 'E'].includes(row.ribbonToughnessLevel)) {
         row.ribbonTotalLevel = '不合格';
@@ -859,51 +872,95 @@ export default {
         return 1;
       }
 
-      // 计划外：厚度
-      const qualifiedThickness = row.qualifiedThickness;
-      if (qualifiedThickness.indexOf('≤') > -1) { // ≤23
-        const maxThickness = parseInt(qualifiedThickness.substr(1));
-        if (ribbonThickness > maxThickness) {
-          // 厚度不符合符合计划外入库的要求
-          outPlanFlag = false;
-        }
-      } else if (qualifiedThickness.indexOf('-') > -1) {
-        const maxThickness = qualifiedThickness.split('-')[1];
-        const minThickness = qualifiedThickness.split('-')[0];
-        if (ribbonThickness < minThickness || ribbonThickness > maxThickness) {
-          outPlanFlag = false;
-        }
-      }
-      // 计划外：叠片
-      const qualifiedLaminationFactor = row.qualifiedLaminationFactor;
-      if (qualifiedLaminationFactor.indexOf('≥') > -1) { // ≥0.78
-        const minLaminationFactor = parseInt(qualifiedLaminationFactor.substr(1));
-        if (laminationFactor < minLaminationFactor) {
-          // 叠片不符合符合计划外入库的要求
-          outPlanFlag = false;
-        }
-      } else if (qualifiedLaminationFactor.indexOf('-') > -1) {
-        const maxLaminationFactor = qualifiedLaminationFactor.split('-')[1];
-        const minLaminationFactor = qualifiedLaminationFactor.split('-')[0];
-        if (laminationFactor < minLaminationFactor || laminationFactor > maxLaminationFactor) {
-          outPlanFlag = false;
-        }
-      }
-      // 计划外：韧性
-      const qualifiedRibbonToughnessLevels = row.qualifiedRibbonToughnessLevels.split(',');
-      if (!qualifiedRibbonToughnessLevels.includes(ribbonToughnessLevel)) {
-        outPlanFlag = false;
-      }
-      // 计划外：外观
-      const qualifiedAppearenceLevels = row.qualifiedAppearenceLevels.split(',');
-      if (!qualifiedAppearenceLevels.includes(appearenceLevel)) {
-        outPlanFlag = false;
-      }
+      // // 计划外：厚度
+      // const qualifiedThickness = row.qualifiedThickness;
+      // if (qualifiedThickness.indexOf('≤') > -1) { // ≤23
+      //   const maxThickness = parseInt(qualifiedThickness.substr(1));
+      //   if (ribbonThickness > maxThickness) {
+      //     // 厚度不符合符合计划外入库的要求
+      //     outPlanFlag = false;
+      //   }
+      // } else if (qualifiedThickness.indexOf('-') > -1) {
+      //   const maxThickness = qualifiedThickness.split('-')[1];
+      //   const minThickness = qualifiedThickness.split('-')[0];
+      //   if (ribbonThickness < minThickness || ribbonThickness > maxThickness) {
+      //     outPlanFlag = false;
+      //   }
+      // }
+      // // 计划外：叠片
+      // const qualifiedLaminationFactor = row.qualifiedLaminationFactor;
+      // if (qualifiedLaminationFactor.indexOf('≥') > -1) { // ≥0.78
+      //   const minLaminationFactor = parseInt(qualifiedLaminationFactor.substr(1));
+      //   if (laminationFactor < minLaminationFactor) {
+      //     // 叠片不符合符合计划外入库的要求
+      //     outPlanFlag = false;
+      //   }
+      // } else if (qualifiedLaminationFactor.indexOf('-') > -1) {
+      //   const maxLaminationFactor = qualifiedLaminationFactor.split('-')[1];
+      //   const minLaminationFactor = qualifiedLaminationFactor.split('-')[0];
+      //   if (laminationFactor < minLaminationFactor || laminationFactor > maxLaminationFactor) {
+      //     outPlanFlag = false;
+      //   }
+      // }
+      // // 计划外：韧性
+      // const qualifiedRibbonToughnessLevels = row.qualifiedRibbonToughnessLevels.split(',');
+      // if (!qualifiedRibbonToughnessLevels.includes(ribbonToughnessLevel)) {
+      //   outPlanFlag = false;
+      // }
+      // // 计划外：外观
+      // const qualifiedAppearenceLevels = row.qualifiedAppearenceLevels.split(',');
+      // if (!qualifiedAppearenceLevels.includes(appearenceLevel)) {
+      //   outPlanFlag = false;
+      // }
 
-      if (outPlanFlag) {
-        return 2
-      }
+      const qualifiedDemands = JSON.parse(row.qualifiedDemands) || [];
+      qualifiedDemands.forEach(item => {
+        // 计划外：厚度
+        const qualifiedThickness = item.qualifiedThickness;
+        if (qualifiedThickness.indexOf('≤') > -1) { // ≤23
+          const maxThickness = parseInt(qualifiedThickness.substr(1));
+          if (ribbonThickness > maxThickness) {
+            // 厚度不符合符合计划外入库的要求
+            outPlanFlag = false;
+          }
+        } else if (qualifiedThickness.indexOf('-') > -1) {
+          const maxThickness = qualifiedThickness.split('-')[1];
+          const minThickness = qualifiedThickness.split('-')[0];
+          if (ribbonThickness < minThickness || ribbonThickness > maxThickness) {
+            outPlanFlag = false;
+          }
+        }
+        // 计划外：叠片
+        const qualifiedLaminationFactor = item.qualifiedLaminationFactor;
+        if (qualifiedLaminationFactor.indexOf('≥') > -1) { // ≥0.78
+          const minLaminationFactor = parseInt(qualifiedLaminationFactor.substr(1));
+          if (laminationFactor < minLaminationFactor) {
+            // 叠片不符合符合计划外入库的要求
+            outPlanFlag = false;
+          }
+        } else if (qualifiedLaminationFactor.indexOf('-') > -1) {
+          const maxLaminationFactor = qualifiedLaminationFactor.split('-')[1];
+          const minLaminationFactor = qualifiedLaminationFactor.split('-')[0];
+          if (laminationFactor < minLaminationFactor || laminationFactor > maxLaminationFactor) {
+            outPlanFlag = false;
+          }
+        }
+        // 计划外：韧性
+        const qualifiedRibbonToughnessLevels = item.qualifiedRibbonToughnessLevels;
+        if (!qualifiedRibbonToughnessLevels.includes(ribbonToughnessLevel)) {
+          outPlanFlag = false;
+        }
+        // 计划外：外观
+        const qualifiedAppearenceLevels = item.qualifiedAppearenceLevels;
+        if (!qualifiedAppearenceLevels.includes(appearenceLevel)) {
+          outPlanFlag = false;
+        }
 
+        if (outPlanFlag) {
+          return 2;
+        }
+      });
+    
       return 3;
     },
     exportExcel() {

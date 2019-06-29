@@ -182,7 +182,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="喷带后水温" prop="" class="dialog_field" :prop="'record.' + index + '.coolRollerTemperatureAfterCast'" :rules="[{ required: true, message: '请填写水温', trigger: 'blur' }, { pattern: /^(\d+|\d+\.\d{1,2})-(\d+|\d+\.\d{1,2})$/, message: '格式错误, 如 32.50-33.80', trigger: 'blur' }]">
+            <el-form-item label="喷带后水温" class="dialog_field" :prop="'record.' + index + '.coolRollerTemperatureAfterCast'" :rules="[{ required: true, message: '请填写水温', trigger: 'blur' }, { pattern: /^(\d+|\d+\.\d{1,2})-(\d+|\d+\.\d{1,2})$/, message: '格式错误, 如 32.50-33.80', trigger: 'blur' }]">
               <el-input v-model="item.coolRollerTemperatureAfterCast" placeholder="格式：32-35"></el-input>
             </el-form-item>
           </el-col>

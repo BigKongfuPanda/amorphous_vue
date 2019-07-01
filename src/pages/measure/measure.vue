@@ -48,16 +48,20 @@
             <el-option v-for="item in ribbonToughnessLevelList" :key="item.ribbonToughnessLevelId" :label="item.ribbonToughnessLevel" :value="item.ribbonToughnessLevel"></el-option>
           </el-select>
         </el-form-item>
-
         <el-form-item label="外观级别：">
           <el-select v-model="searchForm.appearenceLevels" placeholder="请选择" multiple collapse-tags>
-            <el-option label="A" value="A"></el-option>
-            <el-option label="B" value="B"></el-option>
-            <el-option label="C" value="C"></el-option>
-            <el-option label="不合格" value="不合格"></el-option>
+            <el-option v-for="(appearenceLevel, index) in uniqueAppearenceLevelList" :key="index" :label="appearenceLevel" :value="appearenceLevel"></el-option>
           </el-select>
         </el-form-item>
-
+        <el-form-item label="厚度偏差：">
+          <el-select v-model="searchForm.thicknessDivation" placeholder="请选择">
+            <el-option label="<=1" :value="1"></el-option>
+            <el-option label="<=2" :value="2"></el-option>
+            <el-option label="<=3" :value="3"></el-option>
+            <el-option label="<=4" :value="4"></el-option>
+            <el-option label="<=5" :value="5"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
           <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
@@ -219,7 +223,7 @@
             </div>
             <div v-else>
                <el-select size="mini" v-model="scope.row.appearence" placeholder="">
-                <el-option label="无明显缺陷" value="无明显缺陷"></el-option>
+                <!-- <el-option label="无明显缺陷" value="无明显缺陷"></el-option>
                 <el-option label="轻棱" value="轻棱"></el-option>
                 <el-option label="棱" value="棱"></el-option>
                 <el-option label="轻微麻点" value="轻微麻点"></el-option>
@@ -230,13 +234,14 @@
                 <el-option label="挖心" value="挖心"></el-option>
                 <el-option label="少量劈裂" value="少量劈裂"></el-option>
                 <el-option label="大量劈裂" value="大量劈裂"></el-option>
-                <el-option label="端面损坏" value="端面损坏"></el-option>
+                <el-option label="端面损坏" value="端面损坏"></el-option> -->
+                <el-option v-for="item in appearenceList" :label="item.appearence" :value="item.appearence" :key="item.appearenceLevelId"></el-option>
               </el-select>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="appearenceLevel" label="外观等级" align="center" width="90px">
-          <template slot-scope="scope">
+          <!-- <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.appearenceLevel }}
             </div>
@@ -248,7 +253,7 @@
                 <el-option label="不合格" value="不合格"></el-option>
               </el-select>
             </div>
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column prop="ribbonTotalLevel" label="综合级别" align="center" width="90px">
           <template slot-scope="scope">
@@ -285,8 +290,8 @@
                     <td>计划外入库要求</td>
                     <td>{{item.qualifiedThickness}}</td>
                     <td>{{item.qualifiedLaminationFactor}}</td>
-                    <td>{{item.qualifiedRibbonToughnessLevels}}</td>
-                    <td>{{item.qualifiedAppearenceLevels}}</td>
+                    <td>{{item.qualifiedRibbonToughnessLevels.join()}}</td>
+                    <td>{{item.qualifiedAppearenceLevels.join()}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -327,7 +332,7 @@
             </div>
             <div v-else>
               <el-select size="mini" v-model="scope.row.clients" placeholder="" multiple collapse-tags>
-                <el-option label="F" value="F" :disabled="scope.row.isFlat == '否'"></el-option>
+                <!-- <el-option label="F" value="F" :disabled="scope.row.isFlat == '否'"></el-option>
                 <el-option label="D" value="D" :disabled="scope.row.isFlat == '否'"></el-option>
                 <el-option label="VM" value="VM" :disabled="scope.row.isFlat == '否'"></el-option>
                 <el-option label="VS" value="VS" :disabled="scope.row.isFlat == '否'"></el-option>
@@ -335,7 +340,8 @@
                 <el-option label="O" value="O" :disabled="scope.row.isFlat == '否'"></el-option>
                 <el-option label="Z" value="Z"></el-option>
                 <el-option label="X" value="X" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="P" value="P" :disabled="scope.row.isFlat == '否'"></el-option>
+                <el-option label="P" value="P" :disabled="scope.row.isFlat == '否'"></el-option> -->
+                <el-option v-for="item in clientsList" :label="item.client" :value="item.client" :key="item.clientsId" :disabled="item.isFlat === '是' && scope.row.isFlat == '否'"></el-option>
               </el-select>
             </div>
           </template>
@@ -386,7 +392,8 @@ export default {
         ribbonThicknessLevels: [],
         laminationLevels: [],
         ribbonToughnessLevels: [],
-        appearenceLevels: []
+        appearenceLevels: [],
+        thicknessDivation: ''
       },
       loading: false,
       tableData: [],
@@ -400,11 +407,12 @@ export default {
       isDeleteable: false,
       tableHeight: 550,
       multipleSelection: [],
-      isBatchInStored: false
+      isBatchInStored: false,
+      uniqueAppearenceLevelList: []
     }
   },
   computed: {
-    ...mapState(['ribbonToughnessLevelList', 'ribbonTypeList', 'ribbonWidthList', 'ribbonThicknessLevelList', 'laminationLevelList'])
+    ...mapState(['ribbonToughnessLevelList', 'ribbonTypeList', 'ribbonWidthList', 'ribbonThicknessLevelList', 'laminationLevelList', 'clientsList', 'appearenceList'])
   },
   // 动态路由匹配
   beforeRouteUpdate(to, from, next) {
@@ -429,16 +437,24 @@ export default {
     this.getRibbonWidthList();
     this.getRibbonThicknessLevelList();
     this.getLaminationLevelList();
+    this.getClientsList();
+    this.getAppearenceLevelList();
+    this.uniqueAppearenceLevelList = this.appearenceList.reduce((acc, cur) => {
+      if (!acc.includes(cur.appearenceLevel)) {
+        acc.push(cur.appearenceLevel)
+      }
+      return acc;
+    }, [])
   },
   mounted () {
     const self = this;
     self.$nextTick(() => {
       // self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
-      self.tableHeight = window.innerHeight - 100;
+      self.tableHeight = window.innerHeight - 80;
     });
     window.onresize = debounce(() => {
       // self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
-      self.tableHeight = window.innerHeight - 100;
+      self.tableHeight = window.innerHeight - 80;
     }, 1000)
   },
   methods: {
@@ -453,7 +469,7 @@ export default {
       row.ribbonThickness = ribbonThicknessList.length > 0 ? (ribbonThicknessList.reduce((acc, cur) => acc + cur, 0) / ribbonThicknessList.length).toFixed(2) : 0;
       row.ribbonThicknessLevel = this.calcribbonThicknessLevel(row.ribbonThickness);
     },
-    ...mapActions([ 'getRibbonToughnessLevelList', 'getRibbonTypeList', 'getRibbonWidthList', 'getRibbonThicknessLevelList', 'getLaminationLevelList' ]),
+    ...mapActions([ 'getRibbonToughnessLevelList', 'getRibbonTypeList', 'getRibbonWidthList', 'getRibbonThicknessLevelList', 'getLaminationLevelList', 'getClientsList', 'getAppearenceLevelList' ]),
     dateFormat(row, column) {
       return dateFormat(row.castDate);
     },
@@ -516,14 +532,15 @@ export default {
         ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
         ribbonToughnessLevelJson: JSON.stringify(this.searchForm.ribbonToughnessLevels),
-        appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels)
+        appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels),
+        thicknessDivation: this.searchForm.thicknessDivation
       };
       Object.assign(params, _params);
       this.$http('get', urlmap.queryMeasure, params).then(data => {
         this.pageConfig.total = data.count;
         this.pageConfig.pageSize = data.limit;
         data.list && data.list.forEach(item => {
-          item.isEditing = false;
+          item.isEditing = true;
           item.storageRule = {
             orderThickness: item.orderThickness,
             orderLaminationFactor: item.orderLaminationFactor,
@@ -533,7 +550,7 @@ export default {
             // qualifiedLaminationFactor: item.qualifiedLaminationFactor,
             // qualifiedRibbonToughnessLevels: item.qualifiedRibbonToughnessLevels,
             // qualifiedAppearenceLevels: item.qualifiedAppearenceLevels,
-            qualifiedDemands: [1, 2, 3, 5, 6, 15].includes(Number(this.roleId)) ? JSON.parse(item.qualifiedDemands) : []
+            qualifiedDemands: [1, 2, 3, 5, 6, 15].includes(Number(this.userinfo.roleId)) ? JSON.parse(item.qualifiedDemands) : []
           };
           item.clients = item.clients ? item.clients.split(',') : [];
         });
@@ -551,7 +568,7 @@ export default {
           type: 'error'
         });
       }
-      row.isEditing = true;
+      // row.isEditing = true;
     },
     del(row) {
       const { measureId, furnace, coilNumber } = row;
@@ -568,7 +585,7 @@ export default {
       }).catch(() => {});
     },
     save(row) {
-      row.isEditing = false;
+      // row.isEditing = false;
       // this.pageConfig.current = 1;
       // this.getTableData();
       
@@ -581,6 +598,12 @@ export default {
         acc[cur.ribbonToughness] = cur.ribbonToughnessLevel;
         return acc;
       }, {})[row.ribbonToughness];
+
+      // 根据外观描述判定外观等级 appearenceLevel
+      row.appearenceLevel = this.appearenceList.reduce((acc, cur) => {
+        acc[cur.appearence] = cur.appearenceLevel;
+        return acc;
+      }, {})[row.appearence];
 
       // 计算厚度最大偏差、平均厚度、厚度级别
       row.ribbonThickness1 = typeof row.ribbonThickness1 === 'string' ? Number(row.ribbonThickness1.trim()) : row.ribbonThickness1;
@@ -601,10 +624,10 @@ export default {
       // 叠片系数不合格，或者外观等级为不合格，则综合级别为不合格
       row.ribbonTotalLevel = row.laminationLevel === '不合格' || row.appearenceLevel === '不合格' ? '不合格' : row.ribbonThicknessLevel + row.laminationLevel + row.ribbonToughnessLevel + row.appearenceLevel;
       // 判断是否满足生产计划规定的入库标准，如果不满足则为不合格
-      const storedType = this.setStoredType();
-      if (storedType === 3) {
-        row.ribbonTotalLevel = '不合格';
-      }
+      // const storedType = this.setStoredType(row);
+      // if (storedType === 3) {
+      //   row.ribbonTotalLevel = '不合格';
+      // }
       // 规格 为 32/35/40/42/45/50/，材质为 1K107B 的带材，如果韧性为D或E，则综合级别为不合格
       // if ([32, 35, 40, 42, 45, 50].includes(row.ribbonWidth) && row.ribbonTypeName == '1K107B' && ['D', 'E'].includes(row.ribbonToughnessLevel)) {
       //   row.ribbonTotalLevel = '不合格';
@@ -625,6 +648,7 @@ export default {
       }
       if (['AD25', 'ND25'].includes(row.ribbonTypeName)) {
         let _width = row.realRibbonWidth - row.ribbonWidth;
+        _width = _width.toFixed(1);
         if (_width >= 0.1 || _width <= -0.2) {
           row.ribbonTotalLevel = '不合格';
         }
@@ -644,6 +668,7 @@ export default {
         }
         // 如果带材韧性为A/B/C，同时带材宽度超出规格±0.2mm，加E，正偏差为+E,负偏差为-E
         let _width = row.realRibbonWidth - row.ribbonWidth;
+        _width = _width.toFixed(1);
         if (row.ribbonWidth < 50) {
           if (Math.abs(_width) > 0.2 && ['A', 'B', 'C'].includes(row.ribbonToughnessLevel)) {
             if ((_width) < -0.2) {
@@ -787,6 +812,8 @@ export default {
         return '1';
       } else if(factor >= 0.75 && factor < 0.78) {
         return '0';
+      } else if(factor >= 0.72 && factor < 0.75) {
+        return '8'
       } else {
         return '不合格';
       }

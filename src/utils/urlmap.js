@@ -59,6 +59,16 @@ export default {
   addLaminationLevel: '/laminationLevel',
   updateLaminationLevel: '/laminationLevel',
   delLaminationLevel: '/laminationLevel',
+  queryClients: '/clients',
+  addClients: '/clients',
+  updateClients: '/clients',
+  delClients: '/clients',
+
+  queryAppearenceLevel: '/appearenceLevel',
+  addAppearenceLevel: '/appearenceLevel',
+  updateAppearenceLevel: '/appearenceLevel',
+  delAppearenceLevel: '/appearenceLevel',
+
   queryStatisticsQuality: '/statistics/quality',
   queryStatisticsRatio: '/statistics/ratio'
 };

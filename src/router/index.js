@@ -23,6 +23,8 @@ import StatisticsQuality from '@/pages/statistics/statisticsQuality.vue';
 import StatisticsOder from '@/pages/statistics/statisticsOder.vue';
 import ReturnTreatment from '@/pages/returnGoods/returnTreatment.vue';
 import ReturnRecord from '@/pages/returnGoods/returnRecord.vue';
+import Clients from '@/pages/clients/clients.vue';
+import AppearenceLevel from '@/pages/appearenceLevel/appearenceLevel.vue';
 
 export default new Router({
   routes: [
@@ -79,10 +81,22 @@ export default new Router({
           meta: { title: '带材韧性等级管理', icon: 'ribbonToughnessLevel' }
         },
         {
+          path: 'appearenceLevel',
+          name: 'appearenceLevel',
+          component: AppearenceLevel,
+          meta: { title: '外观等级管理', icon: 'appearenceLevel' }
+        },
+        {
           path: 'laminationLevel',
           name: 'laminationLevel',
           component: LaminationLevel,
           meta: { title: '带材叠片等级管理', icon: 'laminationLevel' }
+        },
+        {
+          path: 'clients',
+          name: 'clients',
+          component: Clients,
+          meta: { title: '客户管理', icon: 'clients' }
         },
         {
           path: 'user',

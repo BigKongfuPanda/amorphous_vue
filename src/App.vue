@@ -149,4 +149,8 @@ export default {
   .pull_right {
     float: right;
   }
+  .el-input__inner:focus {
+    border-width: 3px;
+    box-sizing: border-box;
+  }
 </style>

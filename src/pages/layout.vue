@@ -173,6 +173,12 @@
           <router-link to="/ribbonToughnessLevel">
             <el-menu-item index="/ribbonToughnessLevel">韧性等级列表</el-menu-item>
           </router-link>
+          <router-link to="/appearenceLevel">
+            <el-menu-item index="/appearenceLevel">外观等级列表</el-menu-item>
+          </router-link>
+          <router-link to="/clients">
+            <el-menu-item index="/clients">客户列表</el-menu-item>
+          </router-link>
         </el-submenu>
         <el-submenu index="10" v-if="roleId === 1 || roleId === 2 || roleId === 3">
           <template slot="title">

@@ -347,10 +347,10 @@
           </template>
         </el-table-column>
         <el-table-column prop="measureDate" label="检测时间" align="center" width="120px" :formatter="dateTimeFormat" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column label="操作" align="center" width="150px">
+        <el-table-column label="操作" align="center" width="150px" v-if="userinfo.roleId == 5 || userinfo.roleId == 1">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button>
-            <el-button size="mini" type="success" @click="save(scope.row)" v-else>保存</el-button>
+            <el-button size="mini" type="success" @click="save(scope.row)" v-else :disabled="!isEditable">保存</el-button>
             <el-button size="mini" type="danger" @click="del(scope.row)" v-if="isDeleteable">删除</el-button>
           </template>
         </el-table-column>
@@ -477,7 +477,7 @@ export default {
       return row.measureDate? dateTimeFormat(row.measureDate) : '';
     },
     setEditable() {
-      if (this.userinfo.roleId == 5 || this.userinfo.roleId == 1) { // 检测人员 或者厂长 可修改
+      if (this.userinfo.roleId == 5) { // 检测人员可修改
         return true;
       } else { // 其他
         return false;
@@ -540,7 +540,7 @@ export default {
         this.pageConfig.total = data.count;
         this.pageConfig.pageSize = data.limit;
         data.list && data.list.forEach(item => {
-          item.isEditing = true;
+          this.userinfo.roleId == 5 ? item.isEditing = true : item.isEditing = false;
           item.storageRule = {
             orderThickness: item.orderThickness,
             orderLaminationFactor: item.orderLaminationFactor,

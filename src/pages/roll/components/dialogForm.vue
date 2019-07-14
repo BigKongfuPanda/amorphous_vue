@@ -145,46 +145,74 @@ export default {
           this.loading = true;
 
           // 根据炉号从喷带记录表中获取其他的信息
-          this.$http('GET', urlmap.queryCast, {castId: this.formData.castId, furnace: this.formData.furnace}).then(data => {
-            if (data.list.length === 0) {
-              this.loading = false;
-              return this.$message({
-                type: 'error',
-                message: '炉号有误，获取带材信息失败'
-              })
+          // this.$http('GET', urlmap.queryCast, {castId: this.formData.castId, furnace: this.formData.furnace}).then(data => {
+          //   if (data.list.length === 0) {
+          //     this.loading = false;
+          //     return this.$message({
+          //       type: 'error',
+          //       message: '炉号有误，获取带材信息失败'
+          //     })
+          //   }
+          //   const { ribbonTypeName, ribbonWidth, createTime, caster } = data.list[0];
+          //   const params = {
+          //     ribbonTypeName, ribbonWidth, castDate: createTime, caster,
+          //     roleId: this.userinfo.roleId,
+          //     adminname: this.userinfo.adminname,
+          //     ...this.formData
+          //   };
+
+          //   // 发送提交的请求
+          //   const { method, url } = this.dialogData.formType === 'add' ? { method: 'POST', url: urlmap.addMeasure } : { method: 'PUT', url: urlmap.updateMeasure };
+
+          //   // 过滤掉值为 null 或者 undefined 的参数，以免存入数据库的时候，发生错误
+          //   Object.keys(params).forEach(key => {
+          //     if (params[key] == null) {
+          //       delete params[key];
+          //     }
+          //   });
+          //   this.$http(method, url, params).then(data => {
+          //     if (data.status !== -1) {
+          //       this.formData.coilNumber++;
+          //       this.formData.coilWeight = null;
+          //       this.formData.diameter = null;
+          //       this.$emit('submit');
+          //     }
+          //   }).catch((error) => {
+          //     console.log(error);
+          //   }).finally(() => {
+          //     this.loading = false;
+          //   });
+          // }).catch((error) => {
+          //   this.loading = false;
+          //   console.log(error);
+          // });
+
+          const params = {
+            roleId: this.userinfo.roleId,
+            adminname: this.userinfo.adminname,
+            ...this.formData
+          };
+
+          // 发送提交的请求
+          const { method, url } = this.dialogData.formType === 'add' ? { method: 'POST', url: urlmap.addMeasure } : { method: 'PUT', url: urlmap.updateMeasure };
+
+          // 过滤掉值为 null 或者 undefined 的参数，以免存入数据库的时候，发生错误
+          Object.keys(params).forEach(key => {
+            if (params[key] == null) {
+              delete params[key];
             }
-            const { ribbonTypeName, ribbonWidth, createTime, caster } = data.list[0];
-            const params = {
-              ribbonTypeName, ribbonWidth, castDate: createTime, caster,
-              roleId: this.userinfo.roleId,
-              adminname: this.userinfo.adminname,
-              ...this.formData
-            };
-
-            // 发送提交的请求
-            const { method, url } = this.dialogData.formType === 'add' ? { method: 'POST', url: urlmap.addMeasure } : { method: 'PUT', url: urlmap.updateMeasure };
-
-            // 过滤掉值为 null 或者 undefined 的参数，以免存入数据库的时候，发生错误
-            Object.keys(params).forEach(key => {
-              if (params[key] == null) {
-                delete params[key];
-              }
-            });
-            this.$http(method, url, params).then(data => {
-              if (data.status !== -1) {
-                this.formData.coilNumber++;
-                this.formData.coilWeight = null;
-                this.formData.diameter = null;
-                this.$emit('submit');
-              }
-            }).catch((error) => {
-              console.log(error);
-            }).finally(() => {
-              this.loading = false;
-            });
+          });
+          this.$http(method, url, params).then(data => {
+            if (data.status !== -1) {
+              this.formData.coilNumber++;
+              this.formData.coilWeight = null;
+              this.formData.diameter = null;
+              this.$emit('submit');
+            }
           }).catch((error) => {
-            this.loading = false;
             console.log(error);
+          }).finally(() => {
+            this.loading = false;
           });
         } else {
           return false;

@@ -117,6 +117,42 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <!-- 二次续钢：开始 -->
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <el-form-item label="续钢1炉号:" prop="addMeltNumber1" class="dialog_field">
+            <el-input v-model="formData.addMeltNumber1"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="续钢1重量:" prop="addMeltWeight1" class="dialog_field">
+            <el-input v-model="formData.addMeltWeight1"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="续钢2炉号:" prop="addMeltNumber2" class="dialog_field">
+            <el-input v-model="formData.addMeltNumber2"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <el-form-item label="续钢2重量:" prop="addMeltWeight2" class="dialog_field">
+            <el-input v-model="formData.addMeltWeight2"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="续钢3炉号:" prop="addMeltNumber3" class="dialog_field">
+            <el-input v-model="formData.addMeltNumber3"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="续钢3重量:" prop="addMeltWeight3" class="dialog_field">
+            <el-input v-model="formData.addMeltWeight3"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <!-- 二次续钢：结束 -->
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item label="放钢重量:" prop="alloyOutWeight" class="dialog_field">
@@ -172,7 +208,13 @@ const formConfig = {
   "alloyFixWeight": 0,// 总重量修正
   "remark":  "",
   "createdAt": "", //创建时间
-  "updatedAt": "" //更新时间
+  "updatedAt": "", //更新时间
+  "addMeltNumber1": '', //二次续钢炉号
+  "addMeltWeight1": 0, //二次续钢重量
+  "addMeltNumber2": '', //二次续钢炉号
+  "addMeltWeight2": 0, //二次续钢重量
+  "addMeltNumber3": '', //二次续钢炉号
+  "addMeltWeight3": 0 //二次续钢重量
 };
 
 export default {
@@ -207,7 +249,13 @@ export default {
         "alloyFixWeight": 0,// 总重量修正
         "remark":  "",
         "createdAt": "", //创建时间
-        "updatedAt": "" //更新时间
+        "updatedAt": "", //更新时间
+        "addMeltNumber1": '', //二次续钢炉号
+        "addMeltWeight1": 0, //二次续钢重量
+        "addMeltNumber2": '', //二次续钢炉号
+        "addMeltWeight2": 0, //二次续钢重量
+        "addMeltNumber3": '', //二次续钢炉号
+        "addMeltWeight3": 0 //二次续钢重量
       },
       rules: {
         ribbonTypeName: [{ required: true, message: '请选择材质', trigger: 'blur' }],
@@ -283,6 +331,27 @@ export default {
         ],
         remark: [
           { max: 100, message: '最多100位字符', trigger: 'blur' }
+        ],
+        addMeltNumber1: [
+          { max: 20, message: '最多20位字符', trigger: 'blur' }
+        ],
+        addMeltWeight1: [
+          { validator: number, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
+        ],
+        addMeltNumber2: [
+          { max: 20, message: '最多20位字符', trigger: 'blur' }
+        ],
+        addMeltWeight2: [
+          { validator: number, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
+        ],
+        addMeltNumber3: [
+          { max: 20, message: '最多20位字符', trigger: 'blur' }
+        ],
+        addMeltWeight3: [
+          { validator: number, trigger: 'blur' },
+          { validator: ltNumber(99999), trigger: 'blur' }
         ]
       }
     };
@@ -317,7 +386,7 @@ export default {
           this.loading = true;
 
           // 总重量
-          this.formData.alloyTotalWeight = parseInt(this.formData.newAlloyWeight) + parseInt(this.formData.oldAlloyWeight) + parseInt(this.formData.mixAlloyWeight) + parseInt(this.formData.highNbWeight) + parseInt(this.formData.alloyFixWeight);
+          this.formData.alloyTotalWeight = parseInt(this.formData.newAlloyWeight) + parseInt(this.formData.oldAlloyWeight) + parseInt(this.formData.mixAlloyWeight) + parseInt(this.formData.highNbWeight) + parseInt(this.formData.alloyFixWeight) + parseInt(this.formData.addMeltWeight1) + parseInt(this.formData.addMeltWeight2) + parseInt(this.formData.addMeltWeight3);
 
           this.formData.roleId = this.userinfo.roleId;
           this.formData.adminname = this.userinfo.adminname;

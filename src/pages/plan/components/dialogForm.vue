@@ -81,7 +81,7 @@
           <el-form-item label="单炉投入" prop="alloyWeight" class="dialog_field">
             <el-input v-model="formData.alloyWeight"></el-input>
           </el-form-item>
-        </el-col>
+        </el-col> 
         <el-col :span="6">
           <el-form-item label="文件编号" prop="fileNumber" class="dialog_field">
             <el-input v-model="formData.fileNumber"></el-input>
@@ -104,6 +104,7 @@
           <el-col :span="6">
             <el-form-item label="叠片系数" prop="orderLaminationFactor" class="dialog_field">
               <el-select v-model="formData.orderLaminationFactor" placeholder="">
+                <el-option label="≥0.72" value="≥0.72"></el-option>
                 <el-option label="≥0.75" value="≥0.75"></el-option>
                 <el-option label="≥0.78" value="≥0.78"></el-option>
                 <el-option label="≥0.80" value="≥0.80"></el-option>
@@ -115,11 +116,7 @@
           <el-col :span="6">
             <el-form-item label="韧性" prop="orderRibbonToughnessLevels" class="dialog_field">
               <el-select v-model="formData.orderRibbonToughnessLevels" placeholder="" multiple collapse-tags>
-                <el-option label="A" value="A"></el-option>
-                <el-option label="B" value="B"></el-option>
-                <el-option label="C" value="C"></el-option>
-                <el-option label="D" value="D"></el-option>
-                <el-option label="E" value="E"></el-option>
+                <el-option v-for="item in ribbonToughnessLevelList" :key="item.ribbonToughnessLevelId" :label="item.ribbonToughnessLevel" :value="item.ribbonToughnessLevel"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -146,6 +143,7 @@
           <el-col :span="6">
             <el-form-item label="叠片系数" class="dialog_field" :prop="'qualifiedDemands.' + index + '.qualifiedLaminationFactor'" :rules="[{ required: true, message: '请选择叠片系数', trigger: 'blur' }]">
               <el-select v-model="item.qualifiedLaminationFactor" placeholder="">
+                <el-option label="≥0.72" value="≥0.72"></el-option>
                 <el-option label="≥0.75" value="≥0.75"></el-option>
                 <el-option label="≥0.78" value="≥0.78"></el-option>
                 <el-option label="≥0.80" value="≥0.80"></el-option>
@@ -157,11 +155,7 @@
           <el-col :span="6">
             <el-form-item label="韧性" class="dialog_field" :prop="'qualifiedDemands.' + index + '.qualifiedRibbonToughnessLevels'" :rules="[{ required: true, message: '请选择韧性', trigger: 'blur' }]">
               <el-select v-model="item.qualifiedRibbonToughnessLevels" placeholder="" multiple collapse-tags>
-                <el-option label="A" value="A"></el-option>
-                <el-option label="B" value="B"></el-option>
-                <el-option label="C" value="C"></el-option>
-                <el-option label="D" value="D"></el-option>
-                <el-option label="E" value="E"></el-option>
+                <el-option v-for="item in ribbonToughnessLevelList" :key="item.ribbonToughnessLevelId" :label="item.ribbonToughnessLevel" :value="item.ribbonToughnessLevel"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -345,7 +339,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'ribbonTypeList', 'ribbonWidthList'
+      'ribbonTypeList', 'ribbonWidthList', 'ribbonToughnessLevelList'
     ])
   },
   created () {
@@ -357,6 +351,7 @@ export default {
     this.roleId = JSON.parse(localStorage.getItem('userinfo')).roleId;
     this.getRibbonTypeList();
     this.getRibbonWidthList();
+    this.getRibbonToughnessLevelList();
   },
   methods: {
     pick() {
@@ -364,7 +359,7 @@ export default {
       this.formData.theBeginfurnace = `0${this.formData.castId}-${date}-01`;
     },
     ...mapActions([
-      'getRibbonTypeList', 'getRibbonWidthList'
+      'getRibbonTypeList', 'getRibbonWidthList', 'getRibbonToughnessLevelList'
     ]),
     closeDialog() {
       this.$emit('close');

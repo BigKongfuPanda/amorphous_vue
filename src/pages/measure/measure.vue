@@ -504,6 +504,35 @@ export default {
         return false;
       }
     },
+    // 计算内衬的重量
+    calcLinerWeight(ribbonWidth) {
+      /** 
+       * 计算单盘净重，不同规格的内衬重量不同
+       * 内衬的规格和重量对应表
+       * 20.5: 0.05,
+        25.5: 0.06,
+        30: 0.08,
+        40: 0.12,
+        50: 0.12
+       */
+      let linerWeight = 0;
+      ribbonWidth = Number(ribbonWidth);
+      
+      if (ribbonWidth < 25) {
+        linerWeight = 0.05;
+      } else if (ribbonWidth >= 25 && ribbonWidth < 30) {
+        linerWeight = 0.06;
+      } else if (ribbonWidth >= 30 && ribbonWidth < 40) {
+        linerWeight = 0.08;
+      } else if (ribbonWidth >= 40 && ribbonWidth < 50) {
+        linerWeight = 0.12;
+      } else if (ribbonWidth >= 50 && ribbonWidth < 58) {
+        linerWeight = 0.12;
+      } else if (ribbonWidth >= 58) { // 58mm 以上的使用两个 30 的内衬拼接起来
+        linerWeight = 0.08 * 2;
+      }
+      return linerWeight;
+    },
     clickSearch() {
       // 重置当前页码为1
       const params = {
@@ -553,6 +582,8 @@ export default {
             qualifiedDemands: [1, 2, 3, 5, 6, 15].includes(Number(this.userinfo.roleId)) ? JSON.parse(item.qualifiedDemands) : []
           };
           item.clients = item.clients ? item.clients.split(',') : [];
+          item.coilNetWeight = item.coilWeight - calcLinerWeight(item.ribbonWidth);
+          item.remainWeight = item.coilNetWeight;
         });
         this.tableData = data.list;
       }).catch((err) => {

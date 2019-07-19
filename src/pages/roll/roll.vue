@@ -37,23 +37,23 @@
         <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="userinfo.roleId === 1 || userinfo.roleId === 2 || userinfo.roleId === 3" class="pull_right">导出</el-button>
       </el-col>
       <el-table :data="tableData" stripe border style="width:100%" v-loading="loading" ref="table" :height="tableHeight"> 
-        <el-table-column prop="furnace" label="炉号" align="center" min-width="170px"></el-table-column>
-        <el-table-column prop="ribbonTypeName" label="材质" align="center" min-width="80px"></el-table-column>
-        <el-table-column prop="ribbonWidth" label="规格" align="center"></el-table-column>
-        <el-table-column prop="castDate" label="生产日期" align="center" :formatter="dateFormat" min-width="110px"></el-table-column>
-        <el-table-column prop="caster" label="喷带手" align="center" min-width="100px"></el-table-column>
-        <el-table-column prop="coilNumber" label="盘号" align="center" width="80px"></el-table-column>
-        <el-table-column prop="diameter" label="外径(mm)" align="center" width="100px"></el-table-column>
-        <el-table-column prop="coilWeight" label="重量(kg)" align="center" width="110px"></el-table-column>
-        <el-table-column prop="rollMachine" label="机器编号" align="center" width="110px"></el-table-column>
-        <el-table-column prop="roller" label="重卷人员" align="center" width="110px"></el-table-column>
-        <el-table-column prop="createdAt" label="重卷日期" align="center" :formatter="rollDateFormat" min-width="110px"></el-table-column>
-        <el-table-column label="是否平整" align="center" width="80px">
+        <el-table-column prop="furnace" label="炉号" align="center" min-width="130px"></el-table-column>
+        <el-table-column prop="ribbonTypeName" label="材质" align="center" min-width="60px"></el-table-column>
+        <el-table-column prop="ribbonWidth" label="规格" align="center" width="40px"></el-table-column>
+        <el-table-column prop="castDate" label="生产日期" align="center" :formatter="dateFormat" min-width="80px"></el-table-column>
+        <el-table-column prop="caster" label="喷带手" align="center" width="50px"></el-table-column>
+        <el-table-column prop="coilNumber" label="盘号" align="center" width="40px"></el-table-column>
+        <el-table-column prop="diameter" label="外径(mm)" align="center" width="70px"></el-table-column>
+        <el-table-column prop="coilWeight" label="重量(kg)" align="center" width="70px"></el-table-column>
+        <el-table-column prop="rollMachine" label="机器编号" align="center" width="70px"></el-table-column>
+        <el-table-column prop="roller" label="重卷人员" align="center" width="70px"></el-table-column>
+        <el-table-column prop="createdAt" label="重卷日期" align="center" :formatter="rollDateFormat" min-width="80px"></el-table-column>
+        <el-table-column label="是否平整" align="center" width="60px">
           <template slot-scope="scope">
             <span :class="{text_danger: scope.row.isFlat === '否'}">{{scope.row.isFlat}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="150px">
+        <el-table-column label="操作" align="center" width="80px">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="isEditable" :disabled="scope.row.roller !== userinfo.adminname && userinfo.roleId !== 1">修改</el-button>
             <!-- <el-button size="mini" type="danger" @click="del(scope.row)">删除</el-button> -->
@@ -160,6 +160,35 @@ export default {
       this.pageConfig.current = 1;
       this.getTableData(params);
     },
+    // 计算内衬的重量
+    calcLinerWeight(ribbonWidth) {
+      /** 
+       * 计算单盘净重，不同规格的内衬重量不同
+       * 内衬的规格和重量对应表
+       * 20.5: 0.05,
+        25.5: 0.06,
+        30: 0.08,
+        40: 0.12,
+        50: 0.12
+       */
+      let linerWeight = 0;
+      ribbonWidth = Number(ribbonWidth);
+      
+      if (ribbonWidth < 25) {
+        linerWeight = 0.05;
+      } else if (ribbonWidth >= 25 && ribbonWidth < 30) {
+        linerWeight = 0.06;
+      } else if (ribbonWidth >= 30 && ribbonWidth < 40) {
+        linerWeight = 0.08;
+      } else if (ribbonWidth >= 40 && ribbonWidth < 50) {
+        linerWeight = 0.12;
+      } else if (ribbonWidth >= 50 && ribbonWidth < 58) {
+        linerWeight = 0.12;
+      } else if (ribbonWidth >= 58) { // 58mm 以上的使用两个 30 的内衬拼接起来
+        linerWeight = 0.08 * 2;
+      }
+      return linerWeight;
+    },
     getTableData(params = {}) {
       const _params = {
         castId: this.castId,
@@ -173,6 +202,11 @@ export default {
       this.$http('get', urlmap.queryMeasure, params).then(data => {
         this.pageConfig.total = data.count;
         this.pageConfig.pageSize = data.limit;
+        data.list && data.list.forEach(item => {
+          item.clients = item.clients ? item.clients.split(',') : [];
+          item.coilNetWeight = item.coilWeight - this.calcLinerWeight(item.ribbonWidth);
+          item.remainWeight = item.coilNetWeight;
+        });
         this.tableData = data.list;
       }).catch((err) => {
         console.log(err);

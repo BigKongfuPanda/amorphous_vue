@@ -74,18 +74,18 @@
         <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable" class="pull_right">导出</el-button>
       </el-col>
       <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading" @selection-change="handleSelectionChange"> 
-        <el-table-column type="selection" width="30" :selectable="setSelectable"></el-table-column>
-        <el-table-column prop="furnace" label="炉号" align="center" width="170px" fixed></el-table-column>
-        <el-table-column prop="coilNumber" label="盘号" align="center" width="50px" fixed></el-table-column>
-        <el-table-column prop="ribbonTypeName" label="材质" align="center" width="70px"></el-table-column>
-        <el-table-column prop="ribbonWidth" label="规格" align="center" width="50px"></el-table-column>
-        <el-table-column prop="castDate" label="生产日期" align="center" :formatter="dateFormat" width="110px"></el-table-column>
-        <el-table-column prop="caster" label="喷带手" align="center" width="70px"></el-table-column>
-        <el-table-column prop="diameter" label="外径(mm)" align="center" width="90px"></el-table-column>
-        <el-table-column prop="coilWeight" label="重量(kg)" align="center" width="90px"></el-table-column>
-        <el-table-column prop="laminationFactor" label="叠片系数" align="center" width="80px"></el-table-column>
-        <el-table-column prop="laminationLevel" label="叠片等级" align="center" width="80px"></el-table-column>
-        <el-table-column prop="realRibbonWidth" label="实际带宽" align="center" width="80px">
+        <el-table-column type="selection" width="20" :selectable="setSelectable"></el-table-column>
+        <el-table-column prop="furnace" label="炉号" align="center" width="130px" fixed></el-table-column>
+        <el-table-column prop="coilNumber" label="盘号" align="center" width="35px" fixed></el-table-column>
+        <el-table-column prop="ribbonTypeName" label="材质" align="center" min-width="50px"></el-table-column>
+        <el-table-column prop="ribbonWidth" label="规格" align="center" width="40px"></el-table-column>
+        <el-table-column prop="castDate" label="生产日期" align="center" :formatter="dateFormat" width="80px"></el-table-column>
+        <el-table-column prop="caster" label="喷带手" align="center" width="50px"></el-table-column>
+        <el-table-column prop="diameter" label="外径(mm)" align="center" width="70px"></el-table-column>
+        <el-table-column prop="coilWeight" label="重量(kg)" align="center" width="70px"></el-table-column>
+        <el-table-column prop="laminationFactor" label="叠片系数" align="center" width="70px"></el-table-column>
+        <el-table-column prop="laminationLevel" label="叠片等级" align="center" width="70px"></el-table-column>
+        <el-table-column prop="realRibbonWidth" label="实际带宽" align="center" width="70px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.realRibbonWidth }}
@@ -95,7 +95,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness1" label="带厚1(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness1" label="带厚1(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.ribbonThickness1 }}
@@ -105,7 +105,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness2" label="带厚2(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness2" label="带厚2(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.ribbonThickness2 }}
@@ -115,7 +115,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness3" label="带厚3(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness3" label="带厚3(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.ribbonThickness3 }}
@@ -125,7 +125,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness4" label="带厚4(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness4" label="带厚4(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.ribbonThickness4 }}
@@ -135,7 +135,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness5" label="带厚5(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness5" label="带厚5(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.ribbonThickness5 }}
@@ -145,7 +145,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness6" label="带厚6(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness6" label="带厚6(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.ribbonThickness6 }}
@@ -155,7 +155,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness7" label="带厚7(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness7" label="带厚7(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.ribbonThickness7 }}
@@ -165,7 +165,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness8" label="带厚8(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness8" label="带厚8(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.ribbonThickness8 }}
@@ -175,7 +175,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness9" label="带厚9(μm)" align="center" width="90px">
+        <el-table-column prop="ribbonThickness9" label="带厚9(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.ribbonThickness9 }}
@@ -185,10 +185,10 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThicknessDeviation" label="厚度偏差(μm)" align="center" width="110px"></el-table-column>
-        <el-table-column prop="ribbonThickness" label="平均厚度(μm)" align="center" width="110px"></el-table-column>
-        <el-table-column prop="ribbonThicknessLevel" label="厚度级别" align="center" width="90px"></el-table-column>
-        <el-table-column prop="ribbonToughness" label="韧性" align="center" width="90px">
+        <el-table-column prop="ribbonThicknessDeviation" label="厚度偏差(μm)" align="center" width="90px"></el-table-column>
+        <el-table-column prop="ribbonThickness" label="平均厚度(μm)" align="center" width="90px"></el-table-column>
+        <el-table-column prop="ribbonThicknessLevel" label="厚度级别" align="center" width="70px"></el-table-column>
+        <el-table-column prop="ribbonToughness" label="韧性" align="center" width="70px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.ribbonToughness }}
@@ -200,7 +200,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonToughnessLevel" label="韧性等级" align="center" width="90px">
+        <el-table-column prop="ribbonToughnessLevel" label="韧性等级" align="center" width="60px">
           <!-- <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.ribbonToughnessLevel }}
@@ -216,7 +216,7 @@
             </div>
           </template> -->
         </el-table-column>
-        <el-table-column prop="appearence" label="外观" align="center" width="90px">
+        <el-table-column prop="appearence" label="外观" align="center" width="70px">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.appearence }}
@@ -240,7 +240,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="appearenceLevel" label="外观等级" align="center" width="90px">
+        <el-table-column prop="appearenceLevel" label="外观等级" align="center" width="60px">
           <!-- <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.appearenceLevel }}
@@ -255,12 +255,12 @@
             </div>
           </template> -->
         </el-table-column>
-        <el-table-column prop="ribbonTotalLevel" label="综合级别" align="center" width="90px">
+        <el-table-column prop="ribbonTotalLevel" label="综合级别" align="center" width="70px">
           <template slot-scope="scope">
             <span :class="scope.row.ribbonTotalLevel === '不合格' ? 'text_danger' : '' ">{{scope.row.ribbonTotalLevel}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="入库规则" align="center" width="90px">
+        <el-table-column label="入库规则" align="center" width="60px">
           <template slot-scope="scope">
             <el-popover placement="right" trigger="hover">
               <table class="popover_table" cellpadding="0" cellspacing="0">
@@ -299,7 +299,7 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column prop="isStored" label="是否入库" align="center" width="100px">
+        <el-table-column prop="isStored" label="是否入库" align="center" width="60px">
           <template slot-scope="scope">
             <div v-if="scope.row.isMeasureConfirmed === 1">
               <span v-if="scope.row.isStored === 1">计划内入库</span>
@@ -315,7 +315,7 @@
             </div> -->
           </template>
         </el-table-column>
-        <el-table-column prop="unStoreReason" label="不入库原因" align="center" width="100px" :show-overflow-tooltip="true">
+        <el-table-column prop="unStoreReason" label="不入库原因" align="center" min-width="70px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false" class="text_danger">
               {{ scope.row.unStoreReason }}
@@ -325,7 +325,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="clients" label="判定去向" align="center" width="120px" :show-overflow-tooltip="true">
+        <el-table-column prop="clients" label="判定去向" align="center" width="80px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.clients ? scope.row.clients.toString() : '' }}
@@ -346,7 +346,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="measureDate" label="检测时间" align="center" width="120px" :formatter="dateTimeFormat" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="measureDate" label="检测时间" align="center" width="100px" :formatter="dateTimeFormat" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="操作" align="center" width="150px" v-if="userinfo.roleId == 5 || userinfo.roleId == 1">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button>
@@ -582,7 +582,7 @@ export default {
             qualifiedDemands: [1, 2, 3, 5, 6, 15].includes(Number(this.userinfo.roleId)) ? JSON.parse(item.qualifiedDemands) : []
           };
           item.clients = item.clients ? item.clients.split(',') : [];
-          item.coilNetWeight = item.coilWeight - calcLinerWeight(item.ribbonWidth);
+          item.coilNetWeight = item.coilWeight - this.calcLinerWeight(item.ribbonWidth);
           item.remainWeight = item.coilNetWeight;
         });
         this.tableData = data.list;

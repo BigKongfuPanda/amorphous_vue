@@ -27,7 +27,19 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="炉号：">
-          <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
+          <!-- <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input> -->
+          <el-select 
+            v-model="searchForm.furnaces" 
+            placeholder="请输入炉号关键字" 
+            multiple 
+            filterable 
+            remote
+            collapse-tags
+            :loading="selectLoading"
+            :remote-method="remoteMethod"
+            >
+            <el-option v-for="furnace in furnaceList" :key="furnace" :label="furnace" :value="furnace"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="材质：">
           <el-select v-model="searchForm.ribbonTypeNames" placeholder="请选择" multiple collapse-tags>
@@ -266,7 +278,7 @@ export default {
       castId: 6,
       searchForm: {
         caster: '',
-        furnace: '',
+        furnaces: [],
         date: [],
         outDate: [],
         ribbonTypeNames: [],
@@ -278,6 +290,8 @@ export default {
         isRemain: 1
       },
       loading: false,
+      selectLoading: false,
+      furnaceList: [],
       totalCoilNum: null,
       totalWeight: null,
       tableData: [],
@@ -411,7 +425,7 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { caster: '', furnace: '', date: [], outDate: [], ribbonTotalLevels: '', ribbonTypeNames: [], ribbonWidths: [],  ribbonThicknessLevels: [], laminationLevels: [], place: '', isRemain: 1 };
+      this.searchForm = { caster: '', furnaces: [], date: [], outDate: [], ribbonTotalLevels: '', ribbonTypeNames: [], ribbonWidths: [],  ribbonThicknessLevels: [], laminationLevels: [], place: '', isRemain: 1 };
       const params = {
         current: 1
       };
@@ -426,7 +440,7 @@ export default {
         outStartTime: this.searchForm.outDate[0],
         outEndTime: this.searchForm.outDate[1],
         caster: this.searchForm.caster,
-        furnace: this.searchForm.furnace,
+        furnaceJson: JSON.stringify(this.searchForm.furnaces),
         ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
         ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths),
         ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
@@ -656,6 +670,20 @@ export default {
         });
       }
       this.getTableData(params);
+    },
+    remoteMethod(query) {
+      if (query !== '') {
+        this.selectLoading = true;
+        this.$http('GET', urlmap.queryFurnaceList, { query }).then(data => {
+          this.furnaceList = data.list;
+        }).catch(err => {
+          console.log(err);
+        }).finally(() => {
+          this.selectLoading = false;
+        }); 
+      } else {
+        this.furnaceList = [];
+      }
     }
   }
 }

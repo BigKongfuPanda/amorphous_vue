@@ -87,7 +87,8 @@
         <el-table-column prop="laminationLevel" label="叠片等级" align="center" width="70px"></el-table-column>
         <el-table-column prop="realRibbonWidth" label="实际带宽" align="center" width="70px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+            <!-- <div v-if="scope.row.isEditing === false"> -->
+            <div v-if="scope.row.isMeasureConfirmed === 1">
               {{ scope.row.realRibbonWidth }}
             </div>
             <div v-else>
@@ -97,7 +98,8 @@
         </el-table-column>
         <el-table-column prop="ribbonThickness1" label="带厚1(μm)" align="center" width="70px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+            <!-- <div v-if="scope.row.isEditing === false"> -->
+            <div v-if="scope.row.isMeasureConfirmed === 1">
               {{ scope.row.ribbonThickness1 }}
             </div>
             <div v-else>
@@ -107,7 +109,8 @@
         </el-table-column>
         <el-table-column prop="ribbonThickness2" label="带厚2(μm)" align="center" width="70px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+            <!-- <div v-if="scope.row.isEditing === false"> -->
+            <div v-if="scope.row.isMeasureConfirmed === 1">
               {{ scope.row.ribbonThickness2 }}
             </div>
             <div v-else>
@@ -117,7 +120,8 @@
         </el-table-column>
         <el-table-column prop="ribbonThickness3" label="带厚3(μm)" align="center" width="70px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+            <!-- <div v-if="scope.row.isEditing === false"> -->
+            <div v-if="scope.row.isMeasureConfirmed === 1">
               {{ scope.row.ribbonThickness3 }}
             </div>
             <div v-else>
@@ -127,7 +131,8 @@
         </el-table-column>
         <el-table-column prop="ribbonThickness4" label="带厚4(μm)" align="center" width="70px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+            <!-- <div v-if="scope.row.isEditing === false"> -->
+            <div v-if="scope.row.isMeasureConfirmed === 1">
               {{ scope.row.ribbonThickness4 }}
             </div>
             <div v-else>
@@ -137,7 +142,8 @@
         </el-table-column>
         <el-table-column prop="ribbonThickness5" label="带厚5(μm)" align="center" width="70px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+            <!-- <div v-if="scope.row.isEditing === false"> -->
+            <div v-if="scope.row.isMeasureConfirmed === 1">
               {{ scope.row.ribbonThickness5 }}
             </div>
             <div v-else>
@@ -147,7 +153,8 @@
         </el-table-column>
         <el-table-column prop="ribbonThickness6" label="带厚6(μm)" align="center" width="70px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+            <!-- <div v-if="scope.row.isEditing === false"> -->
+            <div v-if="scope.row.isMeasureConfirmed === 1">
               {{ scope.row.ribbonThickness6 }}
             </div>
             <div v-else>
@@ -157,7 +164,8 @@
         </el-table-column>
         <el-table-column prop="ribbonThickness7" label="带厚7(μm)" align="center" width="70px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+            <!-- <div v-if="scope.row.isEditing === false"> -->
+            <div v-if="scope.row.isMeasureConfirmed === 1">
               {{ scope.row.ribbonThickness7 }}
             </div>
             <div v-else>
@@ -167,7 +175,8 @@
         </el-table-column>
         <el-table-column prop="ribbonThickness8" label="带厚8(μm)" align="center" width="70px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+            <!-- <div v-if="scope.row.isEditing === false"> -->
+            <div v-if="scope.row.isMeasureConfirmed === 1">
               {{ scope.row.ribbonThickness8 }}
             </div>
             <div v-else>
@@ -177,7 +186,8 @@
         </el-table-column>
         <el-table-column prop="ribbonThickness9" label="带厚9(μm)" align="center" width="70px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+            <!-- <div v-if="scope.row.isEditing === false"> -->
+            <div v-if="scope.row.isMeasureConfirmed === 1">
               {{ scope.row.ribbonThickness9 }}
             </div>
             <div v-else>
@@ -190,7 +200,8 @@
         <el-table-column prop="ribbonThicknessLevel" label="厚度级别" align="center" width="70px"></el-table-column>
         <el-table-column prop="ribbonToughness" label="韧性" align="center" width="70px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+            <!-- <div v-if="scope.row.isEditing === false"> -->
+            <div v-if="scope.row.isMeasureConfirmed === 1">
               {{ scope.row.ribbonToughness }}
             </div>
             <div v-else>
@@ -218,7 +229,8 @@
         </el-table-column>
         <el-table-column prop="appearence" label="外观" align="center" width="70px">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+            <!-- <div v-if="scope.row.isEditing === false"> -->
+            <div v-if="scope.row.isMeasureConfirmed === 1">
               {{ scope.row.appearence }}
             </div>
             <div v-else>
@@ -302,8 +314,8 @@
         <el-table-column prop="isStored" label="是否入库" align="center" width="60px">
           <template slot-scope="scope">
             <div v-if="scope.row.isMeasureConfirmed === 1">
-              <span v-if="scope.row.isStored === 1">计划内入库</span>
-              <span v-if="scope.row.isStored === 2">计划外入库</span>
+              <span v-if="scope.row.isStored === 1">计划内</span>
+              <span v-if="scope.row.isStored === 2">计划外</span>
               <span v-if="scope.row.isStored === 3" class="text_danger">否</span>
             </div>
             <!-- <div v-else>
@@ -317,7 +329,8 @@
         </el-table-column>
         <el-table-column prop="unStoreReason" label="不入库原因" align="center" min-width="70px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false" class="text_danger">
+            <!-- <div v-if="scope.row.isEditing === false" class="text_danger"> -->
+            <div v-if="scope.row.isMeasureConfirmed === 1" class="text_danger">
               {{ scope.row.unStoreReason }}
             </div>
             <div v-else>
@@ -327,7 +340,8 @@
         </el-table-column>
         <el-table-column prop="clients" label="判定去向" align="center" width="80px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+            <!-- <div v-if="scope.row.isEditing === false"> -->
+            <div v-if="scope.row.isMeasureConfirmed === 1">
               {{ scope.row.clients ? scope.row.clients.toString() : '' }}
             </div>
             <div v-else>
@@ -347,11 +361,13 @@
           </template>
         </el-table-column>
         <el-table-column prop="measureDate" label="检测时间" align="center" width="100px" :formatter="dateTimeFormat" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column label="操作" align="center" width="150px" v-if="userinfo.roleId == 5 || userinfo.roleId == 1">
+        <el-table-column label="操作" align="center" v-if="userinfo.roleId == 5 || userinfo.roleId == 1">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button>
-            <el-button size="mini" type="success" @click="save(scope.row)" v-else :disabled="!isEditable">保存</el-button>
-            <el-button size="mini" type="danger" @click="del(scope.row)" v-if="isDeleteable">删除</el-button>
+            <!-- <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button> -->
+            <!-- <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isMeasureConfirmed === 1" :disabled="!isEditable">修改</el-button> -->
+            <!-- <el-button size="mini" type="success" @click="save(scope.row)" v-else :disabled="!isEditable">保存</el-button> -->
+            <el-button size="mini" type="success" @click="save(scope.row)" v-if="scope.row.isMeasureConfirmed !== 1" :disabled="!isEditable">保存</el-button>
+            <!-- <el-button size="mini" type="danger" @click="del(scope.row)" v-if="isDeleteable">删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -480,7 +496,7 @@ export default {
       if (this.userinfo.roleId == 5) { // 检测人员可修改
         return true;
       } else { // 其他
-        return false;
+        return false; 
       }
     },
     setDeleteable() {
@@ -654,15 +670,13 @@ export default {
       // 综合级别
       // 叠片系数不合格，或者外观等级为不合格，则综合级别为不合格
       row.ribbonTotalLevel = row.laminationLevel === '不合格' || row.appearenceLevel === '不合格' ? '不合格' : row.ribbonThicknessLevel + row.laminationLevel + row.ribbonToughnessLevel + row.appearenceLevel;
-      // 判断是否满足生产计划规定的入库标准，如果不满足则为不合格
-      // const storedType = this.setStoredType(row);
-      // if (storedType === 3) {
-      //   row.ribbonTotalLevel = '不合格';
-      // }
       // 规格 为 32/35/40/42/45/50/，材质为 1K107B 的带材，如果韧性为D或E，则综合级别为不合格
       // if ([32, 35, 40, 42, 45, 50].includes(row.ribbonWidth) && row.ribbonTypeName == '1K107B' && ['D', 'E'].includes(row.ribbonToughnessLevel)) {
       //   row.ribbonTotalLevel = '不合格';
       // }
+      if ([32, 42].includes(row.ribbonWidth) && row.ribbonTypeName == '1K107B' && ['D', 'E'].includes(row.ribbonToughnessLevel)) {
+        row.ribbonTotalLevel = '不合格';
+      }
       //如果带材厚度偏差大于3，同时韧性为D/E,此带材为不合格，否则加F
       if (row.ribbonThicknessDeviation > 3 && ['D', 'E'].includes(row.ribbonToughnessLevel)) {
         row.ribbonTotalLevel = '不合格';
@@ -726,7 +740,7 @@ export default {
       // 是否入库：不合格不能入库，端面有问题的不能入库，不满足入库规则的不能入库
       if (row.ribbonTotalLevel === '不合格') {
         row.isStored = 3;
-        row.isMeasureConfirmed = 1;
+        // row.isMeasureConfirmed = 1;
       } else {
         // 入库分为：计划内入库和计划外入库
         row.isStored = this.setStoredType(row);
@@ -880,7 +894,7 @@ export default {
     },
     setStoredType(row) {
       let inPlanFlag = true;
-      let outPlanFlag = true;
+      // let outPlanFlag = true;
       // 计划内：厚度
       const ribbonThickness = row.ribbonThickness;
       const orderThickness = row.orderThickness;
@@ -972,7 +986,8 @@ export default {
       // }
 
       const qualifiedDemands = JSON.parse(row.qualifiedDemands) || [];
-      qualifiedDemands.forEach(item => {
+      for (const item of qualifiedDemands) {
+        let outPlanFlag = true;
         // 计划外：厚度
         const qualifiedThickness = item.qualifiedThickness;
         if (qualifiedThickness.indexOf('≤') > -1) { // ≤23
@@ -980,11 +995,12 @@ export default {
           if (ribbonThickness > maxThickness) {
             // 厚度不符合符合计划外入库的要求
             outPlanFlag = false;
-          }
+          } 
         } else if (qualifiedThickness.indexOf('-') > -1) {
           const maxThickness = qualifiedThickness.split('-')[1];
           const minThickness = qualifiedThickness.split('-')[0];
           if (ribbonThickness < minThickness || ribbonThickness > maxThickness) {
+            // 厚度不符合符合计划外入库的要求
             outPlanFlag = false;
           }
         }
@@ -1000,25 +1016,28 @@ export default {
           const maxLaminationFactor = qualifiedLaminationFactor.split('-')[1];
           const minLaminationFactor = qualifiedLaminationFactor.split('-')[0];
           if (laminationFactor < minLaminationFactor || laminationFactor > maxLaminationFactor) {
+             // 叠片不符合符合计划外入库的要求
             outPlanFlag = false;
           }
         }
         // 计划外：韧性
         const qualifiedRibbonToughnessLevels = item.qualifiedRibbonToughnessLevels;
         if (!qualifiedRibbonToughnessLevels.includes(ribbonToughnessLevel)) {
+           // 韧性不符合符合计划外入库的要求
           outPlanFlag = false;
         }
         // 计划外：外观
         const qualifiedAppearenceLevels = item.qualifiedAppearenceLevels;
         if (!qualifiedAppearenceLevels.includes(appearenceLevel)) {
+           // 外观不符合符合计划外入库的要求
           outPlanFlag = false;
         }
 
         if (outPlanFlag) {
           return 2;
         }
-      });
-    
+      };
+
       return 3;
     },
     exportExcel() {

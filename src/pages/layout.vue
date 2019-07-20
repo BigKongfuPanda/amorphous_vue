@@ -105,7 +105,7 @@
             <el-menu-item index="/measure/9">9号机组</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="6" v-if="roleId === 1 || roleId === 2 || roleId === 3 || roleId === 6">
+        <el-submenu index="6" v-if="roleId === 1 || roleId === 2 || roleId === 3 || roleId === 6 || roleId === 5">
           <template slot="title">
             <i class="el-icon-tickets"></i>
             <span>库房记录</span>

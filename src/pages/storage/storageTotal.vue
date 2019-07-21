@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right" class="crumb">
       <el-breadcrumb-item>库存记录</el-breadcrumb-item>
-      <el-breadcrumb-item>库存总表</el-breadcrumb-item>
+      <el-breadcrumb-item>{{castId}}号机组</el-breadcrumb-item>
     </el-breadcrumb>
     <Collapse>
       <el-form class="search_bar" :model="searchForm" :inline="true">
@@ -16,8 +16,30 @@
             end-placeholder="结束日期">
           </el-date-picker>
         </el-form-item>
+        <el-form-item label="出库日期：">
+          <el-date-picker
+            v-model="searchForm.outDate"
+            type="daterange"
+            :default-time="['00:00:00', '23:59:59']"
+            :clearable="false"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+        </el-form-item>
         <el-form-item label="炉号：">
-          <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
+          <!-- <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input> -->
+          <el-select 
+            v-model="searchForm.furnaces" 
+            placeholder="请输入炉号关键字" 
+            multiple 
+            filterable 
+            remote
+            collapse-tags
+            :loading="selectLoading"
+            :remote-method="remoteMethod"
+            >
+            <el-option v-for="furnace in furnaceList" :key="furnace" :label="furnace" :value="furnace"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="材质：">
           <el-select v-model="searchForm.ribbonTypeNames" placeholder="请选择" multiple collapse-tags>
@@ -45,17 +67,43 @@
         <el-form-item label="仓位：">
           <el-input v-model="searchForm.place" placeholder="请输入仓位，以逗号分隔"></el-input>
         </el-form-item>
+        <el-form-item label="去向：">
+          <el-select v-model="searchForm.takebys" placeholder="请选择" multiple collapse-tags>
+            <el-option label="J" value="J"></el-option>
+            <el-option label="F" value="F"></el-option>
+            <el-option label="Z" value="Z"></el-option>
+            <el-option label="S" value="S"></el-option>
+            <el-option label="G" value="G"></el-option>
+            <el-option label="W" value="W"></el-option>
+            <el-option label="H" value="H"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="结余：">
+          <el-select v-model="searchForm.isRemain" placeholder="">
+            <el-option value="" label="全部"></el-option>
+            <el-option :value="0" label="=0"></el-option>
+            <el-option :value="1" label=">0"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
           <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
         </el-form-item>
       </el-form>
     </Collapse>
+    <el-row class="total_data">
+      <el-col :span="6">总盘数：{{totalCoilNum}}</el-col>
+      <el-col :span="6">总重量(kg)：{{totalWeight}}</el-col>
+    </el-row>
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable">导出</el-button>
+        <el-button type="primary" icon="el-icon-upload" @click="uploadExcelHandler" v-if="userinfo.roleId == 6">批量入仓</el-button>
+        <el-button type="primary" icon="el-icon-menu" @click="allOutStoreHandler" v-if="isOutStoreable" class="pull_right">整托出库</el-button>
+        <el-button type="primary" icon="el-icon-rank" @click="batchOutStoreHandler" v-if="isOutStoreable" class="pull_right">批量出库</el-button>
       </el-col>
-      <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading"> 
+      <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading" @selection-change="handleSelectionChange"> 
+        <el-table-column type="selection" width="30" :selectable="setSelectable"></el-table-column>
         <el-table-column prop="inStoreDate" label="入库日期" align="center" :formatter="inStoreDateFormat" width="110px"></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="170px" fixed></el-table-column>
         <el-table-column prop="coilNumber" label="盘号" align="center" width="50px" fixed></el-table-column>
@@ -70,6 +118,7 @@
             <span v-if="scope.row.isStored == 1">计划内入库</span>
             <span v-if="scope.row.isStored == 2">计划外入库</span>
             <span v-if="scope.row.isStored == 3">否</span>
+            <span v-if="scope.row.isStored == 4" class="text_warn">退货入库</span>
           </template>
         </el-table-column>
         <el-table-column prop="outStoreDate" label="出库日期" align="center" :formatter="outStoreDateFormat" width="110px"></el-table-column>
@@ -132,6 +181,96 @@
         :page-size="pageConfig.pageSize"
         @current-change="handleCurrentChange"></el-pagination>
     </div>
+    <!-- 整托出库弹出框 -->
+    <el-dialog 
+      title="整托出库" 
+      :visible.sync="allOutStoreForm.visible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="closeAllOutDialog"
+      :center="true"
+      width="30%"
+      v-loading="loading"
+      element-loading-text="拼命加载中">
+      <el-form :model="allOutStoreForm" :rules="allOutStoreFormRules" ref="allOutStoreForm" label-width="100px" style="100%" @submit.native.prevent>
+        <el-form-item label="仓位：" prop="place">
+          <el-input v-model="allOutStoreForm.place"></el-input>
+        </el-form-item>
+        <el-form-item label="去向：" prop="takeBy">
+          <el-select v-model="allOutStoreForm.takeBy" placeholder="">
+            <el-option label="J" value="J"></el-option>
+            <el-option label="F" value="F"></el-option>
+            <el-option label="Z" value="Z"></el-option>
+            <el-option label="S" value="S"></el-option>
+            <el-option label="G" value="G"></el-option>
+            <el-option label="W" value="W"></el-option>
+            <el-option label="H" value="H"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button @click="closeAllOutDialog">取消</el-button>
+        <el-button type="primary" @click="submitAllOutForm">提交</el-button>
+      </div>
+    </el-dialog>
+    <!-- 批量出库弹出框 -->
+    <el-dialog 
+      title="批量出库" 
+      :visible.sync="batchOutStoreForm.visible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="closeBatchOutDialog"
+      :center="true"
+      width="30%"
+      v-loading="loading"
+      element-loading-text="拼命加载中">
+      <el-form :model="batchOutStoreForm" :rules="batchOutStoreFormRules" ref="batchOutStoreForm" label-width="100px" style="100%" @submit.native.prevent>
+        <el-form-item label="去向：" prop="takeBy">
+          <el-select v-model="batchOutStoreForm.takeBy" placeholder="">
+            <el-option label="J" value="J"></el-option>
+            <el-option label="F" value="F"></el-option>
+            <el-option label="Z" value="Z"></el-option>
+            <el-option label="S" value="S"></el-option>
+            <el-option label="G" value="G"></el-option>
+            <el-option label="W" value="W"></el-option>
+            <el-option label="H" value="H"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button @click="closeBatchOutDialog">取消</el-button>
+        <el-button type="primary" @click="submitBatchOutForm">提交</el-button>
+      </div>
+    </el-dialog>
+    <!-- 批量添加仓位弹出框 -->
+    <el-dialog 
+      title="批量入仓" 
+      :visible.sync="uploadExcelForm.visible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="closeUploadDialog"
+      :center="true"
+      width="40%"
+      v-loading="loading"
+      element-loading-text="拼命加载中">
+      <el-upload
+        class="upload"
+        ref="upload"
+        :action="uploadExcelForm.url"
+        :file-list="uploadExcelForm.fileList"
+        :multiple="false"
+        :limit="1"
+        accept=".xlsx"
+        :on-error="uploadErrorHanler"
+        :on-success="uploadSuccessHanler"
+        :auto-upload="false">
+        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        <div slot="tip" class="el-upload__tip">只能上传xlsx文件，且不超过500kb</div>
+      </el-upload>
+      <div slot="footer">
+        <el-button type="primary" @click="submitUploadForm">上传提交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -143,23 +282,31 @@ import { mapState, mapActions } from 'vuex';
 import Collapse from '@/components/collapse.vue';
 
 export default {
-  name: 'melt',
+  name: 'storage',
   components: {Collapse},
   data () {
     return {
       userinfo: {},
+      castId: 6,
       searchForm: {
         caster: '',
-        furnace: '',
+        furnaces: [],
         date: [],
+        outDate: [],
         ribbonTypeNames: [],
         ribbonWidths: [],
         ribbonTotalLevels: '',
         ribbonThicknessLevels: [],
         laminationLevels: [],
-        place: ''
+        takebys: [],
+        place: '',
+        isRemain: 1
       },
       loading: false,
+      selectLoading: false,
+      furnaceList: [],
+      totalCoilNum: null,
+      totalWeight: null,
       tableData: [],
       pageConfig: {
         total: 1,
@@ -169,7 +316,41 @@ export default {
       isExportable: false,
       isEditable: false,
       isDeleteable: false,
-      tableHeight: 550
+      tableHeight: 200,
+      isOutStoreable: false,
+      // 整托盘出库
+      allOutStoreForm: {
+        loading: false,
+        visible: false,
+        place: '',
+        takeBy: ''
+      },
+      allOutStoreFormRules: {
+        place: [
+          { required: true, message: '请输入仓位', trigger: 'blur' },
+          { pattern: /^1-[0-9]{1,2}-[0-9]{1,2}$/, message: '格式错误', trigger: 'blur'}
+        ],
+        takeBy: [
+          { required: true, message: '请填写实际去向', trigger: 'blur' }
+        ]
+      },
+      batchOutStoreForm: {
+        loading: false,
+        visible: false,
+        takeBy: ''
+      },
+      batchOutStoreFormRules: {
+        takeBy: [
+          { required: true, message: '请填写实际去向', trigger: 'blur' }
+        ]
+      },
+      uploadExcelForm: {
+        loading: false,
+        visible: false,
+        url: urlmap.uploadStorage,
+        // url: 'http://localhost:8080/api/storage/uploadstorage',
+        fileList: []
+      }
     }
   },
   computed: {
@@ -177,11 +358,22 @@ export default {
       'ribbonTypeList', 'ribbonWidthList', 'ribbonThicknessLevelList', 'laminationLevelList'
     ])
   },
-  created () {
-    this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
+  // 动态路由匹配
+  beforeRouteUpdate(to, from, next) {
+    this.castId = to.params.castId;
+    this.getTableData();
+    this.isExportable = this.setExportable();
     this.isEditable = this.setEditable();
     this.isDeleteable = this.setDeleteable();
+    next();
+  },
+  created () {
+    this.castId = this.$route.params.castId;
+    this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
     this.isExportable = this.setExportable();
+    this.isEditable = this.setEditable();
+    this.isDeleteable = this.setDeleteable();
+    this.isOutStoreable = this.setOutStoreable();
     this.getTableData();
     this.getRibbonTypeList();
     this.getRibbonWidthList();
@@ -230,6 +422,13 @@ export default {
         return false;
       }
     },
+    setOutStoreable() {
+      if (this.userinfo.roleId == 6) {//只有库房才能够出库操作
+        return true;
+      } else {
+        return false;
+      }
+    },
     clickSearch() {
       // 重置当前页码为1
       const params = {
@@ -239,7 +438,7 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { caster: '', furnace: '', date: [], ribbonTypeNames: [], ribbonWidths: [], ribbonTotalLevels: '', ribbonThicknessLevels: [], laminationLevels: [], place: '' };
+      this.searchForm = { caster: '', furnaces: [], date: [], outDate: [], ribbonTotalLevels: '', ribbonTypeNames: [], ribbonWidths: [],  ribbonThicknessLevels: [], laminationLevels: [], place: '', isRemain: 1 };
       const params = {
         current: 1
       };
@@ -248,18 +447,21 @@ export default {
     },
     getTableData(params = {}) {
       const _params = {
-        // castId: this.castId,
+        castId: this.castId,
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
+        outStartTime: this.searchForm.outDate[0],
+        outEndTime: this.searchForm.outDate[1],
         caster: this.searchForm.caster,
-        furnace: this.searchForm.furnace,
+        furnaceJson: JSON.stringify(this.searchForm.furnaces),
         ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
         ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths),
         ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
         ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
+        takebyJson: JSON.stringify(this.searchForm.takebys),
         place: this.searchForm.place,
-        filterBy: 'storage' // 筛选库房所需的数据：入库且结余大于0
+        isRemain: this.searchForm.isRemain
       };
       Object.assign(params, _params);
       this.$http('get', urlmap.queryStorage, params).then(data => {
@@ -268,6 +470,8 @@ export default {
         data.list && data.list.forEach(item => {
           item.isEditing = false;
         });
+        this.totalCoilNum = data.totalCoilNum;
+        this.totalWeight = data.totalWeight;
         this.tableData = data.list;
       }).catch((err) => {
         console.log(err);
@@ -285,10 +489,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // 库房测的删除操作并非真正的删除数据，而是将当前带材的入库状态改为不入库，3；并且检测的确认状态也改为0
-        row.isStored = 3;
-        row.isMeasureConfirmed = 0;
-        this.$http('PUT', urlmap.updateStorage, row).then(data => {
+        this.$http('delete', urlmap.delStorage, { storageId, furnace, coilNumber }).then(data => {
           this.getTableData();
         }).catch(error => {
           console.log(error);
@@ -322,8 +523,11 @@ export default {
     },
     exportExcel() {
       const params = {
+        castId: this.castId,
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
+        outStartTime: this.searchForm.outDate[0],
+        outEndTime: this.searchForm.outDate[1],
         caster: this.searchForm.caster,
         furnace: this.searchForm.furnace,
         ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
@@ -331,11 +535,187 @@ export default {
         ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
         ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
-        place: this.searchForm.place
+        takebyJson: JSON.stringify(this.searchForm.takebys),
+        place: this.searchForm.place,
+        isRemain: this.searchForm.isRemain
       };
       const url = `${urlmap.exportStorage}?${qs.stringify(params)}`;
       window.open(url);
+    },
+    setSelectable(row, index) {
+      // 合格并且已经检测过了的，才可以被选中来入库
+      // if ([1, 2].includes(row.isStored) && !row.isMeasureConfirmed ) {
+      //   return true;
+      // }
+      return true;
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    allOutStoreHandler() {
+      this.allOutStoreForm.visible = true;
+    },
+    closeAllOutDialog() {
+      this.$refs.allOutStoreForm.resetFields();
+      this.allOutStoreForm.visible = false;
+    },
+    submitAllOutForm() {
+      this.$refs.allOutStoreForm.validate((valid) => {
+        if (valid) {
+          this.allOutStoreForm.loading = true;
+          let formData = {
+            place: this.allOutStoreForm.place,
+            takeBy: this.allOutStoreForm.takeBy,
+            type: 'all'
+          };
+          this.$http('PUT', urlmap.updateStorage, formData).then(data => {
+            const params = {
+              current: 1
+            };
+            this.pageConfig.current = 1;
+            this.getTableData(params);
+          }).catch(err => {
+            console.log(err);
+          }).finally(() => {
+            this.allOutStoreForm.visible = false;
+            this.allOutStoreForm.loading = false;
+          });    
+        } else {
+          return false;
+        }
+      });
+    },
+    batchOutStoreHandler() {
+      if (this.multipleSelection && this.multipleSelection.length > 0) {
+        this.batchOutStoreForm.visible = true;
+      } else {
+        this.$alert('请选择要出库的带材', '提示');
+      }
+    },
+    closeBatchOutDialog() {
+      this.$refs.batchOutStoreForm.resetFields();
+      this.batchOutStoreForm.visible = false;
+    },
+    submitBatchOutForm() {
+      this.$refs.batchOutStoreForm.validate((valid) => {
+        if (valid) {
+          this.batchOutStoreForm.loading = true;
+          // this.multipleSelection && this.multipleSelection.forEach(item => {
+          //   item.takeBy = this.batchOutStoreForm.takeBy,
+          //   item.remainWeight = 0
+          // });
+          // let formData = {
+          //   dataJson: JSON.stringify(this.multipleSelection),
+          //   type: 'batch'
+          // };
+          // this.$http('PUT', urlmap.updateStorage, formData).then(data => {
+          //   const params = {
+          //     current: 1
+          //   };
+          //   this.pageConfig.current = 1;
+          //   this.getTableData(params);
+          // }).catch(err => {
+          //   console.log(err);
+          // }).finally(() => {
+          //   this.batchOutStoreForm.visible = false;
+          //   this.batchOutStoreForm.loading = false;
+          // }); 
+          let ids = [];
+          ids = this.multipleSelection && this.multipleSelection.map(item => {
+            return item.storageId;
+          });
+          const formData = {
+            ids: ids.join(),
+            takeBy: this.batchOutStoreForm.takeBy,
+            type: 'batch'
+          };
+          this.$http('PUT', urlmap.updateStorage, formData).then(data => {
+            const params = {
+              current: 1
+            };
+            this.pageConfig.current = 1;
+            this.getTableData(params);
+          }).catch(err => {
+            console.log(err);
+          }).finally(() => {
+            this.batchOutStoreForm.visible = false;
+            this.batchOutStoreForm.loading = false;
+          }); 
+        } else {
+          return false;
+        }
+      });
+    },
+    uploadExcelHandler() {
+      this.uploadExcelForm.visible = true;
+      this.uploadExcelForm.fileList = [];
+    },
+    closeUploadDialog() {
+      this.uploadExcelForm.visible = false;
+    },
+    submitUploadForm() {
+      this.$refs.upload.submit();
+      this.uploadExcelForm.visible = false;
+      const params = {
+        current: 1
+      };
+      this.pageConfig.current = 1;
+      this.getTableData(params);
+    },
+    uploadErrorHanler(error, file, fileList) {
+      this.$message({
+        message: `上传失败：${error.message}`,
+        type: 'error'
+      });
+    },
+    uploadSuccessHanler(res, file, fileList) {
+      if (res.status === 0) {
+        this.$message({
+          message: res.message,
+          type: 'success'
+        });
+      } else {
+        let html = '';
+        res.data.forEach(item => {
+          html += `<p>炉号：${item.furnace}，盘号：${item.coilNumber}</p>`
+        });
+        this.$alert(html, '以下带材添加仓位失败：', {
+          dangerouslyUseHTMLString: true,
+          type: 'warning'
+        });
+      }
+      const params = {
+        current: 1
+      };
+      this.pageConfig.current = 1;
+      this.getTableData(params);
+    },
+    remoteMethod(query) {
+      if (query !== '') {
+        this.selectLoading = true;
+        this.$http('GET', urlmap.queryFurnaceList, { query }).then(data => {
+          this.furnaceList = data.list;
+        }).catch(err => {
+          console.log(err);
+        }).finally(() => {
+          this.selectLoading = false;
+        }); 
+      } else {
+        this.furnaceList = [];
+      }
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+.total_data {
+  height: 46px;
+  line-height: 46px;
+  background: #fff;
+  margin-top: 10px;
+  padding: 0 30px;
+}
+.upload {
+  height: 100px;
+}
+</style>

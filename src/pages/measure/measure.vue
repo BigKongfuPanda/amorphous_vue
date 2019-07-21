@@ -88,7 +88,7 @@
         <el-table-column prop="realRibbonWidth" label="实际带宽" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
               {{ scope.row.realRibbonWidth }}
             </div>
             <div v-else>
@@ -99,7 +99,7 @@
         <el-table-column prop="ribbonThickness1" label="带厚1(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
               {{ scope.row.ribbonThickness1 }}
             </div>
             <div v-else>
@@ -110,7 +110,7 @@
         <el-table-column prop="ribbonThickness2" label="带厚2(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
               {{ scope.row.ribbonThickness2 }}
             </div>
             <div v-else>
@@ -121,7 +121,7 @@
         <el-table-column prop="ribbonThickness3" label="带厚3(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
               {{ scope.row.ribbonThickness3 }}
             </div>
             <div v-else>
@@ -132,7 +132,7 @@
         <el-table-column prop="ribbonThickness4" label="带厚4(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
               {{ scope.row.ribbonThickness4 }}
             </div>
             <div v-else>
@@ -143,7 +143,7 @@
         <el-table-column prop="ribbonThickness5" label="带厚5(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
               {{ scope.row.ribbonThickness5 }}
             </div>
             <div v-else>
@@ -154,7 +154,7 @@
         <el-table-column prop="ribbonThickness6" label="带厚6(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
               {{ scope.row.ribbonThickness6 }}
             </div>
             <div v-else>
@@ -165,7 +165,7 @@
         <el-table-column prop="ribbonThickness7" label="带厚7(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
               {{ scope.row.ribbonThickness7 }}
             </div>
             <div v-else>
@@ -176,7 +176,7 @@
         <el-table-column prop="ribbonThickness8" label="带厚8(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
               {{ scope.row.ribbonThickness8 }}
             </div>
             <div v-else>
@@ -187,7 +187,7 @@
         <el-table-column prop="ribbonThickness9" label="带厚9(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
               {{ scope.row.ribbonThickness9 }}
             </div>
             <div v-else>
@@ -201,7 +201,7 @@
         <el-table-column prop="ribbonToughness" label="韧性" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
               {{ scope.row.ribbonToughness }}
             </div>
             <div v-else>
@@ -230,7 +230,7 @@
         <el-table-column prop="appearence" label="外观" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
               {{ scope.row.appearence }}
             </div>
             <div v-else>
@@ -330,7 +330,7 @@
         <el-table-column prop="unStoreReason" label="不入库原因" align="center" min-width="70px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false" class="text_danger"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1" class="text_danger">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5" class="text_danger">
               {{ scope.row.unStoreReason }}
             </div>
             <div v-else>
@@ -341,7 +341,7 @@
         <el-table-column prop="clients" label="判定去向" align="center" width="80px" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
               {{ scope.row.clients ? scope.row.clients.toString() : '' }}
             </div>
             <div v-else>

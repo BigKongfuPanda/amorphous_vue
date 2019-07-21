@@ -67,8 +67,20 @@
         <el-form-item label="仓位：">
           <el-input v-model="searchForm.place" placeholder="请输入仓位，以逗号分隔"></el-input>
         </el-form-item>
+        <el-form-item label="去向：">
+          <el-select v-model="searchForm.takebys" placeholder="请选择" multiple collapse-tags>
+            <el-option label="J" value="J"></el-option>
+            <el-option label="F" value="F"></el-option>
+            <el-option label="Z" value="Z"></el-option>
+            <el-option label="S" value="S"></el-option>
+            <el-option label="G" value="G"></el-option>
+            <el-option label="W" value="W"></el-option>
+            <el-option label="H" value="H"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="结余：">
           <el-select v-model="searchForm.isRemain" placeholder="">
+            <el-option value="" label="全部"></el-option>
             <el-option :value="0" label="=0"></el-option>
             <el-option :value="1" label=">0"></el-option>
           </el-select>
@@ -286,6 +298,7 @@ export default {
         ribbonTotalLevels: '',
         ribbonThicknessLevels: [],
         laminationLevels: [],
+        takebys: [],
         place: '',
         isRemain: 1
       },
@@ -315,7 +328,7 @@ export default {
       allOutStoreFormRules: {
         place: [
           { required: true, message: '请输入仓位', trigger: 'blur' },
-          { pattern: /^1-[1-9]{1,2}-[1-9]{1,2}$/, message: '格式错误', trigger: 'blur'}
+          { pattern: /^1-[0-9]{1,2}-[0-9]{1,2}$/, message: '格式错误', trigger: 'blur'}
         ],
         takeBy: [
           { required: true, message: '请填写实际去向', trigger: 'blur' }
@@ -446,6 +459,7 @@ export default {
         ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
         ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
+        takebyJson: JSON.stringify(this.searchForm.takebys),
         place: this.searchForm.place,
         isRemain: this.searchForm.isRemain
       };
@@ -521,6 +535,7 @@ export default {
         ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
         ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
+        takebyJson: JSON.stringify(this.searchForm.takebys),
         place: this.searchForm.place,
         isRemain: this.searchForm.isRemain
       };
@@ -669,6 +684,10 @@ export default {
           type: 'warning'
         });
       }
+      const params = {
+        current: 1
+      };
+      this.pageConfig.current = 1;
       this.getTableData(params);
     },
     remoteMethod(query) {

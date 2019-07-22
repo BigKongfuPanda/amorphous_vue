@@ -92,8 +92,8 @@
       </el-form>
     </Collapse>
     <el-row class="total_data">
-      <el-col :span="6">总盘数：{{totalCoilNum}}</el-col>
-      <el-col :span="6">总重量(kg)：{{totalWeight}}</el-col>
+      <el-col :span="6">总盘数：{{ totalCoilNum }}</el-col>
+      <el-col :span="6">总重量(kg)：{{ totalWeight }}</el-col>
     </el-row>
     <div class="main_bd">
       <el-col class="table_hd">

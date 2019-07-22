@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right" class="crumb">
       <el-breadcrumb-item>库存记录</el-breadcrumb-item>
-      <el-breadcrumb-item>{{castId}}号机组</el-breadcrumb-item>
+      <el-breadcrumb-item>库存主表</el-breadcrumb-item>
     </el-breadcrumb>
     <Collapse>
       <el-form class="search_bar" :model="searchForm" :inline="true">
@@ -98,9 +98,9 @@
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable">导出</el-button>
-        <el-button type="primary" icon="el-icon-upload" @click="uploadExcelHandler" v-if="userinfo.roleId == 6">批量入仓</el-button>
+        <!-- <el-button type="primary" icon="el-icon-upload" @click="uploadExcelHandler" v-if="userinfo.roleId == 6">批量入仓</el-button>
         <el-button type="primary" icon="el-icon-menu" @click="allOutStoreHandler" v-if="isOutStoreable" class="pull_right">整托出库</el-button>
-        <el-button type="primary" icon="el-icon-rank" @click="batchOutStoreHandler" v-if="isOutStoreable" class="pull_right">批量出库</el-button>
+        <el-button type="primary" icon="el-icon-rank" @click="batchOutStoreHandler" v-if="isOutStoreable" class="pull_right">批量出库</el-button> -->
       </el-col>
       <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading" @selection-change="handleSelectionChange"> 
         <el-table-column type="selection" width="30" :selectable="setSelectable"></el-table-column>

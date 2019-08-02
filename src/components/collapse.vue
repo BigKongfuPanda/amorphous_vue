@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     handleChange(v) {
-      console.log(v);
+
     }
   }
 }

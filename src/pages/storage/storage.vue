@@ -27,7 +27,19 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="炉号：">
-          <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
+          <!-- <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input> -->
+          <el-select 
+            v-model="searchForm.furnaces" 
+            placeholder="请输入炉号关键字" 
+            multiple 
+            filterable 
+            remote
+            collapse-tags
+            :loading="selectLoading"
+            :remote-method="remoteMethod"
+            >
+            <el-option v-for="furnace in furnaceList" :key="furnace" :label="furnace" :value="furnace"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="材质：">
           <el-select v-model="searchForm.ribbonTypeNames" placeholder="请选择" multiple collapse-tags>
@@ -55,8 +67,20 @@
         <el-form-item label="仓位：">
           <el-input v-model="searchForm.place" placeholder="请输入仓位，以逗号分隔"></el-input>
         </el-form-item>
+        <el-form-item label="去向：">
+          <el-select v-model="searchForm.takebys" placeholder="请选择" multiple collapse-tags>
+            <el-option label="J" value="J"></el-option>
+            <el-option label="F" value="F"></el-option>
+            <el-option label="Z" value="Z"></el-option>
+            <el-option label="S" value="S"></el-option>
+            <el-option label="G" value="G"></el-option>
+            <el-option label="W" value="W"></el-option>
+            <el-option label="H" value="H"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="结余：">
           <el-select v-model="searchForm.isRemain" placeholder="">
+            <el-option value="" label="全部"></el-option>
             <el-option :value="0" label="=0"></el-option>
             <el-option :value="1" label=">0"></el-option>
           </el-select>
@@ -266,7 +290,7 @@ export default {
       castId: 6,
       searchForm: {
         caster: '',
-        furnace: '',
+        furnaces: [],
         date: [],
         outDate: [],
         ribbonTypeNames: [],
@@ -274,10 +298,13 @@ export default {
         ribbonTotalLevels: '',
         ribbonThicknessLevels: [],
         laminationLevels: [],
+        takebys: [],
         place: '',
         isRemain: 1
       },
       loading: false,
+      selectLoading: false,
+      furnaceList: [],
       totalCoilNum: null,
       totalWeight: null,
       tableData: [],
@@ -301,7 +328,7 @@ export default {
       allOutStoreFormRules: {
         place: [
           { required: true, message: '请输入仓位', trigger: 'blur' },
-          { pattern: /^1-[1-9]{1,2}-[1-9]{1,2}$/, message: '格式错误', trigger: 'blur'}
+          { pattern: /^1-[0-9]{1,2}-[0-9]{1,2}$/, message: '格式错误', trigger: 'blur'}
         ],
         takeBy: [
           { required: true, message: '请填写实际去向', trigger: 'blur' }
@@ -411,7 +438,7 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { caster: '', furnace: '', date: [], outDate: [], ribbonTotalLevels: '', ribbonTypeNames: [], ribbonWidths: [],  ribbonThicknessLevels: [], laminationLevels: [], place: '', isRemain: 1 };
+      this.searchForm = { caster: '', furnaces: [], date: [], outDate: [], ribbonTotalLevels: '', ribbonTypeNames: [], ribbonWidths: [],  ribbonThicknessLevels: [], laminationLevels: [], place: '', isRemain: 1 };
       const params = {
         current: 1
       };
@@ -426,12 +453,13 @@ export default {
         outStartTime: this.searchForm.outDate[0],
         outEndTime: this.searchForm.outDate[1],
         caster: this.searchForm.caster,
-        furnace: this.searchForm.furnace,
+        furnaceJson: JSON.stringify(this.searchForm.furnaces),
         ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
         ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths),
         ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
         ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
+        takebyJson: JSON.stringify(this.searchForm.takebys),
         place: this.searchForm.place,
         isRemain: this.searchForm.isRemain
       };
@@ -507,6 +535,7 @@ export default {
         ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
         ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
+        takebyJson: JSON.stringify(this.searchForm.takebys),
         place: this.searchForm.place,
         isRemain: this.searchForm.isRemain
       };
@@ -655,7 +684,25 @@ export default {
           type: 'warning'
         });
       }
+      const params = {
+        current: 1
+      };
+      this.pageConfig.current = 1;
       this.getTableData(params);
+    },
+    remoteMethod(query) {
+      if (query !== '') {
+        this.selectLoading = true;
+        this.$http('GET', urlmap.queryFurnaceList, { query }).then(data => {
+          this.furnaceList = data.list;
+        }).catch(err => {
+          console.log(err);
+        }).finally(() => {
+          this.selectLoading = false;
+        }); 
+      } else {
+        this.furnaceList = [];
+      }
     }
   }
 }

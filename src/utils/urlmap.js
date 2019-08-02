@@ -31,6 +31,7 @@ export default {
   exportMeasure: '/measure/exportmeasure',
   exportRoll: '/measure/exportroll',
   // 库房
+  queryFurnaceList: '/storage/furnace',
   queryStorage: '/storage',
   updateStorage: '/storage',
   delStorage: '/storage',

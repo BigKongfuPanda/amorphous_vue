@@ -419,8 +419,9 @@ export default {
 
             clone.orderRibbonToughnessLevels = clone.orderRibbonToughnessLevels.join();
             clone.orderAppearenceLevels = clone.orderAppearenceLevels.join();
-            clone.qualifiedRibbonToughnessLevels = clone.qualifiedRibbonToughnessLevels.join();
-            clone.qualifiedAppearenceLevels = clone.qualifiedAppearenceLevels.join();
+            // clone.qualifiedRibbonToughnessLevels = clone.qualifiedRibbonToughnessLevels.join();
+            // clone.qualifiedAppearenceLevels = clone.qualifiedAppearenceLevels.join();
+            clone.qualifiedDemands = JSON.stringify(clone.qualifiedDemands);
             params = clone;
           }
 

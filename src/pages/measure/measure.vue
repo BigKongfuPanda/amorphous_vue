@@ -346,16 +346,7 @@
             </div>
             <div v-else>
               <el-select size="mini" v-model="scope.row.clients" placeholder="" multiple collapse-tags>
-                <!-- <el-option label="F" value="F" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="D" value="D" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="VM" value="VM" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="VS" value="VS" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="VD" value="VD" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="O" value="O" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="Z" value="Z"></el-option>
-                <el-option label="X" value="X" :disabled="scope.row.isFlat == '否'"></el-option>
-                <el-option label="P" value="P" :disabled="scope.row.isFlat == '否'"></el-option> -->
-                <el-option v-for="item in clientsList" :label="item.client" :value="item.client" :key="item.clientsId" :disabled="item.isFlat === '是' && scope.row.isFlat == '否'"></el-option>
+                <el-option v-for="item in clientsList" :label="item.client" :value="item.client" :key="item.clientsId" :disabled="item.isFlat === 1 && scope.row.isFlat === 0"></el-option>
               </el-select>
             </div>
           </template>

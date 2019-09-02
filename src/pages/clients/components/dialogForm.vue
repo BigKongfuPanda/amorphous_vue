@@ -13,8 +13,8 @@
       </el-form-item>
       <el-form-item label="是否必须平整：" prop="isFlat">
         <el-select v-model="formData.isFlat" placeholder="">
-          <el-option value="是" label="是"></el-option>
-          <el-option value="否" label="否"></el-option>
+          <el-option :value="1" label="是"></el-option>
+          <el-option :value="0" label="否"></el-option>
         </el-select>
       </el-form-item>
     </el-form>
@@ -31,7 +31,7 @@ import { number } from '@/utils/validate';
 
 const formConfig = {
   client: '',
-  isFlat: ''
+  isFlat: 1
 };
 
 export default {
@@ -45,7 +45,7 @@ export default {
     return {
       formData: {
         client: '',
-        isFlat: ''
+        isFlat: 1
       },
       rules: {
         client: [

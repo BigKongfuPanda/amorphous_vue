@@ -50,7 +50,7 @@
         <el-table-column prop="createdAt" label="重卷日期" align="center" :formatter="rollDateFormat" min-width="80px"></el-table-column>
         <el-table-column label="是否平整" align="center" width="60px">
           <template slot-scope="scope">
-            <span :class="{text_danger: scope.row.isFlat === '否'}">{{scope.row.isFlat}}</span>
+            <span :class="{text_danger: scope.row.isFlat === 0}">{{scope.row.isFlat === 0 ? '否' : '是'}}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="80px">

@@ -10,7 +10,11 @@
     <el-table :data="clientsList" stripe border style="width:100%" v-loading="loading">
       <el-table-column type="index" label="序号" align="center" width="200"></el-table-column>
       <el-table-column prop="client" label="客户" align="center"></el-table-column>
-      <el-table-column prop="isFlat" label="是否必须平整" align="center"></el-table-column>
+      <el-table-column prop="isFlat" label="是否必须平整" align="center">
+        <template slot-scope="scope">
+          <span>{{scope.row.isFlat === 1 ? '是' : '否'}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="edit(scope.row)">修改</el-button>

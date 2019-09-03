@@ -415,11 +415,19 @@ export default {
       tableHeight: 550,
       multipleSelection: [],
       isBatchInStored: false,
-      uniqueAppearenceLevelList: []
+      // uniqueAppearenceLevelList: []
     }
   },
   computed: {
-    ...mapState(['ribbonToughnessLevelList', 'ribbonTypeList', 'ribbonWidthList', 'ribbonThicknessLevelList', 'laminationLevelList', 'clientsList', 'appearenceList'])
+    ...mapState(['ribbonToughnessLevelList', 'ribbonTypeList', 'ribbonWidthList', 'ribbonThicknessLevelList', 'laminationLevelList', 'clientsList', 'appearenceList']),
+    uniqueAppearenceLevelList() {
+      return this.appearenceList.reduce((acc, cur) => {
+        if (!acc.includes(cur.appearenceLevel)) {
+          acc.push(cur.appearenceLevel)
+        }
+        return acc;
+      }, [])
+    }
   },
   // 动态路由匹配
   beforeRouteUpdate(to, from, next) {
@@ -446,12 +454,6 @@ export default {
     this.getLaminationLevelList();
     this.getClientsList();
     this.getAppearenceLevelList();
-    this.uniqueAppearenceLevelList = this.appearenceList.reduce((acc, cur) => {
-      if (!acc.includes(cur.appearenceLevel)) {
-        acc.push(cur.appearenceLevel)
-      }
-      return acc;
-    }, [])
   },
   mounted () {
     const self = this;

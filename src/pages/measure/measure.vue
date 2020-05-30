@@ -630,7 +630,8 @@ export default {
       // this.getTableData();
       
       // 计算叠片系数和叠片等级 realRibbonWidth diameter coilWeight
-      row.laminationFactor = ((row.coilWeight - 0.09)/(Math.PI * (row.diameter * row.diameter / 4 - 95 * 95 / 4) * 7.2) * Math.pow(10, 6) / row.realRibbonWidth).toFixed(2);
+      // row.laminationFactor = ((row.coilWeight - 0.09)/(Math.PI * (row.diameter * row.diameter / 4 - 95 * 95 / 4) * 7.2) * Math.pow(10, 6) / row.realRibbonWidth).toFixed(2);
+      row.laminationFactor = this.calcLaminationFactor(row.coilWeight, row.diameter, row.realRibbonWidth)
       row.laminationLevel = this.calcLaminationLevel(row.laminationFactor);
 
       // 根据韧性描述判定韧性等级 ribbonToughnessLevel
@@ -837,6 +838,9 @@ export default {
       } else if (requireMentOfE.test(ribbonTotalLevel)) {
         row.qualityOfE = row.coilNetWeight;
       }
+    },
+    calcLaminationFactor(coilWeight, diameter, realRibbonWidth) {
+      return ((coilWeight - 0.09)/(Math.PI * (diameter * diameter / 4 - 95 * 95 / 4) * 7.2) * Math.pow(10, 6) / realRibbonWidth).toFixed(2) || 0;
     },
     calcLaminationLevel(factor) {
       if (!factor) return '';

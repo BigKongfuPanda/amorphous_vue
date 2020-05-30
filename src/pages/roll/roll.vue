@@ -33,6 +33,7 @@
     </Collapse>
     <div class="main_bd">
       <el-col class="table_hd">
+        <el-button type="primary" icon="el-icon-success" @click="handleConfirm">确认送检</el-button>
         <el-button type="primary" icon="el-icon-plus" @click="add" v-if="isAddable">创建重卷记录</el-button>
         <el-button
           type="primary"
@@ -50,7 +51,9 @@
         v-loading="loading"
         ref="table"
         :height="tableHeight"
+        @selection-change="handleSelectionChange"
       >
+        <el-table-column type="selection" width="20" :selectable="setSelectable"></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" min-width="130px"></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" min-width="60px"></el-table-column>
         <el-table-column prop="ribbonWidth" label="规格" align="center" width="40px"></el-table-column>
@@ -118,6 +121,7 @@ import { dateFormat, debounce } from "@/utils/common";
 import dialogForm from "./components/dialogForm.vue";
 import Collapse from "@/components/collapse.vue";
 import qs from "qs";
+import { cloneDeep } from "lodash";
 
 export default {
   name: "melt",
@@ -147,7 +151,8 @@ export default {
         current: 1,
         pageSize: 10
       },
-      tableHeight: 200
+      tableHeight: 200,
+      multipleSelection: []
     };
   },
   // 动态路由匹配
@@ -333,6 +338,33 @@ export default {
       };
       const url = `${urlmap.exportRoll}?${qs.stringify(params)}`;
       window.open(url);
+    },
+    setSelectable(row, index) {
+      // 未被确认，则可选
+      if (row.isRollConfirmed !== 1) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    handleConfirm() {
+      const selectionList = cloneDeep(this.multipleSelection);
+      if (selectionList.length === 0) {
+        return this.$alert("请选择带材", "提示", { type: "warning" });
+      }
+      // 发送请求，更新当前的数据
+      this.$http("PUT", urlmap.updateMeasure, {
+        rollDataJson: JSON.stringify(selectionList)
+      })
+        .then(data => {
+          this.getTableData();
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };

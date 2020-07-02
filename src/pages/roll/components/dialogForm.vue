@@ -55,8 +55,8 @@
       </el-form-item>
       <el-form-item label="是否平整：" prop="isFlat">
         <el-select v-model="formData.isFlat" placeholder>
-          <el-option :value="1" label="是"></el-option>
-          <el-option :value="0" label="否"></el-option>
+          <el-option :value="0" label="是"></el-option>
+          <el-option :value="1" label="否"></el-option>
         </el-select>
       </el-form-item>
     </el-form>
@@ -82,7 +82,7 @@ const formConfig = {
   castId: 6, // 机组编号
   roller: "", // 重卷人员
   rollMachine: null, // 重卷机器
-  isFlat: 1, //是否平整, 1-是，0-否
+  isFlat: 0, //是否平整, 1-否，0-是
   furnace: "", // 制带炉号  06-20181120-01/01
   coilNumber: "", // 盘号
   diameter: "", //外径,mm
@@ -99,7 +99,7 @@ export default {
         castId: 6, // 机组编号
         roller: "", // 重卷人员
         rollMachine: null, // 重卷机器
-        isFlat: 1, //是否平整， 1-是，0-否
+        isFlat: 0, //是否平整， 0-是，1-否
         furnace: "", // 制带炉号  06-20181120-01/01
         coilNumber: "", // 盘号
         diameter: "", //外径,mm

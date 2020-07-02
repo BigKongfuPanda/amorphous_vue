@@ -13,8 +13,8 @@
             :default-time="['00:00:00', '23:59:59']"
             :clearable="false"
             start-placeholder="开始日期"
-            end-placeholder="结束日期">
-          </el-date-picker>
+            end-placeholder="结束日期"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="喷带手：">
           <el-input v-model="searchForm.caster" placeholder="请输入喷带手姓名"></el-input>
@@ -25,32 +25,72 @@
 
         <el-form-item label="材质：">
           <el-select v-model="searchForm.ribbonTypeNames" placeholder="请选择" multiple collapse-tags>
-            <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
+            <el-option
+              v-for="item in ribbonTypeList"
+              :key="item.ribbonTypeId"
+              :value="item.ribbonTypeName"
+              :label="item.ribbonTypeName"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="规格：">
           <el-select v-model="searchForm.ribbonWidths" placeholder="请选择" multiple collapse-tags>
-            <el-option v-for="item in ribbonWidthList" :key="item.ribbonWidthId" :label="item.ribbonWidth" :value="item.ribbonWidth"></el-option>
+            <el-option
+              v-for="item in ribbonWidthList"
+              :key="item.ribbonWidthId"
+              :label="item.ribbonWidth"
+              :value="item.ribbonWidth"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="厚度级别：">
-          <el-select v-model="searchForm.ribbonThicknessLevels" placeholder="请选择" multiple collapse-tags>
-            <el-option v-for="item in ribbonThicknessLevelList" :key="item.ribbonThicknessLevelId" :label="item.ribbonThicknessLevel" :value="item.ribbonThicknessLevel"></el-option>
+          <el-select
+            v-model="searchForm.ribbonThicknessLevels"
+            placeholder="请选择"
+            multiple
+            collapse-tags
+          >
+            <el-option
+              v-for="item in ribbonThicknessLevelList"
+              :key="item.ribbonThicknessLevelId"
+              :label="item.ribbonThicknessLevel"
+              :value="item.ribbonThicknessLevel"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="叠片级别：">
           <el-select v-model="searchForm.laminationLevels" placeholder="请选择" multiple collapse-tags>
-            <el-option v-for="item in laminationLevelList" :key="item.laminationLevelId" :label="item.laminationLevel" :value="item.laminationLevel"></el-option>
+            <el-option
+              v-for="item in laminationLevelList"
+              :key="item.laminationLevelId"
+              :label="item.laminationLevel"
+              :value="item.laminationLevel"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="韧性级别：">
-          <el-select v-model="searchForm.ribbonToughnessLevels" placeholder="请选择" multiple collapse-tags>
-            <el-option v-for="item in ribbonToughnessLevelList" :key="item.ribbonToughnessLevelId" :label="item.ribbonToughnessLevel" :value="item.ribbonToughnessLevel"></el-option>
+          <el-select
+            v-model="searchForm.ribbonToughnessLevels"
+            placeholder="请选择"
+            multiple
+            collapse-tags
+          >
+            <el-option
+              v-for="item in ribbonToughnessLevelList"
+              :key="item.ribbonToughnessLevelId"
+              :label="item.ribbonToughnessLevel"
+              :value="item.ribbonToughnessLevel"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="外观级别：">
           <el-select v-model="searchForm.appearenceLevels" placeholder="请选择" multiple collapse-tags>
-            <el-option v-for="(appearenceLevel, index) in uniqueAppearenceLevelList" :key="index" :label="appearenceLevel" :value="appearenceLevel"></el-option>
+            <el-option
+              v-for="(appearenceLevel, index) in uniqueAppearenceLevelList"
+              :key="index"
+              :label="appearenceLevel"
+              :value="appearenceLevel"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="厚度偏差：">
@@ -70,16 +110,42 @@
     </Collapse>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-success" @click="measureConfirm" v-if="isBatchInStored">确认入库</el-button>
-        <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="isExportable" class="pull_right">导出</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-success"
+          @click="measureConfirm"
+          v-if="isBatchInStored"
+        >确认入库</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-download"
+          @click="exportExcel"
+          v-if="isExportable"
+          class="pull_right"
+        >导出</el-button>
       </el-col>
-      <el-table :data="tableData" ref="table" stripe border style="width:100%" :height="tableHeight" v-loading="loading" @selection-change="handleSelectionChange"> 
+      <el-table
+        :data="tableData"
+        ref="table"
+        stripe
+        border
+        style="width:100%"
+        :height="tableHeight"
+        v-loading="loading"
+        @selection-change="handleSelectionChange"
+      >
         <el-table-column type="selection" width="20" :selectable="setSelectable"></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="130px" fixed></el-table-column>
         <el-table-column prop="coilNumber" label="盘号" align="center" width="35px" fixed></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" min-width="50px"></el-table-column>
         <el-table-column prop="ribbonWidth" label="规格" align="center" width="40px"></el-table-column>
-        <el-table-column prop="castDate" label="生产日期" align="center" :formatter="dateFormat" width="80px"></el-table-column>
+        <el-table-column
+          prop="castDate"
+          label="生产日期"
+          align="center"
+          :formatter="dateFormat"
+          width="80px"
+        ></el-table-column>
         <el-table-column prop="caster" label="喷带手" align="center" width="50px"></el-table-column>
         <el-table-column prop="diameter" label="外径(mm)" align="center" width="70px"></el-table-column>
         <el-table-column prop="coilWeight" label="重量(kg)" align="center" width="70px"></el-table-column>
@@ -88,9 +154,9 @@
         <el-table-column prop="realRibbonWidth" label="实际带宽" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
-              {{ scope.row.realRibbonWidth }}
-            </div>
+            <div
+              v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
+            >{{ scope.row.realRibbonWidth }}</div>
             <div v-else>
               <el-input size="mini" v-model="scope.row.realRibbonWidth"></el-input>
             </div>
@@ -99,114 +165,160 @@
         <el-table-column prop="ribbonThickness1" label="带厚1(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
-              {{ scope.row.ribbonThickness1 }}
-            </div>
+            <div
+              v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
+            >{{ scope.row.ribbonThickness1 }}</div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness1" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
+              <el-input
+                size="mini"
+                v-model="scope.row.ribbonThickness1"
+                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+              ></el-input>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="ribbonThickness2" label="带厚2(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
-              {{ scope.row.ribbonThickness2 }}
-            </div>
+            <div
+              v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
+            >{{ scope.row.ribbonThickness2 }}</div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness2" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
+              <el-input
+                size="mini"
+                v-model="scope.row.ribbonThickness2"
+                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+              ></el-input>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="ribbonThickness3" label="带厚3(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
-              {{ scope.row.ribbonThickness3 }}
-            </div>
+            <div
+              v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
+            >{{ scope.row.ribbonThickness3 }}</div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness3" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
+              <el-input
+                size="mini"
+                v-model="scope.row.ribbonThickness3"
+                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+              ></el-input>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="ribbonThickness4" label="带厚4(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
-              {{ scope.row.ribbonThickness4 }}
-            </div>
+            <div
+              v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
+            >{{ scope.row.ribbonThickness4 }}</div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness4" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
+              <el-input
+                size="mini"
+                v-model="scope.row.ribbonThickness4"
+                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+              ></el-input>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="ribbonThickness5" label="带厚5(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
-              {{ scope.row.ribbonThickness5 }}
-            </div>
+            <div
+              v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
+            >{{ scope.row.ribbonThickness5 }}</div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness5" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
+              <el-input
+                size="mini"
+                v-model="scope.row.ribbonThickness5"
+                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+              ></el-input>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="ribbonThickness6" label="带厚6(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
-              {{ scope.row.ribbonThickness6 }}
-            </div>
+            <div
+              v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
+            >{{ scope.row.ribbonThickness6 }}</div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness6" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
+              <el-input
+                size="mini"
+                v-model="scope.row.ribbonThickness6"
+                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+              ></el-input>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="ribbonThickness7" label="带厚7(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
-              {{ scope.row.ribbonThickness7 }}
-            </div>
+            <div
+              v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
+            >{{ scope.row.ribbonThickness7 }}</div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness7" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
+              <el-input
+                size="mini"
+                v-model="scope.row.ribbonThickness7"
+                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+              ></el-input>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="ribbonThickness8" label="带厚8(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
-              {{ scope.row.ribbonThickness8 }}
-            </div>
+            <div
+              v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
+            >{{ scope.row.ribbonThickness8 }}</div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness8" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
+              <el-input
+                size="mini"
+                v-model="scope.row.ribbonThickness8"
+                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+              ></el-input>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="ribbonThickness9" label="带厚9(μm)" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
-              {{ scope.row.ribbonThickness9 }}
-            </div>
+            <div
+              v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
+            >{{ scope.row.ribbonThickness9 }}</div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.ribbonThickness9" @keyup.native="$event => thicknessChangeHandler($event, scope.row)"></el-input>
+              <el-input
+                size="mini"
+                v-model="scope.row.ribbonThickness9"
+                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+              ></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThicknessDeviation" label="厚度偏差(μm)" align="center" width="90px"></el-table-column>
+        <el-table-column
+          prop="ribbonThicknessDeviation"
+          label="厚度偏差(μm)"
+          align="center"
+          width="90px"
+        ></el-table-column>
         <el-table-column prop="ribbonThickness" label="平均厚度(μm)" align="center" width="90px"></el-table-column>
         <el-table-column prop="ribbonThicknessLevel" label="厚度级别" align="center" width="70px"></el-table-column>
         <el-table-column prop="ribbonToughness" label="韧性" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
-              {{ scope.row.ribbonToughness }}
-            </div>
+            <div
+              v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
+            >{{ scope.row.ribbonToughness }}</div>
             <div v-else>
-              <el-select size="mini" v-model="scope.row.ribbonToughness" placeholder="">
-                <el-option v-for="item in ribbonToughnessLevelList" :key="item.ribbonToughnessLevelId" :label="item.ribbonToughness" :value="item.ribbonToughness"></el-option>
+              <el-select size="mini" v-model="scope.row.ribbonToughness" placeholder>
+                <el-option
+                  v-for="item in ribbonToughnessLevelList"
+                  :key="item.ribbonToughnessLevelId"
+                  :label="item.ribbonToughness"
+                  :value="item.ribbonToughness"
+                ></el-option>
               </el-select>
             </div>
           </template>
@@ -225,16 +337,16 @@
                 <el-option label="E" value="E"></el-option>
               </el-select>
             </div>
-          </template> -->
+          </template>-->
         </el-table-column>
         <el-table-column prop="appearence" label="外观" align="center" width="70px">
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
-              {{ scope.row.appearence }}
-            </div>
+            <div
+              v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
+            >{{ scope.row.appearence }}</div>
             <div v-else>
-               <el-select size="mini" v-model="scope.row.appearence" placeholder="">
+              <el-select size="mini" v-model="scope.row.appearence" placeholder>
                 <!-- <el-option label="无明显缺陷" value="无明显缺陷"></el-option>
                 <el-option label="轻棱" value="轻棱"></el-option>
                 <el-option label="棱" value="棱"></el-option>
@@ -246,8 +358,13 @@
                 <el-option label="挖心" value="挖心"></el-option>
                 <el-option label="少量劈裂" value="少量劈裂"></el-option>
                 <el-option label="大量劈裂" value="大量劈裂"></el-option>
-                <el-option label="端面损坏" value="端面损坏"></el-option> -->
-                <el-option v-for="item in appearenceList" :label="item.appearence" :value="item.appearence" :key="item.appearenceLevelId"></el-option>
+                <el-option label="端面损坏" value="端面损坏"></el-option>-->
+                <el-option
+                  v-for="item in appearenceList"
+                  :label="item.appearence"
+                  :value="item.appearence"
+                  :key="item.appearenceLevelId"
+                ></el-option>
               </el-select>
             </div>
           </template>
@@ -265,11 +382,13 @@
                 <el-option label="不合格" value="不合格"></el-option>
               </el-select>
             </div>
-          </template> -->
+          </template>-->
         </el-table-column>
         <el-table-column prop="ribbonTotalLevel" label="综合级别" align="center" width="70px">
           <template slot-scope="scope">
-            <span :class="scope.row.ribbonTotalLevel === '不合格' ? 'text_danger' : '' ">{{scope.row.ribbonTotalLevel}}</span>
+            <span
+              :class="scope.row.ribbonTotalLevel === '不合格' ? 'text_danger' : '' "
+            >{{scope.row.ribbonTotalLevel}}</span>
           </template>
         </el-table-column>
         <el-table-column label="入库规则" align="center" width="60px">
@@ -297,7 +416,7 @@
                     <td>{{scope.row.storageRule.qualifiedLaminationFactor}}</td>
                     <td>{{scope.row.storageRule.qualifiedRibbonToughnessLevels}}</td>
                     <td>{{scope.row.storageRule.qualifiedAppearenceLevels}}</td>
-                  </tr> -->
+                  </tr>-->
                   <tr v-for="(item, index) in scope.row.storageRule.qualifiedDemands" :key="index">
                     <td>计划外入库要求</td>
                     <td>{{item.qualifiedThickness}}</td>
@@ -324,40 +443,76 @@
                 <el-option label="计划外入库" :value="2"></el-option>
                 <el-option label="否" :value="3"></el-option>
               </el-select>
-            </div> -->
+            </div>-->
           </template>
         </el-table-column>
-        <el-table-column prop="unStoreReason" label="不入库原因" align="center" min-width="70px" :show-overflow-tooltip="true">
+        <el-table-column
+          prop="unStoreReason"
+          label="不入库原因"
+          align="center"
+          min-width="70px"
+          :show-overflow-tooltip="true"
+        >
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false" class="text_danger"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5" class="text_danger">
-              {{ scope.row.unStoreReason }}
-            </div>
+            <div
+              v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
+              class="text_danger"
+            >{{ scope.row.unStoreReason }}</div>
             <div v-else>
               <el-input size="mini" v-model="scope.row.unStoreReason"></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="clients" label="判定去向" align="center" width="80px" :show-overflow-tooltip="true">
+        <el-table-column
+          prop="clients"
+          label="判定去向"
+          align="center"
+          width="80px"
+          :show-overflow-tooltip="true"
+        >
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
-            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
-              {{ scope.row.clients ? scope.row.clients.toString() : '' }}
-            </div>
+            <div
+              v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
+            >{{ scope.row.clients ? scope.row.clients.toString() : '' }}</div>
             <div v-else>
-              <el-select size="mini" v-model="scope.row.clients" placeholder="" multiple collapse-tags>
-                <el-option v-for="item in clientsList" :label="item.client" :value="item.client" :key="item.clientsId" :disabled="item.isFlat === 1 && scope.row.isFlat === 0"></el-option>
+              <el-select size="mini" v-model="scope.row.clients" placeholder multiple collapse-tags>
+                <el-option
+                  v-for="item in clientsList"
+                  :label="item.client"
+                  :value="item.client"
+                  :key="item.clientsId"
+                  :disabled="item.isFlat === 0 && scope.row.isFlat === 1"
+                ></el-option>
               </el-select>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="measureDate" label="检测时间" align="center" width="100px" :formatter="dateTimeFormat" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column label="操作" align="center" v-if="userinfo.roleId == 5 || userinfo.roleId == 1">
+        <el-table-column
+          prop="measureDate"
+          label="检测时间"
+          align="center"
+          width="100px"
+          :formatter="dateTimeFormat"
+          :show-overflow-tooltip="true"
+        ></el-table-column>
+        <el-table-column
+          label="操作"
+          align="center"
+          v-if="userinfo.roleId == 5 || userinfo.roleId == 1"
+        >
           <template slot-scope="scope">
             <!-- <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button> -->
             <!-- <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isMeasureConfirmed === 1" :disabled="!isEditable">修改</el-button> -->
             <!-- <el-button size="mini" type="success" @click="save(scope.row)" v-else :disabled="!isEditable">保存</el-button> -->
-            <el-button size="mini" type="success" @click="save(scope.row)" v-if="scope.row.isMeasureConfirmed !== 1" :disabled="!isEditable">保存</el-button>
+            <el-button
+              size="mini"
+              type="success"
+              @click="save(scope.row)"
+              v-if="scope.row.isMeasureConfirmed !== 1"
+              :disabled="!isEditable"
+            >保存</el-button>
             <!-- <el-button size="mini" type="danger" @click="del(scope.row)" v-if="isDeleteable">删除</el-button> -->
           </template>
         </el-table-column>
@@ -368,31 +523,32 @@
         :total="pageConfig.total"
         :current-page.sync="pageConfig.current"
         :page-size="pageConfig.pageSize"
-        @current-change="handleCurrentChange"></el-pagination>
+        @current-change="handleCurrentChange"
+      ></el-pagination>
     </div>
   </div>
 </template>
 
 <script>
-import qs from 'qs';
-import { cloneDeep } from 'lodash';
-import urlmap from '@/utils/urlmap';
-import { dateFormat, dateTimeFormat, debounce } from '@/utils/common';
-import { mapState, mapActions } from 'vuex';
-import Collapse from '@/components/collapse.vue';
+import qs from "qs";
+import { cloneDeep } from "lodash";
+import urlmap from "@/utils/urlmap";
+import { dateFormat, dateTimeFormat, debounce } from "@/utils/common";
+import { mapState, mapActions } from "vuex";
+import Collapse from "@/components/collapse.vue";
 
 export default {
-  name: 'melt',
+  name: "melt",
   components: {
     Collapse
   },
-  data () {
+  data() {
     return {
       userinfo: {},
       castId: 6,
       searchForm: {
-        caster: '',
-        furnace: '',
+        caster: "",
+        furnace: "",
         date: [],
         ribbonTypeNames: [],
         ribbonWidths: [],
@@ -400,7 +556,7 @@ export default {
         laminationLevels: [],
         ribbonToughnessLevels: [],
         appearenceLevels: [],
-        thicknessDivation: ''
+        thicknessDivation: ""
       },
       loading: false,
       tableData: [],
@@ -414,19 +570,27 @@ export default {
       isDeleteable: false,
       tableHeight: 550,
       multipleSelection: [],
-      isBatchInStored: false,
+      isBatchInStored: false
       // uniqueAppearenceLevelList: []
-    }
+    };
   },
   computed: {
-    ...mapState(['ribbonToughnessLevelList', 'ribbonTypeList', 'ribbonWidthList', 'ribbonThicknessLevelList', 'laminationLevelList', 'clientsList', 'appearenceList']),
+    ...mapState([
+      "ribbonToughnessLevelList",
+      "ribbonTypeList",
+      "ribbonWidthList",
+      "ribbonThicknessLevelList",
+      "laminationLevelList",
+      "clientsList",
+      "appearenceList"
+    ]),
     uniqueAppearenceLevelList() {
       return this.appearenceList.reduce((acc, cur) => {
         if (!acc.includes(cur.appearenceLevel)) {
-          acc.push(cur.appearenceLevel)
+          acc.push(cur.appearenceLevel);
         }
         return acc;
-      }, [])
+      }, []);
     }
   },
   // 动态路由匹配
@@ -439,9 +603,9 @@ export default {
     this.isBatchInStored = this.setBatchInStored();
     next();
   },
-  created () {
+  created() {
     this.castId = this.$route.params.castId;
-    this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
+    this.userinfo = JSON.parse(localStorage.getItem("userinfo"));
     this.isExportable = this.setExportable();
     this.isEditable = this.setEditable();
     this.isDeleteable = this.setDeleteable();
@@ -455,7 +619,7 @@ export default {
     this.getClientsList();
     this.getAppearenceLevelList();
   },
-  mounted () {
+  mounted() {
     const self = this;
     self.$nextTick(() => {
       // self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
@@ -464,38 +628,70 @@ export default {
     window.onresize = debounce(() => {
       // self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
       self.tableHeight = window.innerHeight - 80;
-    }, 1000)
+    }, 1000);
   },
   methods: {
     thicknessChangeHandler(e, row) {
-      let ribbonThicknessList = [row.ribbonThickness1, row.ribbonThickness2, row.ribbonThickness3, row.ribbonThickness4, row.ribbonThickness5, row.ribbonThickness6, row.ribbonThickness7, row.ribbonThickness8, row.ribbonThickness9];
-      ribbonThicknessList = ribbonThicknessList.map(item => {
-        if (item !== '') {
-          return Number(item);
-        }
-      }).filter(item => item !== undefined);
+      let ribbonThicknessList = [
+        row.ribbonThickness1,
+        row.ribbonThickness2,
+        row.ribbonThickness3,
+        row.ribbonThickness4,
+        row.ribbonThickness5,
+        row.ribbonThickness6,
+        row.ribbonThickness7,
+        row.ribbonThickness8,
+        row.ribbonThickness9
+      ];
+      ribbonThicknessList = ribbonThicknessList
+        .map(item => {
+          if (item !== "") {
+            return Number(item);
+          }
+        })
+        .filter(item => item !== undefined);
       row.ribbonThicknessDeviation = this.calcMaxDeviation(ribbonThicknessList);
-      row.ribbonThickness = ribbonThicknessList.length > 0 ? (ribbonThicknessList.reduce((acc, cur) => acc + cur, 0) / ribbonThicknessList.length).toFixed(2) : 0;
-      row.ribbonThicknessLevel = this.calcribbonThicknessLevel(row.ribbonThickness);
+      row.ribbonThickness =
+        ribbonThicknessList.length > 0
+          ? (
+              ribbonThicknessList.reduce((acc, cur) => acc + cur, 0) /
+              ribbonThicknessList.length
+            ).toFixed(2)
+          : 0;
+      row.ribbonThicknessLevel = this.calcribbonThicknessLevel(
+        row.ribbonThickness
+      );
     },
-    ...mapActions([ 'getRibbonToughnessLevelList', 'getRibbonTypeList', 'getRibbonWidthList', 'getRibbonThicknessLevelList', 'getLaminationLevelList', 'getClientsList', 'getAppearenceLevelList' ]),
+    ...mapActions([
+      "getRibbonToughnessLevelList",
+      "getRibbonTypeList",
+      "getRibbonWidthList",
+      "getRibbonThicknessLevelList",
+      "getLaminationLevelList",
+      "getClientsList",
+      "getAppearenceLevelList"
+    ]),
     dateFormat(row, column) {
       return dateFormat(row.castDate);
     },
     dateTimeFormat(row, column) {
-      return row.measureDate? dateTimeFormat(row.measureDate) : '';
+      return row.measureDate ? dateTimeFormat(row.measureDate) : "";
     },
     setEditable() {
-      if (this.userinfo.roleId == 5) { // 检测人员可修改
+      if (this.userinfo.roleId == 5) {
+        // 检测人员可修改
         return true;
-      } else { // 其他
-        return false; 
+      } else {
+        // 其他
+        return false;
       }
     },
     setDeleteable() {
-      if (this.userinfo.roleId == 1) { // 厂长 可删除
+      if (this.userinfo.roleId == 1) {
+        // 厂长 可删除
         return true;
-      } else { // 其他
+      } else {
+        // 其他
         return false;
       }
     },
@@ -526,7 +722,7 @@ export default {
        */
       let linerWeight = 0;
       ribbonWidth = Number(ribbonWidth);
-      
+
       if (ribbonWidth < 25) {
         linerWeight = 0.05;
       } else if (ribbonWidth >= 25 && ribbonWidth < 30) {
@@ -537,7 +733,8 @@ export default {
         linerWeight = 0.12;
       } else if (ribbonWidth >= 50 && ribbonWidth < 58) {
         linerWeight = 0.12;
-      } else if (ribbonWidth >= 58) { // 58mm 以上的使用两个 30 的内衬拼接起来
+      } else if (ribbonWidth >= 58) {
+        // 58mm 以上的使用两个 30 的内衬拼接起来
         linerWeight = 0.08 * 2;
       }
       return linerWeight;
@@ -551,7 +748,17 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { caster: '', furnace: '', date: [], ribbonTypeNames: [], ribbonWidths: [],  ribbonThicknessLevels: [], laminationLevels: [], ribbonToughnessLevels: [], appearenceLevels: [] };
+      this.searchForm = {
+        caster: "",
+        furnace: "",
+        date: [],
+        ribbonTypeNames: [],
+        ribbonWidths: [],
+        ribbonThicknessLevels: [],
+        laminationLevels: [],
+        ribbonToughnessLevels: [],
+        appearenceLevels: []
+      };
       const params = {
         current: 1
       };
@@ -567,78 +774,112 @@ export default {
         furnace: this.searchForm.furnace,
         ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
         ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths),
-        ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
+        ribbonThicknessLevelJson: JSON.stringify(
+          this.searchForm.ribbonThicknessLevels
+        ),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
-        ribbonToughnessLevelJson: JSON.stringify(this.searchForm.ribbonToughnessLevels),
+        ribbonToughnessLevelJson: JSON.stringify(
+          this.searchForm.ribbonToughnessLevels
+        ),
         appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels),
         thicknessDivation: this.searchForm.thicknessDivation
       };
       Object.assign(params, _params);
-      this.$http('get', urlmap.queryMeasure, params).then(data => {
-        this.pageConfig.total = data.count;
-        this.pageConfig.pageSize = data.limit;
-        data.list && data.list.forEach(item => {
-          this.userinfo.roleId == 5 ? item.isEditing = true : item.isEditing = false;
-          item.storageRule = {
-            orderThickness: item.orderThickness,
-            orderLaminationFactor: item.orderLaminationFactor,
-            orderRibbonToughnessLevels: item.orderRibbonToughnessLevels,
-            orderAppearenceLevels: item.orderAppearenceLevels,
-            // qualifiedThickness: item.qualifiedThickness,
-            // qualifiedLaminationFactor: item.qualifiedLaminationFactor,
-            // qualifiedRibbonToughnessLevels: item.qualifiedRibbonToughnessLevels,
-            // qualifiedAppearenceLevels: item.qualifiedAppearenceLevels,
-            qualifiedDemands: [1, 2, 3, 5, 6, 15].includes(Number(this.userinfo.roleId)) ? JSON.parse(item.qualifiedDemands) : []
-          };
-          item.clients = item.clients ? item.clients.split(',') : [];
-          item.coilNetWeight = item.coilWeight - this.calcLinerWeight(item.ribbonWidth);
-          item.remainWeight = item.coilNetWeight;
+      this.$http("get", urlmap.queryMeasure, params)
+        .then(data => {
+          this.pageConfig.total = data.count;
+          this.pageConfig.pageSize = data.limit;
+          data.list &&
+            data.list.forEach(item => {
+              this.userinfo.roleId == 5
+                ? (item.isEditing = true)
+                : (item.isEditing = false);
+              item.storageRule = {
+                orderThickness: item.orderThickness,
+                orderLaminationFactor: item.orderLaminationFactor,
+                orderRibbonToughnessLevels: item.orderRibbonToughnessLevels,
+                orderAppearenceLevels: item.orderAppearenceLevels,
+                // qualifiedThickness: item.qualifiedThickness,
+                // qualifiedLaminationFactor: item.qualifiedLaminationFactor,
+                // qualifiedRibbonToughnessLevels: item.qualifiedRibbonToughnessLevels,
+                // qualifiedAppearenceLevels: item.qualifiedAppearenceLevels,
+                qualifiedDemands: [1, 2, 3, 5, 6, 15].includes(
+                  Number(this.userinfo.roleId)
+                )
+                  ? JSON.parse(item.qualifiedDemands)
+                  : []
+              };
+              item.clients = item.clients ? item.clients.split(",") : [];
+              item.coilNetWeight =
+                item.coilWeight - this.calcLinerWeight(item.ribbonWidth);
+              item.remainWeight = item.coilNetWeight;
+            });
+          this.tableData = data.list;
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          this.loading = false;
         });
-        this.tableData = data.list;
-      }).catch((err) => {
-        console.log(err);
-      }).finally(() => {
-        this.loading = false;
-      });
     },
     edit(row) {
-      if ((row.isStored == 1 || row.isStored == 2) && row.isMeasureConfirmed == 1) {// 已经入库
+      if (
+        (row.isStored == 1 || row.isStored == 2) &&
+        row.isMeasureConfirmed == 1
+      ) {
+        // 已经入库
         return this.$message({
-          message: '该带材已经入库，您无权限操作，请联系库房主管人员！',
-          type: 'error'
+          message: "该带材已经入库，您无权限操作，请联系库房主管人员！",
+          type: "error"
         });
       }
       // row.isEditing = true;
     },
     del(row) {
       const { measureId, furnace, coilNumber } = row;
-      this.$confirm(`删除后数据无法恢复，确定删除 ${furnace} 的第 ${coilNumber} 盘吗？`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$http('delete', urlmap.delMeasure, {measureId}).then(data => {
-          this.getTableData();
-        }).catch(error => {
-          console.log(error);
-        });
-      }).catch(() => {});
+      this.$confirm(
+        `删除后数据无法恢复，确定删除 ${furnace} 的第 ${coilNumber} 盘吗？`,
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
+        .then(() => {
+          this.$http("delete", urlmap.delMeasure, { measureId })
+            .then(data => {
+              this.getTableData();
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        })
+        .catch(() => {});
     },
     save(row) {
       // row.isEditing = false;
       // this.pageConfig.current = 1;
       // this.getTableData();
-      
+
       // 计算叠片系数和叠片等级 realRibbonWidth diameter coilWeight
       // row.laminationFactor = ((row.coilWeight - 0.09)/(Math.PI * (row.diameter * row.diameter / 4 - 95 * 95 / 4) * 7.2) * Math.pow(10, 6) / row.realRibbonWidth).toFixed(2);
-      row.laminationFactor = this.calcLaminationFactor(row.coilWeight, row.diameter, row.realRibbonWidth)
+      row.laminationFactor = this.calcLaminationFactor(
+        row.coilWeight,
+        row.diameter,
+        row.realRibbonWidth
+      );
       row.laminationLevel = this.calcLaminationLevel(row.laminationFactor);
 
       // 根据韧性描述判定韧性等级 ribbonToughnessLevel
-      row.ribbonToughnessLevel = this.ribbonToughnessLevelList.reduce((acc, cur) => {
-        acc[cur.ribbonToughness] = cur.ribbonToughnessLevel;
-        return acc;
-      }, {})[row.ribbonToughness];
+      row.ribbonToughnessLevel = this.ribbonToughnessLevelList.reduce(
+        (acc, cur) => {
+          acc[cur.ribbonToughness] = cur.ribbonToughnessLevel;
+          return acc;
+        },
+        {}
+      )[row.ribbonToughness];
 
       // 根据外观描述判定外观等级 appearenceLevel
       row.appearenceLevel = this.appearenceList.reduce((acc, cur) => {
@@ -647,92 +888,175 @@ export default {
       }, {})[row.appearence];
 
       // 计算厚度最大偏差、平均厚度、厚度级别
-      row.ribbonThickness1 = typeof row.ribbonThickness1 === 'string' ? Number(row.ribbonThickness1.trim()) : row.ribbonThickness1;
-      row.ribbonThickness2 = typeof row.ribbonThickness2 === 'string' ? Number(row.ribbonThickness2.trim()) : row.ribbonThickness2;
-      row.ribbonThickness3 = typeof row.ribbonThickness3 === 'string' ? Number(row.ribbonThickness3.trim()) : row.ribbonThickness3;
-      row.ribbonThickness4 = typeof row.ribbonThickness4 === 'string' ? Number(row.ribbonThickness4.trim()) : row.ribbonThickness4;
-      row.ribbonThickness5 = typeof row.ribbonThickness5 === 'string' ? Number(row.ribbonThickness5.trim()) : row.ribbonThickness5;
-      row.ribbonThickness6 = typeof row.ribbonThickness6 === 'string' ? Number(row.ribbonThickness6.trim()) : row.ribbonThickness6;
-      row.ribbonThickness7 = typeof row.ribbonThickness7 === 'string' ? Number(row.ribbonThickness7.trim()) : row.ribbonThickness7;
-      row.ribbonThickness8 = typeof row.ribbonThickness8 === 'string' ? Number(row.ribbonThickness8.trim()) : row.ribbonThickness8;
-      row.ribbonThickness9 = typeof row.ribbonThickness9 === 'string' ? Number(row.ribbonThickness9.trim()) : row.ribbonThickness9;
+      row.ribbonThickness1 =
+        typeof row.ribbonThickness1 === "string"
+          ? Number(row.ribbonThickness1.trim())
+          : row.ribbonThickness1;
+      row.ribbonThickness2 =
+        typeof row.ribbonThickness2 === "string"
+          ? Number(row.ribbonThickness2.trim())
+          : row.ribbonThickness2;
+      row.ribbonThickness3 =
+        typeof row.ribbonThickness3 === "string"
+          ? Number(row.ribbonThickness3.trim())
+          : row.ribbonThickness3;
+      row.ribbonThickness4 =
+        typeof row.ribbonThickness4 === "string"
+          ? Number(row.ribbonThickness4.trim())
+          : row.ribbonThickness4;
+      row.ribbonThickness5 =
+        typeof row.ribbonThickness5 === "string"
+          ? Number(row.ribbonThickness5.trim())
+          : row.ribbonThickness5;
+      row.ribbonThickness6 =
+        typeof row.ribbonThickness6 === "string"
+          ? Number(row.ribbonThickness6.trim())
+          : row.ribbonThickness6;
+      row.ribbonThickness7 =
+        typeof row.ribbonThickness7 === "string"
+          ? Number(row.ribbonThickness7.trim())
+          : row.ribbonThickness7;
+      row.ribbonThickness8 =
+        typeof row.ribbonThickness8 === "string"
+          ? Number(row.ribbonThickness8.trim())
+          : row.ribbonThickness8;
+      row.ribbonThickness9 =
+        typeof row.ribbonThickness9 === "string"
+          ? Number(row.ribbonThickness9.trim())
+          : row.ribbonThickness9;
 
-      row.ribbonThicknessDeviation = this.calcMaxDeviation([row.ribbonThickness1, row.ribbonThickness2, row.ribbonThickness3, row.ribbonThickness4, row.ribbonThickness5, row.ribbonThickness6, row.ribbonThickness7, row.ribbonThickness8, row.ribbonThickness9]);
-      row.ribbonThickness = ((row.ribbonThickness1 + row.ribbonThickness2 + row.ribbonThickness3 + row.ribbonThickness4 + row.ribbonThickness5 + row.ribbonThickness6 + row.ribbonThickness7 + row.ribbonThickness8 + row.ribbonThickness9) / 9).toFixed(2);
-      row.ribbonThicknessLevel = this.calcribbonThicknessLevel(row.ribbonThickness);
+      row.ribbonThicknessDeviation = this.calcMaxDeviation([
+        row.ribbonThickness1,
+        row.ribbonThickness2,
+        row.ribbonThickness3,
+        row.ribbonThickness4,
+        row.ribbonThickness5,
+        row.ribbonThickness6,
+        row.ribbonThickness7,
+        row.ribbonThickness8,
+        row.ribbonThickness9
+      ]);
+      row.ribbonThickness = (
+        (row.ribbonThickness1 +
+          row.ribbonThickness2 +
+          row.ribbonThickness3 +
+          row.ribbonThickness4 +
+          row.ribbonThickness5 +
+          row.ribbonThickness6 +
+          row.ribbonThickness7 +
+          row.ribbonThickness8 +
+          row.ribbonThickness9) /
+        9
+      ).toFixed(2);
+      row.ribbonThicknessLevel = this.calcribbonThicknessLevel(
+        row.ribbonThickness
+      );
 
       // 综合级别
       // 叠片系数不合格，或者外观等级为不合格，则综合级别为不合格
-      row.ribbonTotalLevel = row.laminationLevel === '不合格' || row.appearenceLevel === '不合格' ? '不合格' : row.ribbonThicknessLevel + row.laminationLevel + row.ribbonToughnessLevel + row.appearenceLevel;
+      row.ribbonTotalLevel =
+        row.laminationLevel === "不合格" || row.appearenceLevel === "不合格"
+          ? "不合格"
+          : row.ribbonThicknessLevel +
+            row.laminationLevel +
+            row.ribbonToughnessLevel +
+            row.appearenceLevel;
       // 规格 为 32/35/40/42/45/50/，材质为 1K107B 的带材，如果韧性为D或E，则综合级别为不合格
       // if ([32, 35, 40, 42, 45, 50].includes(row.ribbonWidth) && row.ribbonTypeName == '1K107B' && ['D', 'E'].includes(row.ribbonToughnessLevel)) {
       //   row.ribbonTotalLevel = '不合格';
       // }
-      if ([32, 42].includes(row.ribbonWidth) && row.ribbonTypeName == '1K107B' && ['D', 'E'].includes(row.ribbonToughnessLevel)) {
-        row.ribbonTotalLevel = '不合格';
+      if (
+        [32, 42].includes(row.ribbonWidth) &&
+        row.ribbonTypeName == "1K107B" &&
+        ["D", "E"].includes(row.ribbonToughnessLevel)
+      ) {
+        row.ribbonTotalLevel = "不合格";
       }
       //如果带材厚度偏差大于3，同时韧性为D/E,此带材为不合格，否则加F
-      if (row.ribbonThicknessDeviation > 3 && ['D', 'E'].includes(row.ribbonToughnessLevel)) {
-        row.ribbonTotalLevel = '不合格';
+      if (
+        row.ribbonThicknessDeviation > 3 &&
+        ["D", "E"].includes(row.ribbonToughnessLevel)
+      ) {
+        row.ribbonTotalLevel = "不合格";
       }
       // 如果带材韧性为D/E，同时带材宽度超出规格±0.2mm，此带材为不合格，否则加E，正偏差为+E,负偏差为-E
       if (row.ribbonWidth < 50) {
-        if (['D', 'E'].includes(row.ribbonToughnessLevel) && Math.abs(row.realRibbonWidth - row.ribbonWidth) > 0.2) {
-          row.ribbonTotalLevel = '不合格';        
+        if (
+          ["D", "E"].includes(row.ribbonToughnessLevel) &&
+          Math.abs(row.realRibbonWidth - row.ribbonWidth) > 0.2
+        ) {
+          row.ribbonTotalLevel = "不合格";
         }
-      } else if (row.ribbonWidth >= 50){
-        if (['D', 'E'].includes(row.ribbonToughnessLevel) && Math.abs(row.realRibbonWidth - row.ribbonWidth) > 0.3) {
-          row.ribbonTotalLevel = '不合格';        
+      } else if (row.ribbonWidth >= 50) {
+        if (
+          ["D", "E"].includes(row.ribbonToughnessLevel) &&
+          Math.abs(row.realRibbonWidth - row.ribbonWidth) > 0.3
+        ) {
+          row.ribbonTotalLevel = "不合格";
         }
       }
-      if (['AD25', 'ND25'].includes(row.ribbonTypeName)) {
+      if (["AD25", "ND25"].includes(row.ribbonTypeName)) {
         let _width = row.realRibbonWidth - row.ribbonWidth;
         _width = _width.toFixed(1);
         if (_width >= 0.1 || _width <= -0.2) {
-          row.ribbonTotalLevel = '不合格';
+          row.ribbonTotalLevel = "不合格";
         }
       }
-      
-      if (row.ribbonTotalLevel !== '不合格') {
+
+      if (row.ribbonTotalLevel !== "不合格") {
         // 如果厚度为20-22，则加G，厚度为23-24，加L
         if (row.ribbonThickness >= 20 && row.ribbonThickness < 22) {
-          row.ribbonTotalLevel = row.ribbonTotalLevel + 'G';
+          row.ribbonTotalLevel = row.ribbonTotalLevel + "G";
         }
         if (row.ribbonThickness >= 23 && row.ribbonThickness < 24) {
-          row.ribbonTotalLevel = row.ribbonTotalLevel + 'L';
+          row.ribbonTotalLevel = row.ribbonTotalLevel + "L";
         }
         // 如果带材厚度偏差大于3，同时韧性为A,B,C,此带材加F
-        if (row.ribbonThicknessDeviation > 3 && ['A', 'B', 'C'].includes(row.ribbonToughnessLevel)) {
-          row.ribbonTotalLevel = row.ribbonTotalLevel + 'F';
+        if (
+          row.ribbonThicknessDeviation > 3 &&
+          ["A", "B", "C"].includes(row.ribbonToughnessLevel)
+        ) {
+          row.ribbonTotalLevel = row.ribbonTotalLevel + "F";
         }
         // 如果带材韧性为A/B/C，同时带材宽度超出规格±0.2mm，加E，正偏差为+E,负偏差为-E
         let _width = row.realRibbonWidth - row.ribbonWidth;
         _width = _width.toFixed(1);
         if (row.ribbonWidth < 50) {
-          if (Math.abs(_width) > 0.2 && ['A', 'B', 'C'].includes(row.ribbonToughnessLevel)) {
-            if ((_width) < -0.2) {
-              row.ribbonTotalLevel = row.ribbonTotalLevel + '-E';
-            } else if ((_width) > 0.2) {
-              row.ribbonTotalLevel = row.ribbonTotalLevel + '+E';
+          if (
+            Math.abs(_width) > 0.2 &&
+            ["A", "B", "C"].includes(row.ribbonToughnessLevel)
+          ) {
+            if (_width < -0.2) {
+              row.ribbonTotalLevel = row.ribbonTotalLevel + "-E";
+            } else if (_width > 0.2) {
+              row.ribbonTotalLevel = row.ribbonTotalLevel + "+E";
             }
           }
         } else if (row.ribbonWidth >= 50) {
-          if (Math.abs(_width) > 0.3 && ['A', 'B', 'C'].includes(row.ribbonToughnessLevel)) {
-            if ((_width) < -0.3) {
-              row.ribbonTotalLevel = row.ribbonTotalLevel + '-E';
-            } else if ((_width) > 0.3) {
-              row.ribbonTotalLevel = row.ribbonTotalLevel + '+E';
+          if (
+            Math.abs(_width) > 0.3 &&
+            ["A", "B", "C"].includes(row.ribbonToughnessLevel)
+          ) {
+            if (_width < -0.3) {
+              row.ribbonTotalLevel = row.ribbonTotalLevel + "-E";
+            } else if (_width > 0.3) {
+              row.ribbonTotalLevel = row.ribbonTotalLevel + "+E";
             }
           }
         }
       }
 
-      if (['', undefined, null].includes(row.ribbonThicknessLevel) || ['', undefined, null].includes(row.laminationLevel) || ['', undefined, null].includes(row.ribbonToughnessLevel) || ['', undefined, null].includes(row.appearenceLevel)) {
-        row.ribbonTotalLevel = '';
+      if (
+        ["", undefined, null].includes(row.ribbonThicknessLevel) ||
+        ["", undefined, null].includes(row.laminationLevel) ||
+        ["", undefined, null].includes(row.ribbonToughnessLevel) ||
+        ["", undefined, null].includes(row.appearenceLevel)
+      ) {
+        row.ribbonTotalLevel = "";
       }
 
       // 是否入库：不合格不能入库，端面有问题的不能入库，不满足入库规则的不能入库
-      if (row.ribbonTotalLevel === '不合格') {
+      if (row.ribbonTotalLevel === "不合格") {
         row.isStored = 3;
         // row.isMeasureConfirmed = 1;
       } else {
@@ -745,11 +1069,13 @@ export default {
             row.inPlanThickRibbonWeight = row.coilNetWeight;
           }
         } else if (row.isStored === 2) {
-          row.outPlanStoredWeight = row.coilNetWeight;          
+          row.outPlanStoredWeight = row.coilNetWeight;
         }
 
         // 总入库重量
-        row.totalStoredWeight = (row.inPlanStoredWeight + row.outPlanStoredWeight).toFixed(2);
+        row.totalStoredWeight = (
+          row.inPlanStoredWeight + row.outPlanStoredWeight
+        ).toFixed(2);
 
         // 计算各质量等级的重量
         this.calcQualityOfABCDE(row);
@@ -771,14 +1097,17 @@ export default {
         // 质量等级为良的带材质量：除去符合任务单要求的薄带（31**41**51**61**71**81**32**42**52**62**72**82**33**43**53**63**73**83**34**44**54**64**74**84**）还有德国法国的（22*B、23*B）
         // 质量等级为中的带材质量：除去好和良的其他入库。
         if (row.isStored === 2) {
-          if (/^[3-8][1-4][A-E][A-C]G?([+-]E)?F?$/.test(row.ribbonTotalLevel) || /^2[2-3][A-C]BL?([+-]E)?F?$/.test(row.ribbonTotalLevel)) {
+          if (
+            /^[3-8][1-4][A-E][A-C]G?([+-]E)?F?$/.test(row.ribbonTotalLevel) ||
+            /^2[2-3][A-C]BL?([+-]E)?F?$/.test(row.ribbonTotalLevel)
+          ) {
             row.qualityOfFine = row.coilNetWeight;
           } else {
             row.qualityOfNormal = row.coilNetWeight;
           }
         }
       }
-      
+
       const clone = cloneDeep(row);
       clone.clients = clone.clients.join();
 
@@ -789,11 +1118,11 @@ export default {
         }
       });
       // 发送请求，更新当前的数据
-      this.$http('PUT', urlmap.updateMeasure, clone).then(data => {
-
-      }).catch(error => {
-        console.log(error);
-      });
+      this.$http("PUT", urlmap.updateMeasure, clone)
+        .then(data => {})
+        .catch(error => {
+          console.log(error);
+        });
     },
     handleCurrentChange(val) {
       const params = {
@@ -807,7 +1136,7 @@ export default {
       }
       // 高叠片薄带重量 ≤23, >=0.78
       if (row.laminationFactor >= 0.78) {
-        return row.highFactorThinRibbonWeight = row.coilNetWeight;
+        return (row.highFactorThinRibbonWeight = row.coilNetWeight);
       }
       // 薄带重量 ≤23, >=0.75
       if (row.laminationFactor >= 0.75) {
@@ -840,24 +1169,31 @@ export default {
       }
     },
     calcLaminationFactor(coilWeight, diameter, realRibbonWidth) {
-      return ((coilWeight - 0.09)/(Math.PI * (diameter * diameter / 4 - 95 * 95 / 4) * 7.2) * Math.pow(10, 6) / realRibbonWidth).toFixed(2) || 0;
+      return (
+        (
+          (((coilWeight - 0.09) /
+            (Math.PI * ((diameter * diameter) / 4 - (95 * 95) / 4) * 7.2)) *
+            Math.pow(10, 6)) /
+          realRibbonWidth
+        ).toFixed(2) || 0
+      );
     },
     calcLaminationLevel(factor) {
-      if (!factor) return '';
+      if (!factor) return "";
       if (factor >= 0.84) {
-        return '4';
-      } else if(factor >= 0.82 && factor < 0.84) {
-        return '3';
-      } else if(factor >= 0.80 && factor < 0.82) {
-        return '2';
-      } else if(factor >= 0.78 && factor < 0.80) {
-        return '1';
-      } else if(factor >= 0.75 && factor < 0.78) {
-        return '0';
-      } else if(factor >= 0.72 && factor < 0.75) {
-        return '8'
+        return "4";
+      } else if (factor >= 0.82 && factor < 0.84) {
+        return "3";
+      } else if (factor >= 0.8 && factor < 0.82) {
+        return "2";
+      } else if (factor >= 0.78 && factor < 0.8) {
+        return "1";
+      } else if (factor >= 0.75 && factor < 0.78) {
+        return "0";
+      } else if (factor >= 0.72 && factor < 0.75) {
+        return "8";
       } else {
-        return '不合格';
+        return "不合格";
       }
     },
     calcMaxDeviation(arr) {
@@ -873,19 +1209,19 @@ export default {
       }
       if (thickness > 26) {
         return 1;
-      } else if(thickness > 23 && thickness <= 26) {
+      } else if (thickness > 23 && thickness <= 26) {
         return 2;
-      } else if(thickness > 20 && thickness <= 23) {
+      } else if (thickness > 20 && thickness <= 23) {
         return 3;
-      } else if(thickness > 18 && thickness <= 20) {
+      } else if (thickness > 18 && thickness <= 20) {
         return 4;
-      } else if(thickness > 16 && thickness <= 18) {
+      } else if (thickness > 16 && thickness <= 18) {
         return 5;
-      } else if(thickness > 14 && thickness <= 16) {
+      } else if (thickness > 14 && thickness <= 16) {
         return 6;
-      } else if(thickness > 12 && thickness <= 14) {
+      } else if (thickness > 12 && thickness <= 14) {
         return 7;
-      } else if(thickness <= 12) {
+      } else if (thickness <= 12) {
         return 8;
       }
     },
@@ -895,15 +1231,16 @@ export default {
       // 计划内：厚度
       const ribbonThickness = row.ribbonThickness;
       const orderThickness = row.orderThickness;
-      if (orderThickness.indexOf('≤') > -1) { // ≤23
+      if (orderThickness.indexOf("≤") > -1) {
+        // ≤23
         const maxThickness = parseInt(orderThickness.substr(1));
         if (ribbonThickness > maxThickness) {
           // 厚度不符合符合计划内入库的要求
           inPlanFlag = false;
         }
-      } else if (orderThickness.indexOf('-') > -1) {
-        const maxThickness = orderThickness.split('-')[1];
-        const minThickness = orderThickness.split('-')[0];
+      } else if (orderThickness.indexOf("-") > -1) {
+        const maxThickness = orderThickness.split("-")[1];
+        const minThickness = orderThickness.split("-")[0];
         if (ribbonThickness < minThickness || ribbonThickness > maxThickness) {
           inPlanFlag = false;
         }
@@ -911,28 +1248,34 @@ export default {
       // 计划内：叠片
       const laminationFactor = row.laminationFactor;
       const orderLaminationFactor = row.orderLaminationFactor;
-      if (orderLaminationFactor.indexOf('≥') > -1) { // ≥0.78
+      if (orderLaminationFactor.indexOf("≥") > -1) {
+        // ≥0.78
         const minLaminationFactor = parseInt(orderLaminationFactor.substr(1));
         if (laminationFactor < minLaminationFactor) {
           // 叠片不符合符合计划内入库的要求
           inPlanFlag = false;
         }
-      } else if (orderLaminationFactor.indexOf('-') > -1) {
-        const maxLaminationFactor = orderLaminationFactor.split('-')[1];
-        const minLaminationFactor = orderLaminationFactor.split('-')[0];
-        if (laminationFactor < minLaminationFactor || laminationFactor > maxLaminationFactor) {
+      } else if (orderLaminationFactor.indexOf("-") > -1) {
+        const maxLaminationFactor = orderLaminationFactor.split("-")[1];
+        const minLaminationFactor = orderLaminationFactor.split("-")[0];
+        if (
+          laminationFactor < minLaminationFactor ||
+          laminationFactor > maxLaminationFactor
+        ) {
           inPlanFlag = false;
         }
       }
       // 计划内：韧性
       const ribbonToughnessLevel = row.ribbonToughnessLevel;
-      const orderRibbonToughnessLevels = row.orderRibbonToughnessLevels.split(',');
+      const orderRibbonToughnessLevels = row.orderRibbonToughnessLevels.split(
+        ","
+      );
       if (!orderRibbonToughnessLevels.includes(ribbonToughnessLevel)) {
         inPlanFlag = false;
       }
       // 计划内：外观
       const appearenceLevel = row.appearenceLevel;
-      const orderAppearenceLevels = row.orderAppearenceLevels.split(',');
+      const orderAppearenceLevels = row.orderAppearenceLevels.split(",");
       if (!orderAppearenceLevels.includes(appearenceLevel)) {
         inPlanFlag = false;
       }
@@ -987,53 +1330,64 @@ export default {
         let outPlanFlag = true;
         // 计划外：厚度
         const qualifiedThickness = item.qualifiedThickness;
-        if (qualifiedThickness.indexOf('≤') > -1) { // ≤23
+        if (qualifiedThickness.indexOf("≤") > -1) {
+          // ≤23
           const maxThickness = parseInt(qualifiedThickness.substr(1));
           if (ribbonThickness > maxThickness) {
             // 厚度不符合符合计划外入库的要求
             outPlanFlag = false;
-          } 
-        } else if (qualifiedThickness.indexOf('-') > -1) {
-          const maxThickness = qualifiedThickness.split('-')[1];
-          const minThickness = qualifiedThickness.split('-')[0];
-          if (ribbonThickness < minThickness || ribbonThickness > maxThickness) {
+          }
+        } else if (qualifiedThickness.indexOf("-") > -1) {
+          const maxThickness = qualifiedThickness.split("-")[1];
+          const minThickness = qualifiedThickness.split("-")[0];
+          if (
+            ribbonThickness < minThickness ||
+            ribbonThickness > maxThickness
+          ) {
             // 厚度不符合符合计划外入库的要求
             outPlanFlag = false;
           }
         }
         // 计划外：叠片
         const qualifiedLaminationFactor = item.qualifiedLaminationFactor;
-        if (qualifiedLaminationFactor.indexOf('≥') > -1) { // ≥0.78
-          const minLaminationFactor = parseInt(qualifiedLaminationFactor.substr(1));
+        if (qualifiedLaminationFactor.indexOf("≥") > -1) {
+          // ≥0.78
+          const minLaminationFactor = parseInt(
+            qualifiedLaminationFactor.substr(1)
+          );
           if (laminationFactor < minLaminationFactor) {
             // 叠片不符合符合计划外入库的要求
             outPlanFlag = false;
           }
-        } else if (qualifiedLaminationFactor.indexOf('-') > -1) {
-          const maxLaminationFactor = qualifiedLaminationFactor.split('-')[1];
-          const minLaminationFactor = qualifiedLaminationFactor.split('-')[0];
-          if (laminationFactor < minLaminationFactor || laminationFactor > maxLaminationFactor) {
-             // 叠片不符合符合计划外入库的要求
+        } else if (qualifiedLaminationFactor.indexOf("-") > -1) {
+          const maxLaminationFactor = qualifiedLaminationFactor.split("-")[1];
+          const minLaminationFactor = qualifiedLaminationFactor.split("-")[0];
+          if (
+            laminationFactor < minLaminationFactor ||
+            laminationFactor > maxLaminationFactor
+          ) {
+            // 叠片不符合符合计划外入库的要求
             outPlanFlag = false;
           }
         }
         // 计划外：韧性
-        const qualifiedRibbonToughnessLevels = item.qualifiedRibbonToughnessLevels;
+        const qualifiedRibbonToughnessLevels =
+          item.qualifiedRibbonToughnessLevels;
         if (!qualifiedRibbonToughnessLevels.includes(ribbonToughnessLevel)) {
-           // 韧性不符合符合计划外入库的要求
+          // 韧性不符合符合计划外入库的要求
           outPlanFlag = false;
         }
         // 计划外：外观
         const qualifiedAppearenceLevels = item.qualifiedAppearenceLevels;
         if (!qualifiedAppearenceLevels.includes(appearenceLevel)) {
-           // 外观不符合符合计划外入库的要求
+          // 外观不符合符合计划外入库的要求
           outPlanFlag = false;
         }
 
         if (outPlanFlag) {
           return 2;
         }
-      };
+      }
 
       return 3;
     },
@@ -1046,9 +1400,13 @@ export default {
         furnace: this.searchForm.furnace,
         ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
         ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths),
-        ribbonThicknessLevelJson: JSON.stringify(this.searchForm.ribbonThicknessLevels),
+        ribbonThicknessLevelJson: JSON.stringify(
+          this.searchForm.ribbonThicknessLevels
+        ),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
-        ribbonToughnessLevelJson: JSON.stringify(this.searchForm.ribbonToughnessLevels),
+        ribbonToughnessLevelJson: JSON.stringify(
+          this.searchForm.ribbonToughnessLevels
+        ),
         appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels)
       };
       const url = `${urlmap.exportMeasure}?${qs.stringify(params)}`;
@@ -1056,7 +1414,7 @@ export default {
     },
     setSelectable(row, index) {
       // 合格并且已经检测过了的，才可以被选中来入库
-      if ([1, 2].includes(row.isStored) && !row.isMeasureConfirmed ) {
+      if ([1, 2].includes(row.isStored) && !row.isMeasureConfirmed) {
         return true;
       } else {
         return false;
@@ -1068,26 +1426,31 @@ export default {
     measureConfirm() {
       const selectionList = cloneDeep(this.multipleSelection);
       if (selectionList.length === 0) {
-        return this.$alert('请选择要入库的带材', '提示', { type: 'warning' });
+        return this.$alert("请选择要入库的带材", "提示", { type: "warning" });
       }
       selectionList.forEach(row => {
         row.isMeasureConfirmed = 1; // 1-检测确认入库，0-还没有确认
         row.clients = row.clients.join();
       });
       // 发送请求，更新当前的数据
-      this.$http('PUT', urlmap.updateMeasure, { dataJson: JSON.stringify(selectionList) }).then(data => {
-        this.getTableData();
-      }).catch(error => {
-        console.log(error);
-      });
+      this.$http("PUT", urlmap.updateMeasure, {
+        dataJson: JSON.stringify(selectionList)
+      })
+        .then(data => {
+          this.getTableData();
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .popover_table {
   text-align: center;
-  th, td {
+  th,
+  td {
     border-bottom: 1px solid #dcdfe6;
   }
   td {

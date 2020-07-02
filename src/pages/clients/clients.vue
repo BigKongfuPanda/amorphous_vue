@@ -12,7 +12,7 @@
         <el-table-column prop="client" label="客户" align="center"></el-table-column>
         <el-table-column prop="isFlat" label="是否必须平整" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.isFlat === 1 ? '是' : '否'}}</span>
+            <span>{{scope.row.isFlat === 1 ? '否' : '是'}}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center">

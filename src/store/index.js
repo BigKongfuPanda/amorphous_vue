@@ -14,6 +14,7 @@ export default new Vuex.Store({
     laminationLevelList: [], // 带材叠片级别列表
     ribbonToughnessLevelList: [], // 带材韧性级别列表
     clientsList: [], //客户列表
+    rollerList: [], // 重卷人员列表
     appearenceList: [] //外观列表
   },
   mutations: {
@@ -44,6 +45,10 @@ export default new Vuex.Store({
     // 获取带材外观级别列表
     SET_APPERENCELEVELLIST(state, list) {
       state.appearenceList = list;
+    },
+    // 获取重卷人员列表
+    SET_ROLLERLIST(state, list) {
+      state.rollerList = list;
     }
   },
   actions: {
@@ -127,6 +132,16 @@ export default new Vuex.Store({
       http("get", urlmap.queryClients)
         .then(data => {
           commit("SET_CLIENTSLIST", data.list);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 获取客户列表
+    getRollerList({ commit }) {
+      http("get", urlmap.queryRoller)
+        .then(data => {
+          commit("SET_ROLLERLIST", data.list);
         })
         .catch(err => {
           console.log(err);

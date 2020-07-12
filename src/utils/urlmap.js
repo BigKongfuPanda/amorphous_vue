@@ -71,5 +71,10 @@ export default {
   delAppearenceLevel: "/appearenceLevel",
 
   queryStatisticsQuality: "/statistics/quality",
-  queryStatisticsRatio: "/statistics/ratio"
+  queryStatisticsRatio: "/statistics/ratio",
+
+  queryRoller: "/roller",
+  addRoller: "/roller",
+  updateRoller: "/roller",
+  delRoller: "/roller"
 };

@@ -19,7 +19,15 @@
       @keyup.enter.native="submitForm"
     >
       <el-form-item label="重卷人员：" prop="roller">
-        <span>{{formData.roller}}</span>
+        <!-- <span>{{formData.roller}}</span> -->
+        <el-select v-model="formData.roller" placeholder="请选择重卷人">
+          <el-option
+            v-for="item in rollerList"
+            :key="item.roller"
+            :value="item.roller"
+            :label="item.rollerName"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="重卷机器：" prop="rollMachine">
         <el-select v-model="formData.rollMachine" placeholder>
@@ -106,6 +114,9 @@ export default {
         coilWeight: "" //重量,kg
       },
       rules: {
+        roller: [
+          { required: true, message: "请选择重卷人员", trigger: "blur" }
+        ],
         rollMachine: [
           { required: true, message: "请选择重卷机编号", trigger: "blur" }
         ],
@@ -137,14 +148,18 @@ export default {
     dialogData: {
       type: Object,
       required: true
+    },
+    rollerList: {
+      type: Array,
+      required: true
     }
   },
   created() {
     this.userinfo = JSON.parse(localStorage.getItem("userinfo"));
     if (this.dialogData.formType === "add") {
       this.formData = Object.assign({}, formConfig, {
-        castId: Number(this.$route.params.castId),
-        roller: this.userinfo.adminname
+        castId: Number(this.$route.params.castId)
+        // roller: this.userinfo.adminname
       });
     } else {
       this.formData = Object.assign(this.formData, this.dialogData.rowData);
@@ -162,7 +177,6 @@ export default {
 
           const params = {
             roleId: this.userinfo.roleId,
-            adminname: this.userinfo.adminname,
             ...this.formData
           };
 

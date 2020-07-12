@@ -23,7 +23,15 @@
           <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
         </el-form-item>
         <el-form-item label="重卷：">
-          <el-input v-model="searchForm.roller" placeholder="请输入重卷人姓名"></el-input>
+          <!-- <el-input v-model="searchForm.roller" placeholder="请输入重卷人姓名"></el-input> -->
+          <el-select v-model="searchForm.roller" placeholder="请选择重卷人姓名">
+            <el-option
+              v-for="item in rollerList"
+              :key="item.roller"
+              :value="item.roller"
+              :label="item.rollerName"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
@@ -69,7 +77,11 @@
         <el-table-column prop="diameter" label="外径(mm)" align="center" width="70px"></el-table-column>
         <el-table-column prop="coilWeight" label="重量(kg)" align="center" width="70px"></el-table-column>
         <el-table-column prop="rollMachine" label="机器编号" align="center" width="70px"></el-table-column>
-        <el-table-column prop="roller" label="重卷人员" align="center" width="70px"></el-table-column>
+        <el-table-column prop="roller" label="重卷人员" align="center" width="70px">
+          <template slot-scope="scope">
+            <span>{{getRollerName(scope.row.roller)}}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="createdAt"
           label="重卷日期"
@@ -84,16 +96,21 @@
             >{{scope.row.isFlat === 1 ? '否' : '是'}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="80px">
+        <el-table-column label="操作" align="center" width="140px">
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="primary"
               @click="edit(scope.row)"
               v-if="isEditable"
-              :disabled="scope.row.roller !== userinfo.adminname && userinfo.roleId !== 1"
+              :disabled="getRollerName(scope.row.roller) !== userinfo.adminname && userinfo.roleId !== 1"
             >修改</el-button>
-            <!-- <el-button size="mini" type="danger" @click="del(scope.row)">删除</el-button> -->
+            <el-button
+              size="mini"
+              type="danger"
+              @click="del(scope.row)"
+              v-if="[1,2,3,15].includes(userinfo.roleId)"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -108,6 +125,7 @@
     </div>
     <dialog-form
       v-if="dialogVisible"
+      :rollerList="rollerList"
       :dialogData="{ formType, dialogVisible, rowData }"
       @close="closeHandler"
       @submit="submitHandler"
@@ -116,8 +134,9 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 import urlmap from "@/utils/urlmap";
-import { dateFormat, debounce } from "@/utils/common";
+import { dateFormat, debounce, dateTimeFormat } from "@/utils/common";
 import dialogForm from "./components/dialogForm.vue";
 import Collapse from "@/components/collapse.vue";
 import qs from "qs";
@@ -164,6 +183,9 @@ export default {
     this.isEditable = this.setIsEditable();
     next();
   },
+  computed: {
+    ...mapState(["rollerList"])
+  },
   created() {
     this.castId = this.$route.params.castId;
     this.userinfo = JSON.parse(localStorage.getItem("userinfo"));
@@ -171,6 +193,7 @@ export default {
     this.isAddable = this.setIsAddable();
     this.isEditable = this.setIsEditable();
     this.getTableData();
+    this.getRollerList();
   },
   mounted() {
     const self = this;
@@ -184,11 +207,17 @@ export default {
     }, 1000);
   },
   methods: {
+    ...mapActions(["getRollerList"]),
+    getRollerName(roller) {
+      const { rollerName } =
+        this.rollerList.find(item => item.roller === roller) || {};
+      return rollerName || "";
+    },
     dateFormat(row, column) {
       return dateFormat(row.castDate);
     },
     rollDateFormat(row, column) {
-      return dateFormat(row.createdAt);
+      return dateTimeFormat(row.createdAt);
     },
     clickSearch() {
       // 重置当前页码为1
@@ -275,20 +304,28 @@ export default {
       this.dialogVisible = true;
       this.formType = "edit";
     },
-    // del(row) {
-    //   const { _id, furnace } = row;
-    //   this.$confirm(`确定删除 ${furnace} 吗？`, '提示', {
-    //     confirmButtonText: '确定',
-    //     cancelButtonText: '取消',
-    //     type: 'warning'
-    //   }).then(() => {
-    //     this.$http('delete', urlmap.delMeasure, {_id}).then(data => {
-    //       this.getTableData();
-    //     }).catch(error => {
-    //       console.log(error);
-    //     });
-    //   }).catch(() => {});
-    // },
+    del(row) {
+      const { messageId, furnace, coilNumber } = row;
+      this.$confirm(
+        `该操作可能会影响检测数据，请确认没有送检和入库之后再删除`,
+        `确定要删除 ${furnace} 的 第 ${coilNumber} 盘 吗？`,
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
+        .then(() => {
+          this.$http("delete", urlmap.delMeasure, { messageId })
+            .then(data => {
+              this.getTableData();
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        })
+        .catch(() => {});
+    },
     closeHandler() {
       this.dialogVisible = false;
     },

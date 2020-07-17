@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="dialogData.formType === 'create' ? '新增客户' : '修改客户'"
+    :title="dialogData.formType === 'create' ? '新增重卷人员' : '修改重卷人员'"
     :visible.sync="dialogData.dialogVisible"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -17,14 +17,11 @@
       style="width: 100%"
       @keyup.enter.native="submitForm"
     >
-      <el-form-item label="客户：" prop="client">
-        <el-input v-model="formData.client"></el-input>
+      <el-form-item label="姓名：" prop="rollerName">
+        <el-input v-model="formData.rollerName"></el-input>
       </el-form-item>
-      <el-form-item label="是否必须平整：" prop="isFlat">
-        <el-select v-model="formData.isFlat" placeholder>
-          <el-option :value="0" label="是"></el-option>
-          <el-option :value="1" label="否"></el-option>
-        </el-select>
+      <el-form-item label="编号：" prop="roller">
+        <el-input v-model="formData.roller"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer">
@@ -39,8 +36,8 @@ import urlmap from "@/utils/urlmap";
 import { number } from "@/utils/validate";
 
 const formConfig = {
-  client: "",
-  isFlat: 0
+  rollerName: "",
+  roller: ""
 };
 
 export default {
@@ -53,16 +50,17 @@ export default {
   data() {
     return {
       formData: {
-        client: "",
-        isFlat: 0
+        rollerName: "",
+        roller: ""
       },
       rules: {
-        client: [
-          { required: true, message: "请填写客户", trigger: "blur" },
+        rollerName: [
+          { required: true, message: "请填写姓名", trigger: "blur" },
           { max: 20, message: "最多20位字符", trigger: "blur" }
         ],
-        isFlat: [
-          { required: true, message: "请选择是否必须要求平整", trigger: "blur" }
+        roller: [
+          { required: true, message: "请填写编号", trigger: "blur" },
+          { validator: number, trigger: "blur" }
         ]
       },
       loading: false
@@ -86,8 +84,8 @@ export default {
 
           const { method, url } =
             this.dialogData.formType === "create"
-              ? { method: "post", url: urlmap.addClients }
-              : { method: "put", url: urlmap.updateClients };
+              ? { method: "post", url: urlmap.addRoller }
+              : { method: "put", url: urlmap.updateRoller };
 
           this.$http(method, url, this.formData)
             .then(data => {

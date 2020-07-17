@@ -1,20 +1,36 @@
 <template>
   <el-dialog
-  :title="dialogData.formType === 'add' ? `新增重卷记录-${$route.params.castId}号机组` : `修改重卷记录-${$route.params.castId}号机组`"
-  :visible.sync="dialogData.dialogVisible"
-  :close-on-click-modal="false"
-  :close-on-press-escape="false" 
-  @close="closeDialog"
-  :center="true"
-  width="30%"
-  v-loading="loading"
-  element-loading-text="拼命加载中">
-    <el-form :model="formData" :rules="rules" ref="form" label-width="100px" style="100%" @keyup.enter.native="submitForm">
+    :title="dialogData.formType === 'add' ? `新增重卷记录-${$route.params.castId}号机组` : `修改重卷记录-${$route.params.castId}号机组`"
+    :visible.sync="dialogData.dialogVisible"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    @close="closeDialog"
+    :center="true"
+    width="30%"
+    v-loading="loading"
+    element-loading-text="拼命加载中"
+  >
+    <el-form
+      :model="formData"
+      :rules="rules"
+      ref="form"
+      label-width="100px"
+      style="100%"
+      @keyup.enter.native="submitForm"
+    >
       <el-form-item label="重卷人员：" prop="roller">
-        <span>{{formData.roller}}</span>
+        <!-- <span>{{formData.roller}}</span> -->
+        <el-select v-model="formData.roller" placeholder="请选择重卷人">
+          <el-option
+            v-for="item in rollerList"
+            :key="item.roller"
+            :value="item.roller"
+            :label="item.rollerName"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="重卷机器：" prop="rollMachine">
-        <el-select v-model="formData.rollMachine" placeholder="">
+        <el-select v-model="formData.rollMachine" placeholder>
           <el-option label="#1" :value="1"></el-option>
           <el-option label="#2" :value="2"></el-option>
           <el-option label="#3" :value="3"></el-option>
@@ -46,9 +62,9 @@
         <el-input v-model="formData.coilWeight"></el-input>
       </el-form-item>
       <el-form-item label="是否平整：" prop="isFlat">
-        <el-select v-model="formData.isFlat" placeholder="">
-          <el-option value="是" label="是"></el-option>
-          <el-option value="否" label="否"></el-option>
+        <el-select v-model="formData.isFlat" placeholder>
+          <el-option :value="0" label="是"></el-option>
+          <el-option :value="1" label="否"></el-option>
         </el-select>
       </el-form-item>
     </el-form>
@@ -60,18 +76,25 @@
 </template>
 
 <script>
-import { integer, positiveInteger, ltNumber, checkFurnace, number, decimalFormat } from '@/utils/validate';
-import urlmap from '@/utils/urlmap';
+import {
+  integer,
+  positiveInteger,
+  ltNumber,
+  checkFurnace,
+  number,
+  decimalFormat
+} from "@/utils/validate";
+import urlmap from "@/utils/urlmap";
 
 const formConfig = {
-  castId: 6,// 机组编号
-  roller: '', // 重卷人员
+  castId: 6, // 机组编号
+  roller: "", // 重卷人员
   rollMachine: null, // 重卷机器
-  isFlat: '是', //是否平整
-  furnace: '',// 制带炉号  06-20181120-01/01
-  coilNumber: '',// 盘号
-  diameter: '', //外径,mm
-  coilWeight: '' //重量,kg
+  isFlat: 0, //是否平整, 1-否，0-是
+  furnace: "", // 制带炉号  06-20181120-01/01
+  coilNumber: "", // 盘号
+  diameter: "", //外径,mm
+  coilWeight: "" //重量,kg
 };
 
 export default {
@@ -81,42 +104,43 @@ export default {
       visible: false,
       loading: false,
       formData: {
-        castId: 6,// 机组编号
-        roller: '', // 重卷人员
+        castId: 6, // 机组编号
+        roller: "", // 重卷人员
         rollMachine: null, // 重卷机器
-        isFlat: '是', //是否平整
-        furnace: '',// 制带炉号  06-20181120-01/01
-        coilNumber: '',// 盘号
-        diameter: '', //外径,mm
-        coilWeight: '' //重量,kg
+        isFlat: 0, //是否平整， 0-是，1-否
+        furnace: "", // 制带炉号  06-20181120-01/01
+        coilNumber: "", // 盘号
+        diameter: "", //外径,mm
+        coilWeight: "" //重量,kg
       },
       rules: {
+        roller: [
+          { required: true, message: "请选择重卷人员", trigger: "blur" }
+        ],
         rollMachine: [
-          { required: true, message: '请选择重卷机编号', trigger: 'blur' }
+          { required: true, message: "请选择重卷机编号", trigger: "blur" }
         ],
         furnace: [
-          { required: true, message: '请填写炉号', trigger: 'blur' },
-          { max: 20, message: '最多20位字符', trigger: 'blur' },
-          { validator: checkFurnace, trigger: 'blur'}
+          { required: true, message: "请填写炉号", trigger: "blur" },
+          { max: 20, message: "最多20位字符", trigger: "blur" },
+          { validator: checkFurnace, trigger: "blur" }
         ],
         coilNumber: [
-          { required: true, message: '请填写盘号', trigger: 'blur' },
-          { validator: positiveInteger, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
+          { required: true, message: "请填写盘号", trigger: "blur" },
+          { validator: positiveInteger, trigger: "blur" },
+          { validator: ltNumber(99999), trigger: "blur" }
         ],
         diameter: [
-          { required: true, message: '请填写外径', trigger: 'blur' },
-          { validator: number, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
+          { required: true, message: "请填写外径", trigger: "blur" },
+          { validator: number, trigger: "blur" },
+          { validator: ltNumber(99999), trigger: "blur" }
         ],
         coilWeight: [
-          { required: true, message: '请填写重量', trigger: 'blur' },
-          { validator: decimalFormat, trigger: 'blur' },
-          { validator: ltNumber(99999), trigger: 'blur' }
+          { required: true, message: "请填写重量", trigger: "blur" },
+          { validator: decimalFormat, trigger: "blur" },
+          { validator: ltNumber(99999), trigger: "blur" }
         ],
-        isFlat: [
-          { required: true, message: '请选择是否平整', trigger: 'blur' }
-        ]
+        isFlat: [{ required: true, message: "请选择是否平整", trigger: "blur" }]
       }
     };
   },
@@ -124,12 +148,19 @@ export default {
     dialogData: {
       type: Object,
       required: true
+    },
+    rollerList: {
+      type: Array,
+      required: true
     }
   },
   created() {
-    this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
-    if (this.dialogData.formType === 'add') {
-      this.formData = Object.assign({}, formConfig, {castId: Number(this.$route.params.castId), roller: this.userinfo.adminname});
+    this.userinfo = JSON.parse(localStorage.getItem("userinfo"));
+    if (this.dialogData.formType === "add") {
+      this.formData = Object.assign({}, formConfig, {
+        castId: Number(this.$route.params.castId)
+        // roller: this.userinfo.adminname
+      });
     } else {
       this.formData = Object.assign(this.formData, this.dialogData.rowData);
     }
@@ -137,64 +168,23 @@ export default {
   mounted() {},
   methods: {
     closeDialog() {
-      this.$emit('close');
+      this.$emit("close");
     },
     submitForm() {
-      this.$refs.form.validate((valid) => {
-        if(valid) {
+      this.$refs.form.validate(valid => {
+        if (valid) {
           this.loading = true;
-
-          // 根据炉号从喷带记录表中获取其他的信息
-          // this.$http('GET', urlmap.queryCast, {castId: this.formData.castId, furnace: this.formData.furnace}).then(data => {
-          //   if (data.list.length === 0) {
-          //     this.loading = false;
-          //     return this.$message({
-          //       type: 'error',
-          //       message: '炉号有误，获取带材信息失败'
-          //     })
-          //   }
-          //   const { ribbonTypeName, ribbonWidth, createTime, caster } = data.list[0];
-          //   const params = {
-          //     ribbonTypeName, ribbonWidth, castDate: createTime, caster,
-          //     roleId: this.userinfo.roleId,
-          //     adminname: this.userinfo.adminname,
-          //     ...this.formData
-          //   };
-
-          //   // 发送提交的请求
-          //   const { method, url } = this.dialogData.formType === 'add' ? { method: 'POST', url: urlmap.addMeasure } : { method: 'PUT', url: urlmap.updateMeasure };
-
-          //   // 过滤掉值为 null 或者 undefined 的参数，以免存入数据库的时候，发生错误
-          //   Object.keys(params).forEach(key => {
-          //     if (params[key] == null) {
-          //       delete params[key];
-          //     }
-          //   });
-          //   this.$http(method, url, params).then(data => {
-          //     if (data.status !== -1) {
-          //       this.formData.coilNumber++;
-          //       this.formData.coilWeight = null;
-          //       this.formData.diameter = null;
-          //       this.$emit('submit');
-          //     }
-          //   }).catch((error) => {
-          //     console.log(error);
-          //   }).finally(() => {
-          //     this.loading = false;
-          //   });
-          // }).catch((error) => {
-          //   this.loading = false;
-          //   console.log(error);
-          // });
 
           const params = {
             roleId: this.userinfo.roleId,
-            adminname: this.userinfo.adminname,
             ...this.formData
           };
 
           // 发送提交的请求
-          const { method, url } = this.dialogData.formType === 'add' ? { method: 'POST', url: urlmap.addMeasure } : { method: 'PUT', url: urlmap.updateMeasure };
+          const { method, url } =
+            this.dialogData.formType === "add"
+              ? { method: "POST", url: urlmap.addMeasure }
+              : { method: "PUT", url: urlmap.updateMeasure };
 
           // 过滤掉值为 null 或者 undefined 的参数，以免存入数据库的时候，发生错误
           Object.keys(params).forEach(key => {
@@ -202,18 +192,21 @@ export default {
               delete params[key];
             }
           });
-          this.$http(method, url, params).then(data => {
-            if (data.status !== -1) {
-              this.formData.coilNumber++;
-              this.formData.coilWeight = null;
-              this.formData.diameter = null;
-              this.$emit('submit');
-            }
-          }).catch((error) => {
-            console.log(error);
-          }).finally(() => {
-            this.loading = false;
-          });
+          this.$http(method, url, params)
+            .then(data => {
+              if (data.status !== -1) {
+                this.formData.coilNumber++;
+                this.formData.coilWeight = null;
+                this.formData.diameter = null;
+                this.$emit("submit");
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            })
+            .finally(() => {
+              this.loading = false;
+            });
         } else {
           return false;
         }

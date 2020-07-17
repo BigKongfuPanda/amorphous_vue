@@ -2,8 +2,8 @@
   <el-container>
     <el-aside width="auto" style="background-color: #304156;">
       <div class="aside_title" @click="collapseHandler">
-        <img src="../assets/outdent.png" alt="" v-show="!isCollapse">
-        <img src="../assets/indent.png" alt="" v-show="isCollapse">
+        <img src="../assets/outdent.png" alt v-show="!isCollapse" />
+        <img src="../assets/indent.png" alt v-show="isCollapse" />
       </div>
       <el-menu
         :default-active="$route.path"
@@ -105,7 +105,7 @@
             <el-menu-item index="/measure/9">9号机组</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="6" v-if="roleId === 1 || roleId === 2 || roleId === 3 || roleId === 6 || roleId === 5">
+        <el-submenu index="6" v-if="[1, 2, 3, 5,6].includes(roleId)">
           <template slot="title">
             <i class="el-icon-tickets"></i>
             <span>库房记录</span>
@@ -126,7 +126,7 @@
             <el-menu-item index="/storageTotal">库存总表</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="7" v-if="roleId === 1 || roleId === 2 || roleId === 3 || roleId === 5 || roleId === 6">
+        <el-submenu index="7" v-if="[1, 2, 3,5, 6].includes(roleId)">
           <template slot="title">
             <i class="el-icon-tickets"></i>
             <span>退货处理</span>
@@ -180,13 +180,16 @@
             <el-menu-item index="/clients">客户列表</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="10" v-if="roleId === 1 || roleId === 2 || roleId === 3">
+        <el-submenu index="10" v-if="[1, 2, 3, 15].includes(roleId)">
           <template slot="title">
             <i class="el-icon-tickets"></i>
             <span>账号管理</span>
           </template>
-          <router-link to="/user">
+          <router-link to="/user" v-if="[1, 2, 3].includes(roleId)">
             <el-menu-item index="/user">用户列表</el-menu-item>
+          </router-link>
+          <router-link to="/roller" v-if="[1, 2, 3, 15].includes(roleId)">
+            <el-menu-item index="/roller">重卷人员列表</el-menu-item>
           </router-link>
         </el-submenu>
       </el-menu>
@@ -264,7 +267,7 @@ export default {
       mgleft: "180px",
       isDisabled: false,
       username: "",
-      adminname: '',
+      adminname: "",
       roleId: null,
       loading: false,
       dialogVisible: false,
@@ -304,7 +307,7 @@ export default {
   methods: {
     collapseHandler() {
       this.isCollapse = !this.isCollapse;
-      this.mgleft = this.isCollapse ? '72px' : '180px';
+      this.mgleft = this.isCollapse ? "72px" : "180px";
     },
     signout() {
       this.isDisabled = true;

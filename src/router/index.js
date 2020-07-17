@@ -3,29 +3,95 @@ import Router from "vue-router";
 
 Vue.use(Router);
 
-import Layout from "@/pages/layout.vue";
-import Login from "@/pages/login.vue";
-import Plan from "@/pages/plan/plan.vue";
-import Melt from "@/pages/melt/melt.vue";
-import Cast from "@/pages/cast/cast.vue";
-import RibbonType from "@/pages/ribbonType/ribbonType.vue";
-import RibbonWidth from "@/pages/ribbonWidth/ribbonWidth.vue";
-import RibbonThicknessLevel from "@/pages/ribbonThicknessLevel/ribbonThicknessLevel.vue";
-import RibbonToughnessLevel from "@/pages/ribbonToughnessLevel/ribbonToughnessLevel.vue";
-import LaminationLevel from "@/pages/laminationLevel/laminationLevel.vue";
-import User from "@/pages/user/user.vue";
-import Roll from "@/pages/roll/roll.vue";
-import Measure from "@/pages/measure/measure.vue";
-import Storage from "@/pages/storage/storage.vue";
-import StorageTotal from "@/pages/storage/storageTotal.vue";
-import StatisticsOfRatio from "@/pages/statistics/statisticsOfRatio.vue";
-import StatisticsQuality from "@/pages/statistics/statisticsQuality.vue";
-import StatisticsOder from "@/pages/statistics/statisticsOder.vue";
-import ReturnTreatment from "@/pages/returnGoods/returnTreatment.vue";
-import ReturnRecord from "@/pages/returnGoods/returnRecord.vue";
-import Clients from "@/pages/clients/clients.vue";
-import AppearenceLevel from "@/pages/appearenceLevel/appearenceLevel.vue";
-import Roller from "@/pages/roller/index.vue";
+// import Layout from "@/pages/layout.vue";
+const Layout = () =>
+  import(/* webpackChunkName: "layout" */ "@/pages/layout.vue");
+// import Login from "@/pages/login.vue";
+const Login = () => import(/* webpackChunkName: "login" */ "@/pages/login.vue");
+
+// import Plan from "@/pages/plan/plan.vue";
+const Plan = () =>
+  import(/* webpackChunkName: "plan" */ "@/pages/plan/plan.vue");
+
+// import Melt from "@/pages/melt/melt.vue";
+const Melt = () =>
+  import(/* webpackChunkName: "melt" */ "@/pages/melt/melt.vue");
+
+// import Cast from "@/pages/cast/cast.vue";
+const Cast = () =>
+  import(/* webpackChunkName: "cast" */ "@/pages/cast/cast.vue");
+
+// import RibbonType from "@/pages/ribbonType/ribbonType.vue";
+const RibbonType = () =>
+  import(/* webpackChunkName: "ribbonType" */ "@/pages/ribbonType/ribbonType.vue");
+
+// import RibbonWidth from "@/pages/ribbonWidth/ribbonWidth.vue";
+const RibbonWidth = () =>
+  import(/* webpackChunkName: "ribbonWidth" */ "@/pages/ribbonWidth/ribbonWidth.vue");
+
+// import RibbonThicknessLevel from "@/pages/ribbonThicknessLevel/ribbonThicknessLevel.vue";
+const RibbonThicknessLevel = () =>
+  import(/* webpackChunkName: "ribbonThicknessLevel" */ "@/pages/ribbonThicknessLevel/ribbonThicknessLevel.vue");
+
+// import RibbonToughnessLevel from "@/pages/ribbonToughnessLevel/ribbonToughnessLevel.vue";
+const RibbonToughnessLevel = () =>
+  import(/* webpackChunkName: "RibbonToughnessLevel" */ "@/pages/ribbonToughnessLevel/ribbonToughnessLevel.vue");
+
+// import LaminationLevel from "@/pages/laminationLevel/laminationLevel.vue";
+const LaminationLevel = () =>
+  import(/* webpackChunkName: "LaminationLevel" */ "@/pages/laminationLevel/laminationLevel.vue");
+
+// import User from "@/pages/user/user.vue";
+const User = () =>
+  import(/* webpackChunkName: "user" */ "@/pages/user/user.vue");
+
+// import Roll from "@/pages/roll/roll.vue";
+const Roll = () =>
+  import(/* webpackChunkName: "roll" */ "@/pages/roll/roll.vue");
+
+// import Measure from "@/pages/measure/measure.vue";
+const Measure = () =>
+  import(/* webpackChunkName: "measure" */ "@/pages/measure/measure.vue");
+
+// import Storage from "@/pages/storage/storage.vue";
+const Storage = () =>
+  import(/* webpackChunkName: "storage" */ "@/pages/storage/storage.vue");
+
+// import StorageTotal from "@/pages/storage/storageTotal.vue";
+const StorageTotal = () =>
+  import(/* webpackChunkName: "storageTotal" */ "@/pages/storage/storageTotal.vue");
+
+// import StatisticsOfRatio from "@/pages/statistics/statisticsOfRatio.vue";
+const StatisticsOfRatio = () =>
+  import(/* webpackChunkName: "statisticsOfRatio" */ "@/pages/statistics/statisticsOfRatio.vue");
+
+// import StatisticsQuality from "@/pages/statistics/statisticsQuality.vue";
+const StatisticsQuality = () =>
+  import(/* webpackChunkName: "statisticsQuality" */ "@/pages/statistics/statisticsQuality.vue");
+
+// import StatisticsOder from "@/pages/statistics/statisticsOder.vue";
+const StatisticsOder = () =>
+  import(/* webpackChunkName: "statisticsOder" */ "@/pages/statistics/statisticsOder.vue");
+
+// import ReturnTreatment from "@/pages/returnGoods/returnTreatment.vue";
+const ReturnTreatment = () =>
+  import(/* webpackChunkName: "returnTreatment" */ "@/pages/returnGoods/returnTreatment.vue");
+
+// import ReturnRecord from "@/pages/returnGoods/returnRecord.vue";
+const ReturnRecord = () =>
+  import(/* webpackChunkName: "returnRecord" */ "@/pages/returnGoods/returnRecord.vue");
+
+// import Clients from "@/pages/clients/clients.vue";
+const Clients = () =>
+  import(/* webpackChunkName: "clients" */ "@/pages/clients/clients.vue");
+
+// import AppearenceLevel from "@/pages/appearenceLevel/appearenceLevel.vue";
+const AppearenceLevel = () =>
+  import(/* webpackChunkName: "appearenceLevel" */ "@/pages/appearenceLevel/appearenceLevel.vue");
+
+// import Roller from "@/pages/roller/index.vue";
+const Roller = () =>
+  import(/* webpackChunkName: "roller" */ "@/pages/roller/index.vue");
 
 export default new Router({
   routes: [

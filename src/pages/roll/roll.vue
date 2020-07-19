@@ -275,7 +275,7 @@ export default {
         roller: this.searchForm.roller
       };
       Object.assign(params, _params);
-      this.$http("get", urlmap.queryMeasure, params)
+      this.$http("get", urlmap.queryRollData, params)
         .then(data => {
           this.pageConfig.total = data.count;
           this.pageConfig.pageSize = data.limit;

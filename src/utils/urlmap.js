@@ -23,6 +23,8 @@ export default {
   addCast: "/cast",
   updateCast: "/cast",
   delCast: "/cast",
+  // 重卷
+  queryRollData: "/measure/queryRollData",
   // 检测
   queryMeasure: "/measure",
   addMeasure: "/measure",

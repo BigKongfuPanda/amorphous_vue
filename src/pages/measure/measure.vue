@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right" class="crumb">
       <el-breadcrumb-item>检测记录</el-breadcrumb-item>
-      <el-breadcrumb-item>{{castId}}号机组</el-breadcrumb-item>
+      <el-breadcrumb-item>{{ castId }}号机组</el-breadcrumb-item>
     </el-breadcrumb>
     <Collapse>
       <el-form class="search_bar" :model="searchForm" :inline="true">
@@ -17,14 +17,24 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="喷带手：">
-          <el-input v-model="searchForm.caster" placeholder="请输入喷带手姓名"></el-input>
+          <el-input
+            v-model="searchForm.caster"
+            placeholder="请输入喷带手姓名"
+          ></el-input>
         </el-form-item>
         <el-form-item label="炉号：">
-          <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input>
+          <el-input
+            v-model="searchForm.furnace"
+            placeholder="请输入炉号"
+          ></el-input>
         </el-form-item>
-
         <el-form-item label="材质：">
-          <el-select v-model="searchForm.ribbonTypeNames" placeholder="请选择" multiple collapse-tags>
+          <el-select
+            v-model="searchForm.ribbonTypeNames"
+            placeholder="请选择"
+            multiple
+            collapse-tags
+          >
             <el-option
               v-for="item in ribbonTypeList"
               :key="item.ribbonTypeId"
@@ -34,7 +44,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="规格：">
-          <el-select v-model="searchForm.ribbonWidths" placeholder="请选择" multiple collapse-tags>
+          <el-select
+            v-model="searchForm.ribbonWidths"
+            placeholder="请选择"
+            multiple
+            collapse-tags
+          >
             <el-option
               v-for="item in ribbonWidthList"
               :key="item.ribbonWidthId"
@@ -59,7 +74,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="叠片级别：">
-          <el-select v-model="searchForm.laminationLevels" placeholder="请选择" multiple collapse-tags>
+          <el-select
+            v-model="searchForm.laminationLevels"
+            placeholder="请选择"
+            multiple
+            collapse-tags
+          >
             <el-option
               v-for="item in laminationLevelList"
               :key="item.laminationLevelId"
@@ -84,7 +104,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="外观级别：">
-          <el-select v-model="searchForm.appearenceLevels" placeholder="请选择" multiple collapse-tags>
+          <el-select
+            v-model="searchForm.appearenceLevels"
+            placeholder="请选择"
+            multiple
+            collapse-tags
+          >
             <el-option
               v-for="(appearenceLevel, index) in uniqueAppearenceLevelList"
               :key="index"
@@ -94,7 +119,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="厚度偏差：">
-          <el-select v-model="searchForm.thicknessDivation" placeholder="请选择">
+          <el-select
+            v-model="searchForm.thicknessDivation"
+            placeholder="请选择"
+          >
             <el-option label="<=1" :value="1"></el-option>
             <el-option label="<=2" :value="2"></el-option>
             <el-option label="<=3" :value="3"></el-option>
@@ -103,8 +131,12 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="clickSearch">搜索</el-button>
-          <el-button type="primary" icon="el-icon-refresh" @click="reset">重置</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="clickSearch"
+            >搜索</el-button
+          >
+          <el-button type="primary" icon="el-icon-refresh" @click="reset"
+            >重置</el-button
+          >
         </el-form-item>
       </el-form>
     </Collapse>
@@ -115,30 +147,58 @@
           icon="el-icon-success"
           @click="measureConfirm"
           v-if="isBatchInStored"
-        >确认入库</el-button>
+          >确认入库</el-button
+        >
         <el-button
           type="primary"
           icon="el-icon-download"
           @click="exportExcel"
           v-if="isExportable"
           class="pull_right"
-        >导出</el-button>
+          >导出</el-button
+        >
       </el-col>
       <el-table
         :data="tableData"
         ref="table"
         stripe
         border
-        style="width:100%"
+        style="width: 100%"
         :height="tableHeight"
         v-loading="loading"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="20" :selectable="setSelectable"></el-table-column>
-        <el-table-column prop="furnace" label="炉号" align="center" width="130px" fixed></el-table-column>
-        <el-table-column prop="coilNumber" label="盘号" align="center" width="35px" fixed></el-table-column>
-        <el-table-column prop="ribbonTypeName" label="材质" align="center" min-width="50px"></el-table-column>
-        <el-table-column prop="ribbonWidth" label="规格" align="center" width="40px"></el-table-column>
+        <el-table-column
+          type="selection"
+          width="20"
+          :selectable="setSelectable"
+        ></el-table-column>
+        <el-table-column
+          prop="furnace"
+          label="炉号"
+          align="center"
+          width="130px"
+          fixed
+        ></el-table-column>
+        <el-table-column
+          prop="coilNumber"
+          label="盘号"
+          align="center"
+          width="35px"
+          fixed
+        ></el-table-column>
+        <el-table-column
+          prop="ribbonTypeName"
+          label="材质"
+          align="center"
+          min-width="50px"
+        ></el-table-column>
+        <el-table-column
+          prop="ribbonWidth"
+          label="规格"
+          align="center"
+          width="40px"
+        ></el-table-column>
         <el-table-column
           prop="castDate"
           label="生产日期"
@@ -146,153 +206,269 @@
           :formatter="dateFormat"
           width="80px"
         ></el-table-column>
-        <el-table-column prop="caster" label="喷带手" align="center" width="50px"></el-table-column>
-        <el-table-column prop="diameter" label="外径(mm)" align="center" width="70px"></el-table-column>
-        <el-table-column prop="coilWeight" label="重量(kg)" align="center" width="70px"></el-table-column>
-        <el-table-column prop="laminationFactor" label="叠片系数" align="center" width="70px"></el-table-column>
-        <el-table-column prop="laminationLevel" label="叠片等级" align="center" width="70px"></el-table-column>
-        <el-table-column prop="realRibbonWidth" label="实际带宽" align="center" width="70px">
+        <el-table-column
+          prop="caster"
+          label="喷带手"
+          align="center"
+          width="50px"
+        ></el-table-column>
+        <el-table-column
+          prop="diameter"
+          label="外径(mm)"
+          align="center"
+          width="70px"
+        ></el-table-column>
+        <el-table-column
+          prop="coilWeight"
+          label="重量(kg)"
+          align="center"
+          width="70px"
+        ></el-table-column>
+        <el-table-column
+          prop="laminationFactor"
+          label="叠片系数"
+          align="center"
+          width="70px"
+        ></el-table-column>
+        <el-table-column
+          prop="laminationLevel"
+          label="叠片等级"
+          align="center"
+          width="70px"
+        ></el-table-column>
+        <el-table-column
+          prop="realRibbonWidth"
+          label="实际带宽"
+          align="center"
+          width="70px"
+        >
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
-            >{{ scope.row.realRibbonWidth }}</div>
+            >
+              {{ scope.row.realRibbonWidth }}
+            </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.realRibbonWidth"></el-input>
+              <el-input
+                size="mini"
+                v-model="scope.row.realRibbonWidth"
+              ></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness1" label="带厚1(μm)" align="center" width="70px">
+        <el-table-column
+          prop="ribbonThickness1"
+          label="带厚1(μm)"
+          align="center"
+          width="70px"
+        >
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
-            >{{ scope.row.ribbonThickness1 }}</div>
+            >
+              {{ scope.row.ribbonThickness1 }}
+            </div>
             <div v-else>
               <el-input
                 size="mini"
                 v-model="scope.row.ribbonThickness1"
-                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+                @keyup.native="
+                  ($event) => thicknessChangeHandler($event, scope.row)
+                "
               ></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness2" label="带厚2(μm)" align="center" width="70px">
+        <el-table-column
+          prop="ribbonThickness2"
+          label="带厚2(μm)"
+          align="center"
+          width="70px"
+        >
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
-            >{{ scope.row.ribbonThickness2 }}</div>
+            >
+              {{ scope.row.ribbonThickness2 }}
+            </div>
             <div v-else>
               <el-input
                 size="mini"
                 v-model="scope.row.ribbonThickness2"
-                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+                @keyup.native="
+                  ($event) => thicknessChangeHandler($event, scope.row)
+                "
               ></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness3" label="带厚3(μm)" align="center" width="70px">
+        <el-table-column
+          prop="ribbonThickness3"
+          label="带厚3(μm)"
+          align="center"
+          width="70px"
+        >
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
-            >{{ scope.row.ribbonThickness3 }}</div>
+            >
+              {{ scope.row.ribbonThickness3 }}
+            </div>
             <div v-else>
               <el-input
                 size="mini"
                 v-model="scope.row.ribbonThickness3"
-                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+                @keyup.native="
+                  ($event) => thicknessChangeHandler($event, scope.row)
+                "
               ></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness4" label="带厚4(μm)" align="center" width="70px">
+        <el-table-column
+          prop="ribbonThickness4"
+          label="带厚4(μm)"
+          align="center"
+          width="70px"
+        >
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
-            >{{ scope.row.ribbonThickness4 }}</div>
+            >
+              {{ scope.row.ribbonThickness4 }}
+            </div>
             <div v-else>
               <el-input
                 size="mini"
                 v-model="scope.row.ribbonThickness4"
-                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+                @keyup.native="
+                  ($event) => thicknessChangeHandler($event, scope.row)
+                "
               ></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness5" label="带厚5(μm)" align="center" width="70px">
+        <el-table-column
+          prop="ribbonThickness5"
+          label="带厚5(μm)"
+          align="center"
+          width="70px"
+        >
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
-            >{{ scope.row.ribbonThickness5 }}</div>
+            >
+              {{ scope.row.ribbonThickness5 }}
+            </div>
             <div v-else>
               <el-input
                 size="mini"
                 v-model="scope.row.ribbonThickness5"
-                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+                @keyup.native="
+                  ($event) => thicknessChangeHandler($event, scope.row)
+                "
               ></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness6" label="带厚6(μm)" align="center" width="70px">
+        <el-table-column
+          prop="ribbonThickness6"
+          label="带厚6(μm)"
+          align="center"
+          width="70px"
+        >
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
-            >{{ scope.row.ribbonThickness6 }}</div>
+            >
+              {{ scope.row.ribbonThickness6 }}
+            </div>
             <div v-else>
               <el-input
                 size="mini"
                 v-model="scope.row.ribbonThickness6"
-                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+                @keyup.native="
+                  ($event) => thicknessChangeHandler($event, scope.row)
+                "
               ></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness7" label="带厚7(μm)" align="center" width="70px">
+        <el-table-column
+          prop="ribbonThickness7"
+          label="带厚7(μm)"
+          align="center"
+          width="70px"
+        >
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
-            >{{ scope.row.ribbonThickness7 }}</div>
+            >
+              {{ scope.row.ribbonThickness7 }}
+            </div>
             <div v-else>
               <el-input
                 size="mini"
                 v-model="scope.row.ribbonThickness7"
-                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+                @keyup.native="
+                  ($event) => thicknessChangeHandler($event, scope.row)
+                "
               ></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness8" label="带厚8(μm)" align="center" width="70px">
+        <el-table-column
+          prop="ribbonThickness8"
+          label="带厚8(μm)"
+          align="center"
+          width="70px"
+        >
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
-            >{{ scope.row.ribbonThickness8 }}</div>
+            >
+              {{ scope.row.ribbonThickness8 }}
+            </div>
             <div v-else>
               <el-input
                 size="mini"
                 v-model="scope.row.ribbonThickness8"
-                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+                @keyup.native="
+                  ($event) => thicknessChangeHandler($event, scope.row)
+                "
               ></el-input>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonThickness9" label="带厚9(μm)" align="center" width="70px">
+        <el-table-column
+          prop="ribbonThickness9"
+          label="带厚9(μm)"
+          align="center"
+          width="70px"
+        >
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
-            >{{ scope.row.ribbonThickness9 }}</div>
+            >
+              {{ scope.row.ribbonThickness9 }}
+            </div>
             <div v-else>
               <el-input
                 size="mini"
                 v-model="scope.row.ribbonThickness9"
-                @keyup.native="$event => thicknessChangeHandler($event, scope.row)"
+                @keyup.native="
+                  ($event) => thicknessChangeHandler($event, scope.row)
+                "
               ></el-input>
             </div>
           </template>
@@ -303,16 +479,37 @@
           align="center"
           width="90px"
         ></el-table-column>
-        <el-table-column prop="ribbonThickness" label="平均厚度(μm)" align="center" width="90px"></el-table-column>
-        <el-table-column prop="ribbonThicknessLevel" label="厚度级别" align="center" width="70px"></el-table-column>
-        <el-table-column prop="ribbonToughness" label="韧性" align="center" width="70px">
+        <el-table-column
+          prop="ribbonThickness"
+          label="平均厚度(μm)"
+          align="center"
+          width="90px"
+        ></el-table-column>
+        <el-table-column
+          prop="ribbonThicknessLevel"
+          label="厚度级别"
+          align="center"
+          width="70px"
+        ></el-table-column>
+        <el-table-column
+          prop="ribbonToughness"
+          label="韧性"
+          align="center"
+          width="70px"
+        >
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
-            >{{ scope.row.ribbonToughness }}</div>
+            >
+              {{ scope.row.ribbonToughness }}
+            </div>
             <div v-else>
-              <el-select size="mini" v-model="scope.row.ribbonToughness" placeholder>
+              <el-select
+                size="mini"
+                v-model="scope.row.ribbonToughness"
+                placeholder
+              >
                 <el-option
                   v-for="item in ribbonToughnessLevelList"
                   :key="item.ribbonToughnessLevelId"
@@ -323,7 +520,12 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ribbonToughnessLevel" label="韧性等级" align="center" width="60px">
+        <el-table-column
+          prop="ribbonToughnessLevel"
+          label="韧性等级"
+          align="center"
+          width="60px"
+        >
           <!-- <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.ribbonToughnessLevel }}
@@ -339,12 +541,19 @@
             </div>
           </template>-->
         </el-table-column>
-        <el-table-column prop="appearence" label="外观" align="center" width="70px">
+        <el-table-column
+          prop="appearence"
+          label="外观"
+          align="center"
+          width="70px"
+        >
           <template slot-scope="scope">
             <!-- <div v-if="scope.row.isEditing === false"> -->
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
-            >{{ scope.row.appearence }}</div>
+            >
+              {{ scope.row.appearence }}
+            </div>
             <div v-else>
               <el-select size="mini" v-model="scope.row.appearence" placeholder>
                 <!-- <el-option label="无明显缺陷" value="无明显缺陷"></el-option>
@@ -369,7 +578,12 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="appearenceLevel" label="外观等级" align="center" width="60px">
+        <el-table-column
+          prop="appearenceLevel"
+          label="外观等级"
+          align="center"
+          width="60px"
+        >
           <!-- <template slot-scope="scope">
             <div v-if="scope.row.isEditing === false">
               {{ scope.row.appearenceLevel }}
@@ -384,11 +598,19 @@
             </div>
           </template>-->
         </el-table-column>
-        <el-table-column prop="ribbonTotalLevel" label="综合级别" align="center" width="70px">
+        <el-table-column
+          prop="ribbonTotalLevel"
+          label="综合级别"
+          align="center"
+          width="70px"
+        >
           <template slot-scope="scope">
             <span
-              :class="scope.row.ribbonTotalLevel === '不合格' ? 'text_danger' : '' "
-            >{{scope.row.ribbonTotalLevel}}</span>
+              :class="
+                scope.row.ribbonTotalLevel === '不合格' ? 'text_danger' : ''
+              "
+              >{{ scope.row.ribbonTotalLevel }}</span
+            >
           </template>
         </el-table-column>
         <el-table-column label="入库规则" align="center" width="60px">
@@ -405,10 +627,12 @@
                 <tbody>
                   <tr>
                     <td>计划内入库要求</td>
-                    <td>{{scope.row.storageRule.orderThickness}}</td>
-                    <td>{{scope.row.storageRule.orderLaminationFactor}}</td>
-                    <td>{{scope.row.storageRule.orderRibbonToughnessLevels}}</td>
-                    <td>{{scope.row.storageRule.orderAppearenceLevels}}</td>
+                    <td>{{ scope.row.storageRule.orderThickness }}</td>
+                    <td>{{ scope.row.storageRule.orderLaminationFactor }}</td>
+                    <td>
+                      {{ scope.row.storageRule.orderRibbonToughnessLevels }}
+                    </td>
+                    <td>{{ scope.row.storageRule.orderAppearenceLevels }}</td>
                   </tr>
                   <!-- <tr v-if="userinfo.roleId === 1 || userinfo.roleId === 2 || userinfo.roleId === 3 || userinfo.roleId === 5 || userinfo.roleId === 6">
                     <td>计划外入库要求</td>
@@ -417,25 +641,38 @@
                     <td>{{scope.row.storageRule.qualifiedRibbonToughnessLevels}}</td>
                     <td>{{scope.row.storageRule.qualifiedAppearenceLevels}}</td>
                   </tr>-->
-                  <tr v-for="(item, index) in scope.row.storageRule.qualifiedDemands" :key="index">
+                  <tr
+                    v-for="(item, index) in scope.row.storageRule
+                      .qualifiedDemands"
+                    :key="index"
+                  >
                     <td>计划外入库要求</td>
-                    <td>{{item.qualifiedThickness}}</td>
-                    <td>{{item.qualifiedLaminationFactor}}</td>
-                    <td>{{item.qualifiedRibbonToughnessLevels.join()}}</td>
-                    <td>{{item.qualifiedAppearenceLevels.join()}}</td>
+                    <td>{{ item.qualifiedThickness }}</td>
+                    <td>{{ item.qualifiedLaminationFactor }}</td>
+                    <td>{{ item.qualifiedRibbonToughnessLevels.join() }}</td>
+                    <td>{{ item.qualifiedAppearenceLevels.join() }}</td>
                   </tr>
                 </tbody>
               </table>
-              <el-button slot="reference" size="mini" type="text">详情</el-button>
+              <el-button slot="reference" size="mini" type="text"
+                >详情</el-button
+              >
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column prop="isStored" label="是否入库" align="center" width="60px">
+        <el-table-column
+          prop="isStored"
+          label="是否入库"
+          align="center"
+          width="60px"
+        >
           <template slot-scope="scope">
             <div v-if="scope.row.isMeasureConfirmed === 1">
               <span v-if="scope.row.isStored === 1">计划内</span>
               <span v-if="scope.row.isStored === 2">计划外</span>
-              <span v-if="scope.row.isStored === 3" class="text_danger">否</span>
+              <span v-if="scope.row.isStored === 3" class="text_danger"
+                >否</span
+              >
             </div>
             <!-- <div v-else>
               <el-select v-model="scope.row.isStored" placeholder="" size="mini">
@@ -458,9 +695,14 @@
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
               class="text_danger"
-            >{{ scope.row.unStoreReason }}</div>
+            >
+              {{ scope.row.unStoreReason }}
+            </div>
             <div v-else>
-              <el-input size="mini" v-model="scope.row.unStoreReason"></el-input>
+              <el-input
+                size="mini"
+                v-model="scope.row.unStoreReason"
+              ></el-input>
             </div>
           </template>
         </el-table-column>
@@ -475,9 +717,17 @@
             <!-- <div v-if="scope.row.isEditing === false"> -->
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
-            >{{ scope.row.clients ? scope.row.clients.toString() : '' }}</div>
+            >
+              {{ scope.row.clients ? scope.row.clients.toString() : "" }}
+            </div>
             <div v-else>
-              <el-select size="mini" v-model="scope.row.clients" placeholder multiple collapse-tags>
+              <el-select
+                size="mini"
+                v-model="scope.row.clients"
+                placeholder
+                multiple
+                collapse-tags
+              >
                 <el-option
                   v-for="item in clientsList"
                   :label="item.client"
@@ -512,7 +762,8 @@
               @click="save(scope.row)"
               v-if="scope.row.isMeasureConfirmed !== 1"
               :disabled="!isEditable"
-            >保存</el-button>
+              >保存</el-button
+            >
             <!-- <el-button size="mini" type="danger" @click="del(scope.row)" v-if="isDeleteable">删除</el-button> -->
           </template>
         </el-table-column>
@@ -540,7 +791,7 @@ import Collapse from "@/components/collapse.vue";
 export default {
   name: "melt",
   components: {
-    Collapse
+    Collapse,
   },
   data() {
     return {
@@ -556,21 +807,21 @@ export default {
         laminationLevels: [],
         ribbonToughnessLevels: [],
         appearenceLevels: [],
-        thicknessDivation: ""
+        thicknessDivation: "",
       },
       loading: false,
       tableData: [],
       pageConfig: {
         total: 1,
         current: 1,
-        pageSize: 10
+        pageSize: 10,
       },
       isExportable: false,
       isEditable: false,
       isDeleteable: false,
       tableHeight: 550,
       multipleSelection: [],
-      isBatchInStored: false
+      isBatchInStored: false,
       // uniqueAppearenceLevelList: []
     };
   },
@@ -582,7 +833,8 @@ export default {
       "ribbonThicknessLevelList",
       "laminationLevelList",
       "clientsList",
-      "appearenceList"
+      "appearenceList",
+      "linerWeightList",
     ]),
     uniqueAppearenceLevelList() {
       return this.appearenceList.reduce((acc, cur) => {
@@ -591,7 +843,7 @@ export default {
         }
         return acc;
       }, []);
-    }
+    },
   },
   // 动态路由匹配
   beforeRouteUpdate(to, from, next) {
@@ -603,21 +855,22 @@ export default {
     this.isBatchInStored = this.setBatchInStored();
     next();
   },
-  created() {
+  async created() {
     this.castId = this.$route.params.castId;
     this.userinfo = JSON.parse(localStorage.getItem("userinfo"));
     this.isExportable = this.setExportable();
     this.isEditable = this.setEditable();
     this.isDeleteable = this.setDeleteable();
     this.isBatchInStored = this.setBatchInStored();
+    await this.getLinerWeightList();
+    await this.getRibbonToughnessLevelList();
+    await this.getRibbonTypeList();
+    await this.getRibbonWidthList();
+    await this.getRibbonThicknessLevelList();
+    await this.getLaminationLevelList();
+    await this.getClientsList();
+    await this.getAppearenceLevelList();
     this.getTableData();
-    this.getRibbonToughnessLevelList();
-    this.getRibbonTypeList();
-    this.getRibbonWidthList();
-    this.getRibbonThicknessLevelList();
-    this.getLaminationLevelList();
-    this.getClientsList();
-    this.getAppearenceLevelList();
   },
   mounted() {
     const self = this;
@@ -641,15 +894,15 @@ export default {
         row.ribbonThickness6,
         row.ribbonThickness7,
         row.ribbonThickness8,
-        row.ribbonThickness9
+        row.ribbonThickness9,
       ];
       ribbonThicknessList = ribbonThicknessList
-        .map(item => {
+        .map((item) => {
           if (item !== "") {
             return Number(item);
           }
         })
-        .filter(item => item !== undefined);
+        .filter((item) => item !== undefined);
       row.ribbonThicknessDeviation = this.calcMaxDeviation(ribbonThicknessList);
       row.ribbonThickness =
         ribbonThicknessList.length > 0
@@ -669,7 +922,8 @@ export default {
       "getRibbonThicknessLevelList",
       "getLaminationLevelList",
       "getClientsList",
-      "getAppearenceLevelList"
+      "getAppearenceLevelList",
+      "getLinerWeightList",
     ]),
     dateFormat(row, column) {
       return dateFormat(row.castDate);
@@ -703,7 +957,7 @@ export default {
       }
     },
     setBatchInStored() {
-      if (this.userinfo.roleId == 5) {
+      if ([1, 5].includes(this.userinfo.roleId)) {
         return true;
       } else {
         return false;
@@ -720,29 +974,39 @@ export default {
         40: 0.12,
         50: 0.12
        */
-      let linerWeight = 0;
       ribbonWidth = Number(ribbonWidth);
+      const { linerWeight } =
+        this.linerWeightList.find((item) => item.ribbonWidth === ribbonWidth) ||
+        {};
 
-      if (ribbonWidth < 25) {
-        linerWeight = 0.05;
-      } else if (ribbonWidth >= 25 && ribbonWidth < 30) {
-        linerWeight = 0.06;
-      } else if (ribbonWidth >= 30 && ribbonWidth < 40) {
-        linerWeight = 0.08;
-      } else if (ribbonWidth >= 40 && ribbonWidth < 50) {
-        linerWeight = 0.12;
-      } else if (ribbonWidth >= 50 && ribbonWidth < 58) {
-        linerWeight = 0.12;
-      } else if (ribbonWidth >= 58) {
-        // 58mm 以上的使用两个 30 的内衬拼接起来
-        linerWeight = 0.08 * 2;
+      if (!linerWeight) {
+        Message({
+          message: `带材宽度${ribbonWidth}没有配置所用内衬重量，请联系管理员进行配置！`,
+          type: "error",
+        });
+        return 0;
       }
+
+      // if (ribbonWidth < 25) {
+      //   linerWeight = 0.05;
+      // } else if (ribbonWidth >= 25 && ribbonWidth < 30) {
+      //   linerWeight = 0.06;
+      // } else if (ribbonWidth >= 30 && ribbonWidth < 40) {
+      //   linerWeight = 0.08;
+      // } else if (ribbonWidth >= 40 && ribbonWidth < 50) {
+      //   linerWeight = 0.12;
+      // } else if (ribbonWidth >= 50 && ribbonWidth < 58) {
+      //   linerWeight = 0.12;
+      // } else if (ribbonWidth >= 58) {
+      //   // 58mm 以上的使用两个 30 的内衬拼接起来
+      //   linerWeight = 0.08 * 2;
+      // }
       return linerWeight;
     },
     clickSearch() {
       // 重置当前页码为1
       const params = {
-        current: 1
+        current: 1,
       };
       this.pageConfig.current = 1;
       this.getTableData(params);
@@ -757,10 +1021,10 @@ export default {
         ribbonThicknessLevels: [],
         laminationLevels: [],
         ribbonToughnessLevels: [],
-        appearenceLevels: []
+        appearenceLevels: [],
       };
       const params = {
-        current: 1
+        current: 1,
       };
       this.pageConfig.current = 1;
       this.getTableData(params);
@@ -782,15 +1046,15 @@ export default {
           this.searchForm.ribbonToughnessLevels
         ),
         appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels),
-        thicknessDivation: this.searchForm.thicknessDivation
+        thicknessDivation: this.searchForm.thicknessDivation,
       };
       Object.assign(params, _params);
       this.$http("get", urlmap.queryMeasure, params)
-        .then(data => {
+        .then((data) => {
           this.pageConfig.total = data.count;
           this.pageConfig.pageSize = data.limit;
           data.list &&
-            data.list.forEach(item => {
+            data.list.forEach((item) => {
               this.userinfo.roleId == 5
                 ? (item.isEditing = true)
                 : (item.isEditing = false);
@@ -807,7 +1071,7 @@ export default {
                   Number(this.userinfo.roleId)
                 )
                   ? JSON.parse(item.qualifiedDemands)
-                  : []
+                  : [],
               };
               item.clients = item.clients ? item.clients.split(",") : [];
               item.coilNetWeight =
@@ -816,7 +1080,7 @@ export default {
             });
           this.tableData = data.list;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         })
         .finally(() => {
@@ -831,33 +1095,33 @@ export default {
         // 已经入库
         return this.$message({
           message: "该带材已经入库，您无权限操作，请联系库房主管人员！",
-          type: "error"
+          type: "error",
         });
       }
       // row.isEditing = true;
     },
-    del(row) {
-      const { measureId, furnace, coilNumber } = row;
-      this.$confirm(
-        `删除后数据无法恢复，确定删除 ${furnace} 的第 ${coilNumber} 盘吗？`,
-        "提示",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }
-      )
-        .then(() => {
-          this.$http("delete", urlmap.delMeasure, { measureId })
-            .then(data => {
-              this.getTableData();
-            })
-            .catch(error => {
-              console.log(error);
-            });
-        })
-        .catch(() => {});
-    },
+    // del(row) {
+    //   const { measureId, furnace, coilNumber } = row;
+    //   this.$confirm(
+    //     `删除后数据无法恢复，确定删除 ${furnace} 的第 ${coilNumber} 盘吗？`,
+    //     "提示",
+    //     {
+    //       confirmButtonText: "确定",
+    //       cancelButtonText: "取消",
+    //       type: "warning",
+    //     }
+    //   )
+    //     .then(() => {
+    //       this.$http("delete", urlmap.delRoll, { measureId })
+    //         .then((data) => {
+    //           this.getTableData();
+    //         })
+    //         .catch((error) => {
+    //           console.log(error);
+    //         });
+    //     })
+    //     .catch(() => {});
+    // },
     save(row) {
       // row.isEditing = false;
       // this.pageConfig.current = 1;
@@ -934,7 +1198,7 @@ export default {
         row.ribbonThickness6,
         row.ribbonThickness7,
         row.ribbonThickness8,
-        row.ribbonThickness9
+        row.ribbonThickness9,
       ]);
       row.ribbonThickness = (
         (row.ribbonThickness1 +
@@ -1112,21 +1376,21 @@ export default {
       clone.clients = clone.clients.join();
 
       // 去掉值为null或者undefined的参数
-      Object.keys(clone).forEach(key => {
+      Object.keys(clone).forEach((key) => {
         if (clone[key] == null) {
           delete clone[key];
         }
       });
       // 发送请求，更新当前的数据
       this.$http("PUT", urlmap.updateMeasure, clone)
-        .then(data => {})
-        .catch(error => {
+        .then((data) => {})
+        .catch((error) => {
           console.log(error);
         });
     },
     handleCurrentChange(val) {
       const params = {
-        current: val
+        current: val,
       };
       this.getTableData(params);
     },
@@ -1407,7 +1671,7 @@ export default {
         ribbonToughnessLevelJson: JSON.stringify(
           this.searchForm.ribbonToughnessLevels
         ),
-        appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels)
+        appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels),
       };
       const url = `${urlmap.exportMeasure}?${qs.stringify(params)}`;
       window.open(url);
@@ -1428,22 +1692,22 @@ export default {
       if (selectionList.length === 0) {
         return this.$alert("请选择要入库的带材", "提示", { type: "warning" });
       }
-      selectionList.forEach(row => {
+      selectionList.forEach((row) => {
         row.isMeasureConfirmed = 1; // 1-检测确认入库，0-还没有确认
         row.clients = row.clients.join();
       });
       // 发送请求，更新当前的数据
-      this.$http("PUT", urlmap.updateMeasure, {
-        dataJson: JSON.stringify(selectionList)
+      this.$http("POST", urlmap.measureConfirm, {
+        dataJson: JSON.stringify(selectionList),
       })
-        .then(data => {
+        .then((data) => {
           this.getTableData();
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

@@ -24,12 +24,16 @@ export default {
   updateCast: "/cast",
   delCast: "/cast",
   // 重卷
+  addRoll: "/measure/addRoll",
   queryRollData: "/measure/queryRollData",
+  rollConfirm: "/measure/rollConfirm",
+  updateRoll: "/measure/updateRoll",
+  delRoll: "/measure/delRoll",
   // 检测
-  queryMeasure: "/measure",
-  addMeasure: "/measure",
-  updateMeasure: "/measure",
-  delMeasure: "/measure",
+  queryMeasure: "/measure/queryMeasureData",
+  measureConfirm: "/measure/measureConfirm",
+  updateMeasure: "/measure/updateMeasure",
+
   exportMeasure: "/measure/exportmeasure",
   exportRoll: "/measure/exportroll",
   // 库房
@@ -78,5 +82,10 @@ export default {
   queryRoller: "/roller",
   addRoller: "/roller",
   updateRoller: "/roller",
-  delRoller: "/roller"
+  delRoller: "/roller",
+
+  queryLinerWeight: "/linerWeight",
+  addLinerWeight: "/linerWeight",
+  updateLinerWeight: "/linerWeight",
+  delLinerWeight: "/linerWeight"
 };

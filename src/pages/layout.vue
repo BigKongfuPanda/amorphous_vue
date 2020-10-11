@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside width="auto" style="background-color: #304156;">
+    <el-aside width="auto" style="background-color: #304156">
       <div class="aside_title" @click="collapseHandler">
         <img src="../assets/outdent.png" alt v-show="!isCollapse" />
         <img src="../assets/indent.png" alt v-show="isCollapse" />
@@ -105,7 +105,7 @@
             <el-menu-item index="/measure/9">9号机组</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="6" v-if="[1, 2, 3, 5,6].includes(roleId)">
+        <el-submenu index="6" v-if="[1, 2, 3, 5, 6].includes(roleId)">
           <template slot="title">
             <i class="el-icon-tickets"></i>
             <span>库房记录</span>
@@ -126,7 +126,7 @@
             <el-menu-item index="/storageTotal">库存总表</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="7" v-if="[1, 2, 3,5, 6].includes(roleId)">
+        <el-submenu index="7" v-if="[1, 2, 3, 5, 6].includes(roleId)">
           <template slot="title">
             <i class="el-icon-tickets"></i>
             <span>退货处理</span>
@@ -138,7 +138,10 @@
             <el-menu-item index="/returnRecord">退货记录</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="8" v-if="roleId === 1 || roleId === 2 || roleId === 3">
+        <el-submenu
+          index="8"
+          v-if="roleId === 1 || roleId === 2 || roleId === 3"
+        >
           <template slot="title">
             <i class="el-icon-tickets"></i>
             <span>数据统计</span>
@@ -153,7 +156,10 @@
             <el-menu-item index="/statisticsOder">订单统计表</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu index="9" v-if="roleId === 1 || roleId === 2 || roleId === 3">
+        <el-submenu
+          index="9"
+          v-if="roleId === 1 || roleId === 2 || roleId === 3"
+        >
           <template slot="title">
             <i class="el-icon-tickets"></i>
             <span>带材管理</span>
@@ -165,19 +171,26 @@
             <el-menu-item index="/ribbonWidth">规格列表</el-menu-item>
           </router-link>
           <router-link to="/ribbonThicknessLevel">
-            <el-menu-item index="/ribbonThicknessLevel">厚度等级列表</el-menu-item>
+            <el-menu-item index="/ribbonThicknessLevel"
+              >厚度等级列表</el-menu-item
+            >
           </router-link>
           <router-link to="/laminationLevel">
             <el-menu-item index="/laminationLevel">叠片等级列表</el-menu-item>
           </router-link>
           <router-link to="/ribbonToughnessLevel">
-            <el-menu-item index="/ribbonToughnessLevel">韧性等级列表</el-menu-item>
+            <el-menu-item index="/ribbonToughnessLevel"
+              >韧性等级列表</el-menu-item
+            >
           </router-link>
           <router-link to="/appearenceLevel">
             <el-menu-item index="/appearenceLevel">外观等级列表</el-menu-item>
           </router-link>
           <router-link to="/clients">
             <el-menu-item index="/clients">客户列表</el-menu-item>
+          </router-link>
+          <router-link to="/linerWeight">
+            <el-menu-item index="/linerWeight">内衬重量管理</el-menu-item>
           </router-link>
         </el-submenu>
         <el-submenu index="10" v-if="[1, 2, 3, 15].includes(roleId)">
@@ -194,16 +207,28 @@
         </el-submenu>
       </el-menu>
     </el-aside>
-    <el-container :style="{marginLeft: mgleft}">
+    <el-container :style="{ marginLeft: mgleft }">
       <el-header style="height: 50px">
         <div class="logo"></div>
         <div class="signout">
           <label>
             当前用户：
-            <span style="margin-right: 20px">{{adminname}}</span>
+            <span style="margin-right: 20px">{{ adminname }}</span>
           </label>
-          <el-button type="primary" @click="modifyPwd" :disabled="isDisabled" size="small">修改密码</el-button>
-          <el-button type="danger" @click="signout" :disabled="isDisabled" size="small">退出登录</el-button>
+          <el-button
+            type="primary"
+            @click="modifyPwd"
+            :disabled="isDisabled"
+            size="small"
+            >修改密码</el-button
+          >
+          <el-button
+            type="danger"
+            @click="signout"
+            :disabled="isDisabled"
+            size="small"
+            >退出登录</el-button
+          >
         </div>
       </el-header>
       <el-main class="main">
@@ -231,13 +256,22 @@
         @submit.native.prevent
       >
         <el-form-item label="旧密码：" prop="password">
-          <el-input v-model="formData.password" placeholder="请输入旧密码"></el-input>
+          <el-input
+            v-model="formData.password"
+            placeholder="请输入旧密码"
+          ></el-input>
         </el-form-item>
         <el-form-item label="新密码：" prop="newPassword">
-          <el-input v-model="formData.newPassword" placeholder="请输入新密码"></el-input>
+          <el-input
+            v-model="formData.newPassword"
+            placeholder="请输入新密码"
+          ></el-input>
         </el-form-item>
         <el-form-item label="确认新密码：" prop="newPasswordVerify">
-          <el-input v-model="formData.newPasswordVerify" placeholder="请再次输入新密码"></el-input>
+          <el-input
+            v-model="formData.newPasswordVerify"
+            placeholder="请再次输入新密码"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -274,16 +308,26 @@ export default {
       formData: {
         password: "",
         newPassword: "",
-        newPasswordVerify: ""
+        newPasswordVerify: "",
       },
       rules: {
         password: [
           { required: true, message: "请输入旧密码", trigger: "blur" },
-          { min: 6, max: 20, message: "长度在 6 到 20 个字符", trigger: "blur" }
+          {
+            min: 6,
+            max: 20,
+            message: "长度在 6 到 20 个字符",
+            trigger: "blur",
+          },
         ],
         newPassword: [
           { required: true, message: "请输入新密码", trigger: "blur" },
-          { min: 6, max: 20, message: "长度在 6 到 20 个字符", trigger: "blur" }
+          {
+            min: 6,
+            max: 20,
+            message: "长度在 6 到 20 个字符",
+            trigger: "blur",
+          },
         ],
         newPasswordVerify: [
           { required: true, message: "请输入新密码", trigger: "blur" },
@@ -291,11 +335,11 @@ export default {
             min: 6,
             max: 20,
             message: "长度在 6 到 20 个字符",
-            trigger: "blur"
+            trigger: "blur",
           },
-          { validator: verifyPassword, trigger: "blur" }
-        ]
-      }
+          { validator: verifyPassword, trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
@@ -312,11 +356,11 @@ export default {
     signout() {
       this.isDisabled = true;
       this.$http("POST", urlmap.signout, {})
-        .then(data => {
+        .then((data) => {
           localStorage.removeItem("userinfo");
           this.$router.push({ path: "/login" });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         })
         .finally(() => {
@@ -330,19 +374,19 @@ export default {
       this.dialogVisible = false;
     },
     submitForm() {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate((valid) => {
         if (valid) {
           this.loading = true;
           const params = {
             username: this.username,
             password: this.formData.password,
-            newPassword: this.formData.newPassword
+            newPassword: this.formData.newPassword,
           };
           this.$http("PUT", urlmap.updatePassword, params)
-            .then(data => {
+            .then((data) => {
               this.dialogVisible = false;
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err);
             })
             .finally(() => {
@@ -352,8 +396,8 @@ export default {
           return false;
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

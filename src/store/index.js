@@ -15,7 +15,8 @@ export default new Vuex.Store({
     ribbonToughnessLevelList: [], // 带材韧性级别列表
     clientsList: [], //客户列表
     rollerList: [], // 重卷人员列表
-    appearenceList: [] //外观列表
+    appearenceList: [], //外观列表
+    linerWeightList: [] //内衬重量列表
   },
   mutations: {
     // 获取带材牌号列表
@@ -49,6 +50,10 @@ export default new Vuex.Store({
     // 获取重卷人员列表
     SET_ROLLERLIST(state, list) {
       state.rollerList = list;
+    },
+    // 获取内衬重量列表
+    SET_LINERWEIGHTLIST(state, list) {
+      state.linerWeightList = list;
     }
   },
   actions: {
@@ -56,9 +61,6 @@ export default new Vuex.Store({
     getRibbonTypeList({ commit }) {
       http("get", urlmap.queryRibbonType)
         .then(data => {
-          // data.list && data.list.forEach((item, i) => {
-          //   item.ribbonTypeId = i + 1;
-          // });
           commit("SET_RIBBONTYPELIST", data.list);
         })
         .catch(err => {
@@ -69,9 +71,6 @@ export default new Vuex.Store({
     getRibbonWidthList({ commit }) {
       http("get", urlmap.queryRibbonWidth)
         .then(data => {
-          // data.list && data.list.forEach(item => {
-          //   item.ribbonWidthId = i + 1;
-          // });
           commit("SET_RIBBONWIDTHLIST", data.list);
         })
         .catch(err => {
@@ -82,9 +81,6 @@ export default new Vuex.Store({
     getRibbonThicknessLevelList({ commit }) {
       http("get", urlmap.queryRibbonThicknessLevel)
         .then(data => {
-          // data.list && data.list.forEach(item => {
-          //   item.ribbonThicknessLevelId = i + 1;
-          // });
           commit("SET_RIBBONTHICKNESSLEVELLIST", data.list);
         })
         .catch(err => {
@@ -95,9 +91,6 @@ export default new Vuex.Store({
     getLaminationLevelList({ commit }) {
       http("get", urlmap.queryLaminationLevel)
         .then(data => {
-          // data.list && data.list.forEach(item => {
-          //   item.laminationLevelId = i + 1;
-          // });
           commit("SET_LAMINATIONLEVELLIST", data.list);
         })
         .catch(err => {
@@ -108,9 +101,6 @@ export default new Vuex.Store({
     getRibbonToughnessLevelList({ commit }) {
       http("get", urlmap.queryRibbonToughnessLevel)
         .then(data => {
-          // data.list && data.list.forEach(item => {
-          //   item.ribbonToughnessLevelId = i + 1;
-          // });
           commit("SET_RIBBONTOUGHNESSLEVELLIST", data.list);
         })
         .catch(err => {
@@ -137,11 +127,21 @@ export default new Vuex.Store({
           console.log(err);
         });
     },
-    // 获取客户列表
+    // 获取重卷人员列表
     getRollerList({ commit }) {
       http("get", urlmap.queryRoller)
         .then(data => {
           commit("SET_ROLLERLIST", data.list);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 获取内衬重量列表
+    getLinerWeightList({ commit }) {
+      http("get", urlmap.queryLinerWeight)
+        .then(data => {
+          commit("SET_LINERWEIGHTLIST", data.list);
         })
         .catch(err => {
           console.log(err);

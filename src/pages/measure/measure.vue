@@ -157,6 +157,14 @@
           class="pull_right"
           >导出</el-button
         >
+        <el-tooltip content="点击后会计算下表中带材的综合级别" placement="top-end"><el-button
+          type="primary"
+          icon="el-icon-info"
+          @click="calcRibbonTotalLevel"
+          class="pull_right"
+          >计算综合级别</el-button
+        ></el-tooltip>
+        
       </el-col>
       <el-table
         :data="tableData"
@@ -884,6 +892,10 @@ export default {
     }, 1000);
   },
   methods: {
+    calcRibbonTotalLevel() {
+      const list = this.tableData.filter(item => !item.ribbonTotalLevel && item.ribbonThickness1 && item.ribbonThickness9);
+      
+    },
     thicknessChangeHandler(e, row) {
       let ribbonThicknessList = [
         row.ribbonThickness1,

@@ -158,7 +158,7 @@
         </el-submenu>
         <el-submenu
           index="9"
-          v-if="roleId === 1 || roleId === 2 || roleId === 3"
+          v-if="[1,2,3,5].includes(roleId)"
         >
           <template slot="title">
             <i class="el-icon-tickets"></i>

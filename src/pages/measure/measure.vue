@@ -157,14 +157,17 @@
           class="pull_right"
           >导出</el-button
         >
-        <el-tooltip content="点击后会计算下表中带材的综合级别" placement="top-end"><el-button
-          type="primary"
-          icon="el-icon-info"
-          @click="calcRibbonTotalLevel"
-          class="pull_right"
-          >计算综合级别</el-button
-        ></el-tooltip>
-        
+        <el-tooltip
+          content="点击后会计算下表中带材的综合级别"
+          placement="top-end"
+          ><el-button
+            type="primary"
+            icon="el-icon-info"
+            @click="calcRibbonTotalLevel"
+            class="pull_right"
+            >计算综合级别</el-button
+          ></el-tooltip
+        >
       </el-col>
       <el-table
         :data="tableData"
@@ -893,8 +896,44 @@ export default {
   },
   methods: {
     calcRibbonTotalLevel() {
-      const list = this.tableData.filter(item => !item.ribbonTotalLevel && item.ribbonThickness1 && item.ribbonThickness9);
-      
+      /**
+       * 筛选出从PLC传入的数据。特征：1.没有综合级别，2.有带材厚度，韧性等级code，外观等级code
+       */
+      let list = this.tableData.filter(
+        (item) =>
+          !item.ribbonTotalLevel &&
+          [
+            item.ribbonThickness1,
+            item.ribbonThickness2,
+            item.ribbonThickness3,
+            item.ribbonThickness4,
+            item.ribbonThickness5,
+            item.ribbonThickness6,
+            item.ribbonThickness7,
+            item.ribbonThickness8,
+            item.ribbonThickness9,
+            item.realRibbonWidth,
+            item.ribbonToughnessLevelCode,
+            item.appearenceLevelCode,
+          ].every((el) => !!el)
+      );
+      /**
+       * 计算：
+       * 1.平均厚度，最大偏差，厚度等级
+       * 2.叠片系数，叠片等级
+       * 3.韧性等级，韧性描述
+       * 4.外观等级，外观描述
+       * 5.综合等级
+       * 6.合格情况
+       * 
+       */
+      list = list.map(item => {
+
+        return {
+          ...item,
+
+        }
+      })
     },
     thicknessChangeHandler(e, row) {
       let ribbonThicknessList = [
@@ -926,6 +965,7 @@ export default {
       row.ribbonThicknessLevel = this.calcribbonThicknessLevel(
         row.ribbonThickness
       );
+      return {ribbonThicknessDeviation: row.ribbonThicknessDeviation, }
     },
     ...mapActions([
       "getRibbonToughnessLevelList",

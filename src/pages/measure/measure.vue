@@ -163,7 +163,7 @@
           ><el-button
             type="primary"
             icon="el-icon-info"
-            @click="calcRibbonTotalLevel"
+            @click="batchCalcRibbonTotalData"
             class="pull_right"
             >计算综合级别</el-button
           ></el-tooltip
@@ -895,7 +895,7 @@ export default {
     }, 1000);
   },
   methods: {
-    calcRibbonTotalLevel() {
+    batchCalcRibbonTotalData() {
       /**
        * 筛选出从PLC传入的数据。特征：1.没有综合级别，2.有带材厚度，韧性等级code，外观等级code
        */
@@ -928,7 +928,10 @@ export default {
        * 
        */
       list = list.map(item => {
-
+        // 根据PLC数据获取韧性等级
+        const obj = this.ribbonToughnessLevelList.find(ribbon => ribbon.ribbonToughnessLevelCode === item.ribbonToughnessLevelCode) || {}
+        item.ribbonToughnessLevel = obj.ribbonToughnessLevel;
+        // 根据PLC数据获取外观等级
         return {
           ...item,
 
@@ -965,7 +968,6 @@ export default {
       row.ribbonThicknessLevel = this.calcribbonThicknessLevel(
         row.ribbonThickness
       );
-      return {ribbonThicknessDeviation: row.ribbonThicknessDeviation, }
     },
     ...mapActions([
       "getRibbonToughnessLevelList",
@@ -1174,11 +1176,10 @@ export default {
     //     })
     //     .catch(() => {});
     // },
-    save(row) {
-      // row.isEditing = false;
-      // this.pageConfig.current = 1;
-      // this.getTableData();
-
+    customerNumer(value) {
+      return typeof value === 'string' ? Number(value.trim()) : value
+    },
+    calcRibbonTotalData(row) {
       // 计算叠片系数和叠片等级 realRibbonWidth diameter coilWeight
       // row.laminationFactor = ((row.coilWeight - 0.09)/(Math.PI * (row.diameter * row.diameter / 4 - 95 * 95 / 4) * 7.2) * Math.pow(10, 6) / row.realRibbonWidth).toFixed(2);
       row.laminationFactor = this.calcLaminationFactor(
@@ -1204,42 +1205,15 @@ export default {
       }, {})[row.appearence];
 
       // 计算厚度最大偏差、平均厚度、厚度级别
-      row.ribbonThickness1 =
-        typeof row.ribbonThickness1 === "string"
-          ? Number(row.ribbonThickness1.trim())
-          : row.ribbonThickness1;
-      row.ribbonThickness2 =
-        typeof row.ribbonThickness2 === "string"
-          ? Number(row.ribbonThickness2.trim())
-          : row.ribbonThickness2;
-      row.ribbonThickness3 =
-        typeof row.ribbonThickness3 === "string"
-          ? Number(row.ribbonThickness3.trim())
-          : row.ribbonThickness3;
-      row.ribbonThickness4 =
-        typeof row.ribbonThickness4 === "string"
-          ? Number(row.ribbonThickness4.trim())
-          : row.ribbonThickness4;
-      row.ribbonThickness5 =
-        typeof row.ribbonThickness5 === "string"
-          ? Number(row.ribbonThickness5.trim())
-          : row.ribbonThickness5;
-      row.ribbonThickness6 =
-        typeof row.ribbonThickness6 === "string"
-          ? Number(row.ribbonThickness6.trim())
-          : row.ribbonThickness6;
-      row.ribbonThickness7 =
-        typeof row.ribbonThickness7 === "string"
-          ? Number(row.ribbonThickness7.trim())
-          : row.ribbonThickness7;
-      row.ribbonThickness8 =
-        typeof row.ribbonThickness8 === "string"
-          ? Number(row.ribbonThickness8.trim())
-          : row.ribbonThickness8;
-      row.ribbonThickness9 =
-        typeof row.ribbonThickness9 === "string"
-          ? Number(row.ribbonThickness9.trim())
-          : row.ribbonThickness9;
+      row.ribbonThickness1 = this.customerNumer(row.ribbonThickness1)
+      row.ribbonThickness2 = this.customerNumer(row.ribbonThickness2)
+      row.ribbonThickness3 = this.customerNumer(row.ribbonThickness3)
+      row.ribbonThickness4 = this.customerNumer(row.ribbonThickness4)
+      row.ribbonThickness5 = this.customerNumer(row.ribbonThickness5)
+      row.ribbonThickness6 = this.customerNumer(row.ribbonThickness6)
+      row.ribbonThickness7 = this.customerNumer(row.ribbonThickness7)
+      row.ribbonThickness8 = this.customerNumer(row.ribbonThickness8)
+      row.ribbonThickness9 = this.customerNumer(row.ribbonThickness9)
 
       row.ribbonThicknessDeviation = this.calcMaxDeviation([
         row.ribbonThickness1,
@@ -1433,6 +1407,13 @@ export default {
           delete clone[key];
         }
       });
+      return clone;
+    },
+    save(row) {
+      // row.isEditing = false;
+      // this.pageConfig.current = 1;
+      // this.getTableData();
+      const clone = this.calcRibbonTotalData(row)
       // 发送请求，更新当前的数据
       this.$http("PUT", urlmap.updateMeasure, clone)
         .then((data) => {})

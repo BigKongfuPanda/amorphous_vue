@@ -14,6 +14,9 @@
       <el-form-item label="带材韧性：" prop="ribbonToughness">
         <el-input v-model="formData.ribbonToughness"></el-input>
       </el-form-item>
+      <el-form-item label="PLC映射码：" prop="ribbonToughnessLevelCode">
+        <el-input v-model="formData.ribbonToughnessLevelCode"></el-input>
+      </el-form-item>
     </el-form>
     <div slot="footer"> 
       <el-button @click="closeDialog">取消</el-button>
@@ -24,12 +27,13 @@
 
 <script>
 import urlmap from '@/utils/urlmap';
-import { positiveInteger } from '@/utils/validate';
+import { positiveInteger, ltNumber } from '@/utils/validate';
 
 const formConfig = {
   ribbonToughnessLevelId: '',
   ribbonToughness: '',
-  ribbonToughnessLevel: ''
+  ribbonToughnessLevel: '',
+  ribbonToughnessLevelCode: ''
 };
 
 export default {
@@ -44,7 +48,8 @@ export default {
       formData: {
         ribbonToughnessLevelId: '',
         ribbonToughness: '',
-        ribbonToughnessLevel: ''
+        ribbonToughnessLevel: '',
+        ribbonToughnessLevelCode: ''
       },
       rules: {
         ribbonToughness: [
@@ -55,7 +60,12 @@ export default {
           { required: true, message: '请填写带材韧性等级', trigger: 'blur' },
           { maxlength: 1, message: '不能超过1个字母', trigger: 'blur' },
           { pattern: /^[A-Z]$/, message: '只能填写大写字母', trigger: 'blur' },
-        ]
+        ],
+        ribbonToughnessLevelCode: [
+          { required: true, message: '请填写PLC映射码', trigger: 'blur' },
+          { validator: positiveInteger, trigger: "blur" },
+          { validator: ltNumber(99999), trigger: "blur" },
+        ],
       },
       loading: false
     }

@@ -8,9 +8,9 @@
       <el-button type="primary" icon="el-icon-plus" @click="add">新增带材韧性</el-button>
     </el-col>
     <el-table :data="ribbonToughnessLevelList" stripe border style="width:100%" v-loading="loading">
-      <el-table-column type="index" label="序号" align="center" width="200"></el-table-column>
       <el-table-column prop="ribbonToughness" label="带材韧性" align="center"></el-table-column>
       <el-table-column prop="ribbonToughnessLevel" label="带材韧性级别" align="center"></el-table-column>
+      <el-table-column prop="ribbonToughnessLevelCode" label="PLC映射码" align="center"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="edit(scope.row)">修改</el-button>

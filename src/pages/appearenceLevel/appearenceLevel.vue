@@ -8,9 +8,9 @@
       <el-button type="primary" icon="el-icon-plus" @click="add">新增外观</el-button>
     </el-col>
     <el-table :data="appearenceList" stripe border style="width:100%" v-loading="loading">
-      <el-table-column type="index" label="序号" align="center" width="200"></el-table-column>
       <el-table-column prop="appearence" label="外观" align="center"></el-table-column>
       <el-table-column prop="appearenceLevel" label="级别" align="center"></el-table-column>
+      <el-table-column prop="appearenceLevelCode" label="PLC映射码" align="center"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="edit(scope.row)">修改</el-button>
@@ -60,7 +60,7 @@ export default {
       this.rowData = row;
     },
     del(row) {
-      const { appearenceLevelId, appearence, appearenceLevel } = row;
+      const { appearenceLevelId, appearence } = row;
       this.$confirm(`删除后数据无法恢复，确定要删除 ${appearence} 吗？`, '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'})
       .then(() => {
         this.$http('delete', urlmap.delAppearenceLevel, { appearenceLevelId }).then(data => {

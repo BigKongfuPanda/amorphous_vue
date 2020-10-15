@@ -14,6 +14,9 @@
       <el-form-item label="外观等级：" prop="appearenceLevel">
         <el-input v-model="formData.appearenceLevel"></el-input>
       </el-form-item>
+      <el-form-item label="PLC映射码：" prop="appearenceLevelCode">
+        <el-input v-model="formData.appearenceLevelCode"></el-input>
+      </el-form-item>
     </el-form>
     <div slot="footer"> 
       <el-button @click="closeDialog">取消</el-button>
@@ -24,11 +27,12 @@
 
 <script>
 import urlmap from '@/utils/urlmap';
-import { number } from '@/utils/validate';
+import { positiveInteger, ltNumber } from '@/utils/validate';
 
 const formConfig = {
   appearence: '',
-  appearenceLevel: ''
+  appearenceLevel: '',
+  appearenceLevelCode: ''
 };
 
 export default {
@@ -42,7 +46,8 @@ export default {
     return {
       formData: {
         appearence: '',
-        appearenceLevel: ''
+        appearenceLevel: '',
+        appearenceLevelCode: ''
       },
       rules: {
         appearence: [
@@ -52,7 +57,12 @@ export default {
         appearenceLevel: [
           { required: true, message: '请填写外观等级', trigger: 'blur' },
           { max: 20, message: '最多20位字符', trigger: 'blur' },
-        ]
+        ],
+        appearenceLevelCode: [
+          { required: true, message: '请填写PLC映射码', trigger: 'blur' },
+          { validator: positiveInteger, trigger: "blur" },
+          { validator: ltNumber(99999), trigger: "blur" },
+        ],
       },
       loading: false
     }

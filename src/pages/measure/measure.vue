@@ -537,20 +537,26 @@
           align="center"
           width="60px"
         >
-          <!-- <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+          <template slot-scope="scope">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
               {{ scope.row.ribbonToughnessLevel }}
             </div>
             <div v-else>
               <el-select size="mini" v-model="scope.row.ribbonToughnessLevel" placeholder="">
-                <el-option label="A" value="A"></el-option>
+                <!-- <el-option label="A" value="A"></el-option>
                 <el-option label="B" value="B"></el-option>
                 <el-option label="C" value="C"></el-option>
                 <el-option label="D" value="D"></el-option>
-                <el-option label="E" value="E"></el-option>
+                <el-option label="E" value="E"></el-option> -->
+                <el-option
+                  v-for="item in ribbonToughnessLevelList"
+                  :key="item.ribbonToughnessLevelId"
+                  :label="item.ribbonToughnessLevel"
+                  :value="item.ribbonToughnessLevel"
+                ></el-option>
               </el-select>
             </div>
-          </template>-->
+          </template>
         </el-table-column>
         <el-table-column
           prop="appearence"
@@ -563,10 +569,10 @@
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
             >
-              {{ scope.row.appearence }}
+              {{ scope.row.appearence ? scope.row.appearence.toString() : '' }}
             </div>
             <div v-else>
-              <el-select size="mini" v-model="scope.row.appearence" placeholder>
+              <el-select size="mini" v-model="scope.row.appearence" multiple collapse-tags placeholder>
                 <!-- <el-option label="无明显缺陷" value="无明显缺陷"></el-option>
                 <el-option label="轻棱" value="轻棱"></el-option>
                 <el-option label="棱" value="棱"></el-option>
@@ -595,19 +601,25 @@
           align="center"
           width="60px"
         >
-          <!-- <template slot-scope="scope">
-            <div v-if="scope.row.isEditing === false">
+          <template slot-scope="scope">
+            <div v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5">
               {{ scope.row.appearenceLevel }}
             </div>
             <div v-else>
               <el-select size="mini" v-model="scope.row.appearenceLevel" placeholder="">
-                <el-option label="A" value="A"></el-option>
+                <!-- <el-option label="A" value="A"></el-option>
                 <el-option label="B" value="B"></el-option>
                 <el-option label="C" value="C"></el-option>
-                <el-option label="不合格" value="不合格"></el-option>
+                <el-option label="不合格" value="不合格"></el-option> -->
+                <el-option
+                  v-for="(appearenceLevel, index) in uniqueAppearenceLevelList"
+                  :key="index"
+                  :label="appearenceLevel"
+                  :value="appearenceLevel"
+                ></el-option>
               </el-select>
             </div>
-          </template>-->
+          </template>
         </el-table-column>
         <el-table-column
           prop="ribbonTotalLevel"
@@ -929,14 +941,20 @@ export default {
        */
       list = list.map(item => {
         // 根据PLC数据获取韧性等级
-        const obj = this.ribbonToughnessLevelList.find(ribbon => ribbon.ribbonToughnessLevelCode === item.ribbonToughnessLevelCode) || {}
-        item.ribbonToughnessLevel = obj.ribbonToughnessLevel;
+        const ribbonToughnessItem = this.ribbonToughnessLevelList.find(ribbon => ribbon.ribbonToughnessLevelCode === item.ribbonToughnessLevelCode) || {}
+        item.ribbonToughnessLevel = ribbonToughnessItem.ribbonToughnessLevel;
         // 根据PLC数据获取外观等级
+        const appearenceItem = this.appearenceList.find(a => a.appearenceLevelCode === item.appearenceLevelCode) || {}
+        item.appearenceLevel = appearenceItem.appearenceLevel;
+        const result = this.calcRibbonTotalData(item)
         return {
           ...item,
-
+          ...result
         }
       })
+      this.$http('POST', urlmap.updateMeasureByBatch, {list}).then(res => {
+        this.getTableData({current: this.pageConfig.current || 1});
+      }).catch(err => console.log(err))
     },
     thicknessChangeHandler(e, row) {
       let ribbonThicknessList = [
@@ -1128,6 +1146,8 @@ export default {
                   : [],
               };
               item.clients = item.clients ? item.clients.split(",") : [];
+              item.appearence = item.appearence ? item.appearence.split(",") : [];
+
               item.coilNetWeight =
                 item.coilWeight - this.calcLinerWeight(item.ribbonWidth);
               item.remainWeight = item.coilNetWeight;
@@ -1400,6 +1420,7 @@ export default {
 
       const clone = cloneDeep(row);
       clone.clients = clone.clients.join();
+      clone.appearence = clone.appearence.join();
 
       // 去掉值为null或者undefined的参数
       Object.keys(clone).forEach((key) => {

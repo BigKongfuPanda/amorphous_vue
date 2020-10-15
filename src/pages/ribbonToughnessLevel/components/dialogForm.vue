@@ -30,7 +30,6 @@ import urlmap from '@/utils/urlmap';
 import { positiveInteger, ltNumber } from '@/utils/validate';
 
 const formConfig = {
-  ribbonToughnessLevelId: '',
   ribbonToughness: '',
   ribbonToughnessLevel: '',
   ribbonToughnessLevelCode: ''
@@ -46,7 +45,6 @@ export default {
   data () {
     return {
       formData: {
-        ribbonToughnessLevelId: '',
         ribbonToughness: '',
         ribbonToughnessLevel: '',
         ribbonToughnessLevelCode: ''

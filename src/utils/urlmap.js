@@ -34,7 +34,7 @@ export default {
   queryMeasure: "/measure/queryMeasureData",
   measureConfirm: "/measure/measureConfirm",
   updateMeasure: "/measure/updateMeasure",
-  updateMeasureByBatch: "measure/updateMeasureByBatch",
+  updateMeasureByBatch: "/measure/updateMeasureByBatch",
   exportMeasure: "/measure/exportmeasure",
   // 库房
   queryFurnaceList: "/storage/furnace",

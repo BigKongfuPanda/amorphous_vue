@@ -51,7 +51,11 @@
     </Collapse>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-success" @click="handleConfirm"
+        <el-button
+          type="primary"
+          icon="el-icon-success"
+          v-if="isAddable"
+          @click="handleConfirm"
           >确认送检</el-button
         >
         <el-button
@@ -66,6 +70,7 @@
           icon="el-icon-download"
           @click="exportExcel"
           class="pull_right"
+          v-if="[1, 2, 3, 4, 15].includes(userinfo.roleId)"
           >导出</el-button
         >
       </el-col>
@@ -172,7 +177,7 @@
               v-if="[1, 2, 3, 4, 15].includes(userinfo.roleId)"
               :disabled="
                 getRollerName(scope.row.roller) !== userinfo.adminname &&
-                userinfo.roleId !== 1
+                  userinfo.roleId !== 1
               "
               >修改</el-button
             >
@@ -218,7 +223,7 @@ export default {
   name: "melt",
   components: {
     dialogForm,
-    Collapse,
+    Collapse
   },
   data() {
     return {
@@ -230,7 +235,7 @@ export default {
         caster: "",
         furnace: "",
         roller: "",
-        date: [],
+        date: []
       },
       loading: false,
       tableData: [],
@@ -240,10 +245,10 @@ export default {
       pageConfig: {
         total: 1,
         current: 1,
-        pageSize: 10,
+        pageSize: 10
       },
       tableHeight: 200,
-      multipleSelection: [],
+      multipleSelection: []
     };
   },
   // 动态路由匹配
@@ -256,7 +261,7 @@ export default {
     next();
   },
   computed: {
-    ...mapState(["rollerList"]),
+    ...mapState(["rollerList"])
   },
   async created() {
     this.castId = this.$route.params.castId;
@@ -282,7 +287,7 @@ export default {
     ...mapActions(["getRollerList"]),
     getRollerName(roller) {
       const { rollerName } =
-        this.rollerList.find((item) => item.roller === roller) || {};
+        this.rollerList.find(item => item.roller === roller) || {};
       return rollerName || "";
     },
     dateFormat(row, column) {
@@ -294,7 +299,7 @@ export default {
     clickSearch() {
       // 重置当前页码为1
       const params = {
-        current: 1,
+        current: 1
       };
       this.pageConfig.current = 1;
       this.getTableData(params);
@@ -302,7 +307,7 @@ export default {
     reset() {
       this.searchForm = { caster: "", furnace: "", roller: "", date: [] };
       const params = {
-        current: 1,
+        current: 1
       };
       this.pageConfig.current = 1;
       this.getTableData(params);
@@ -314,20 +319,20 @@ export default {
         endTime: this.searchForm.date[1],
         caster: this.searchForm.caster,
         furnace: this.searchForm.furnace,
-        roller: this.searchForm.roller,
+        roller: this.searchForm.roller
       };
       Object.assign(params, _params);
       this.$http("get", urlmap.queryRollData, params)
-        .then((data) => {
+        .then(data => {
           this.pageConfig.total = data.count;
           this.pageConfig.pageSize = data.limit;
           data.list &&
-            data.list.forEach((item) => {
+            data.list.forEach(item => {
               item.clients = item.clients ? item.clients.split(",") : [];
             });
           this.tableData = data.list;
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         })
         .finally(() => {
@@ -351,15 +356,15 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning",
+          type: "warning"
         }
       )
         .then(() => {
           this.$http("delete", urlmap.delRoll, { measureId })
-            .then((data) => {
+            .then(data => {
               this.getTableData();
             })
-            .catch((error) => {
+            .catch(error => {
               console.log(error);
             });
         })
@@ -377,7 +382,7 @@ export default {
     },
     handleCurrentChange(val) {
       const params = {
-        current: val,
+        current: val
       };
       this.getTableData(params);
     },
@@ -416,7 +421,7 @@ export default {
         endTime,
         caster,
         furnace,
-        roller,
+        roller
       };
 
       // 如果所有的条件都为空，则提示是否导出全部数据
@@ -428,11 +433,11 @@ export default {
             confirmButtonText: "去设置筛选条件",
             cancelButtonText: "继续导出",
             type: "warning",
-            center: true,
+            center: true
           }
         )
           .then(() => {})
-          .catch((error) => {
+          .catch(error => {
             const url = `${urlmap.exportRoll}?${qs.stringify(params)}`;
             window.open(url);
           });
@@ -459,17 +464,15 @@ export default {
       }
       // 发送请求，更新当前的数据
       this.$http("POST", urlmap.rollConfirm, {
-        rollDataJson: JSON.stringify(selectionList),
+        rollDataJson: JSON.stringify(selectionList)
       })
-        .then((data) => {
+        .then(data => {
           this.getTableData();
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
         });
-    },
-  },
+    }
+  }
 };
 </script>
-
-

@@ -824,6 +824,7 @@
 <script>
 import qs from "qs";
 import { cloneDeep } from "lodash";
+import { Message } from "element-ui";
 import urlmap from "@/utils/urlmap";
 import { dateFormat, dateTimeFormat, debounce } from "@/utils/common";
 import { mapState, mapActions } from "vuex";
@@ -943,8 +944,8 @@ export default {
             item.ribbonThickness8,
             item.ribbonThickness9,
             item.realRibbonWidth,
-            item.ribbonToughnessLevelCode,
-            item.appearenceLevelCode
+            item.ribbonToughnessLevel,
+            item.appearenceLevel
           ].every(el => !!el)
       );
       /**
@@ -970,8 +971,12 @@ export default {
           ...result
         };
       });
-      if (!Array.isArray(list) || list.length === 0) return;
-      this.$http("POST", urlmap.updateMeasureByBatch, { list })
+      if (!Array.isArray(list) || list.length === 0)
+        return Message({
+          message: `没有找到需要计算综合级别的带材，请确认 带材厚度/带宽/韧性等级/外观等级 等数据是否完整`,
+          type: "error"
+        });
+      this.$http("PUT", urlmap.updateMeasureByBatch, { listJson: JSON.stringify(list) })
         .then(res => {
           this.getTableData({ current: this.pageConfig.current || 1 });
         })
@@ -1240,6 +1245,15 @@ export default {
       //   },
       //   {}
       // )[row.ribbonToughness];
+
+      // 根据韧性等级来获取韧性描述
+      row.ribbonToughness = this.ribbonToughnessLevelList.reduce(
+        (acc, cur) => {
+          acc[cur.ribbonToughnessLevel] = cur.ribbonToughness;
+          return acc;
+        },
+        {}
+      )[row.ribbonToughnessLevel];
 
       // 根据外观描述判定外观等级 appearenceLevel
       // row.appearenceLevel = this.appearenceList.reduce((acc, cur) => {
@@ -1596,7 +1610,7 @@ export default {
         row.appearenceLevel;
 
       /**
-       * 针对1K107B带材：
+       * 针对所有带材：
        * 1.1任意规格，厚度等级为2级别(23μm<d≤26μm)的带材判定修改如下：
        * 1）24μm<d≤25μm，在综合级别最后加注“S”。
        * 2）23μm<d≤24μm，在综合级别最后加注“L”。
@@ -1604,20 +1618,18 @@ export default {
        * 1）21μm<d≤22μm，在综合级别最后加注“S”，
        * 2）20μm<d≤21μm，在综合级别最后加注“L”，
        */
-      if (row.ribbonTypeName == "1K107B") {
-        if (row.ribbonThickness > 24 && row.ribbonThickness <= 25) {
-          ribbonTotalLevel = ribbonTotalLevel + "S";
-        }
-        if (row.ribbonThickness > 23 && row.ribbonThickness <= 24) {
-          ribbonTotalLevel = ribbonTotalLevel + "L";
-        }
+      if (row.ribbonThickness > 24 && row.ribbonThickness <= 25) {
+        ribbonTotalLevel = ribbonTotalLevel + "S";
+      }
+      if (row.ribbonThickness > 23 && row.ribbonThickness <= 24) {
+        ribbonTotalLevel = ribbonTotalLevel + "L";
+      }
 
-        if (row.ribbonThickness > 21 && row.ribbonThickness <= 22) {
-          ribbonTotalLevel = ribbonTotalLevel + "S";
-        }
-        if (row.ribbonThickness > 20 && row.ribbonThickness <= 21) {
-          ribbonTotalLevel = ribbonTotalLevel + "L";
-        }
+      if (row.ribbonThickness > 21 && row.ribbonThickness <= 22) {
+        ribbonTotalLevel = ribbonTotalLevel + "S";
+      }
+      if (row.ribbonThickness > 20 && row.ribbonThickness <= 21) {
+        ribbonTotalLevel = ribbonTotalLevel + "L";
       }
 
       // 如果带材厚度偏差大于3，同时韧性为A,B,C,此带材加F

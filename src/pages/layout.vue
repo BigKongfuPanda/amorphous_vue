@@ -358,7 +358,8 @@ export default {
       this.$http("POST", urlmap.signout, {})
         .then((data) => {
           localStorage.removeItem("userinfo");
-          this.$router.push({ path: "/login" });
+          const returnUrl = encodeURIComponent(window.location.href)
+          this.$router.push({ path: "/login", query: {returnUrl} });
         })
         .catch((err) => {
           console.log(err);

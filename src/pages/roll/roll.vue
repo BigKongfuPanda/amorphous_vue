@@ -176,8 +176,11 @@
               @click="edit(scope.row)"
               v-if="[1, 2, 3, 4, 15].includes(userinfo.roleId)"
               :disabled="
-                getRollerName(scope.row.roller) !== userinfo.adminname &&
-                  userinfo.roleId !== 1
+                !(
+                  [1, 2, 3, 15].includes(userinfo.roleId) ||
+                  (userinfo.roleId === 4 &&
+                    getRollerName(scope.row.roller) === userinfo.adminname)
+                )
               "
               >修改</el-button
             >
@@ -186,6 +189,13 @@
               type="danger"
               @click="del(scope.row)"
               v-if="[1, 2, 3, 4, 15].includes(userinfo.roleId)"
+              :disabled="
+                !(
+                  [1, 2, 3, 15].includes(userinfo.roleId) ||
+                  (userinfo.roleId === 4 &&
+                    getRollerName(scope.row.roller) === userinfo.adminname)
+                )
+              "
               >删除</el-button
             >
           </template>
@@ -396,17 +406,20 @@ export default {
       }
     },
     setIsEditable() {
-      if (
-        this.userinfo.roleId == 4 ||
-        this.userinfo.roleId == 15 ||
-        this.userinfo.roleId == 1
-      ) {
-        // 重卷人员 或者厂长 可修改
-        return true;
-      } else {
-        // 其他
-        return false;
-      }
+      /**
+       * 重卷组员：能够修改自己的，不能修改其他人的。
+       * 重卷组长，管理员：能够修改所有人
+       */
+      // if (
+      //   [1, 2, 3, 15].includes(this.userinfo.roleId) ||
+      //   (this.userinfo.roleId === 4 &&
+      //     getRollerName(row.roller) === this.userinfo.adminname)
+      // ) {
+      //   return false;
+      // } else {
+      //   // 其他
+      //   return true;
+      // }
     },
     exportExcel() {
       const castId = this.castId;

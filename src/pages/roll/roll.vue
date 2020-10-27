@@ -175,13 +175,7 @@
               type="primary"
               @click="edit(scope.row)"
               v-if="[1, 2, 3, 4, 15].includes(userinfo.roleId)"
-              :disabled="
-                !(
-                  [1, 2, 3, 15].includes(userinfo.roleId) ||
-                  (userinfo.roleId === 4 &&
-                    getRollerName(scope.row.roller) === userinfo.adminname)
-                )
-              "
+              :disabled="setIsEditable(scope.row)"
               >修改</el-button
             >
             <el-button
@@ -189,13 +183,7 @@
               type="danger"
               @click="del(scope.row)"
               v-if="[1, 2, 3, 4, 15].includes(userinfo.roleId)"
-              :disabled="
-                !(
-                  [1, 2, 3, 15].includes(userinfo.roleId) ||
-                  (userinfo.roleId === 4 &&
-                    getRollerName(scope.row.roller) === userinfo.adminname)
-                )
-              "
+              :disabled="setIsEditable(scope.row)"
               >删除</el-button
             >
           </template>
@@ -267,7 +255,7 @@ export default {
     this.getTableData();
     // 判断当前用户角色是否有操作权限
     this.isAddable = this.setIsAddable();
-    this.isEditable = this.setIsEditable();
+    // this.isEditable = this.setIsEditable();
     next();
   },
   computed: {
@@ -278,7 +266,7 @@ export default {
     this.userinfo = JSON.parse(localStorage.getItem("userinfo"));
     // 判断当前用户角色是否有操作权限
     this.isAddable = this.setIsAddable();
-    this.isEditable = this.setIsEditable();
+    // this.isEditable = this.setIsEditable();
     await this.getRollerList();
     this.getTableData();
   },
@@ -405,21 +393,21 @@ export default {
         return false;
       }
     },
-    setIsEditable() {
+    setIsEditable(row) {
       /**
        * 重卷组员：能够修改自己的，不能修改其他人的。
        * 重卷组长，管理员：能够修改所有人
        */
-      // if (
-      //   [1, 2, 3, 15].includes(this.userinfo.roleId) ||
-      //   (this.userinfo.roleId === 4 &&
-      //     getRollerName(row.roller) === this.userinfo.adminname)
-      // ) {
-      //   return false;
-      // } else {
-      //   // 其他
-      //   return true;
-      // }
+      if (
+        [1, 2, 3, 15].includes(this.userinfo.roleId) ||
+        (this.userinfo.roleId === 4 &&
+          this.getRollerName(row.roller) === this.userinfo.adminname)
+      ) {
+        return false;
+      } else {
+        // 其他
+        return true;
+      }
     },
     exportExcel() {
       const castId = this.castId;

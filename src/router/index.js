@@ -81,6 +81,11 @@ export default new Router({
       component: Login
     },
     {
+      path: "/qrcode", // http://192.168.0.89/#/qrcode?f=炉号&c=盘号
+      name: "qrcode",
+      component: Login
+    },
+    {
       path: "/",
       component: Layout,
       redirect: "/login",

@@ -289,6 +289,7 @@ export default {
       return rollerName || "";
     },
     dateFormat(row, column) {
+      console.log(row.castDate);
       return dateFormat(row.castDate);
     },
     rollDateFormat(row, column) {
@@ -385,7 +386,7 @@ export default {
       this.getTableData(params);
     },
     setIsAddable() {
-      if (this.userinfo.roleId == 4 || this.userinfo.roleId == 15) {
+      if ([1, 2, 3, 4, 15].includes(this.userinfo.roleId)) {
         // 重卷人员可修改
         return true;
       } else {

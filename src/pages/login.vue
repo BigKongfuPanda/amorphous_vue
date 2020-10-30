@@ -62,7 +62,6 @@ export default {
               });
               localStorage.setItem("userinfo", userinfo);
               const { returnUrl } = this.$route.query;
-              console.log(returnUrl);
               returnUrl
                 ? (window.location.href = decodeURIComponent(returnUrl))
                 : this.$router.push({ path: "/plan/6" });
@@ -75,9 +74,6 @@ export default {
             });
         }
       });
-    },
-    parseQueryParams() {
-      const href = window.location.href;
     }
   }
 };

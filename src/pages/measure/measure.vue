@@ -144,10 +144,16 @@
       <el-col class="table_hd">
         <el-button
           type="primary"
-          icon="el-icon-success"
+          icon="el-icon-check"
           @click="measureConfirm"
           v-if="isBatchInStored"
-          >确认入库</el-button
+          >申请入库</el-button
+        >
+        <el-button
+          :type="autoQueryConfig.type"
+          :icon="autoQueryConfig.icon"
+          @click="handleAutoQuery"
+          >{{ autoQueryConfig.text }}</el-button
         >
         <el-button
           type="primary"
@@ -155,6 +161,7 @@
           @click="exportExcel"
           v-if="isExportable"
           class="pull_right"
+          style="margin-left: 10px"
           >导出</el-button
         >
         <el-tooltip
@@ -863,11 +870,22 @@ export default {
       isDeleteable: false,
       tableHeight: 550,
       multipleSelection: [],
-      isBatchInStored: false
+      isBatchInStored: false,
+      isAutoQuerying: false,
+      pollTimer: null
       // uniqueAppearenceLevelList: []
     };
   },
   computed: {
+    autoQueryConfig() {
+      return {
+        icon: this.isAutoQuerying
+          ? "el-icon-video-pause"
+          : "el-icon-video-play",
+        text: this.isAutoQuerying ? "停止自动更新" : "启动自动更新",
+        type: this.isAutoQuerying ? "danger" : "primary"
+      };
+    },
     ...mapState([
       "ribbonToughnessLevelList",
       "ribbonTypeList",
@@ -925,7 +943,24 @@ export default {
       self.tableHeight = window.innerHeight - 80;
     }, 1000);
   },
+  beforeDestroy() {
+    clearInterval(this.pollTimer);
+    this.pollTimer = null;
+  },
   methods: {
+    handleAutoQuery() {
+      const curStatus = this.isAutoQuerying;
+      this.isAutoQuerying = !curStatus;
+      if (!this.isAutoQuerying) {
+        this.pollTimer && clearInterval(this.pollTimer);
+      } else {
+        clearInterval(this.pollTimer);
+        this.getTableData();
+        this.pollTimer = setInterval(() => {
+          this.getTableData();
+        }, 5000);
+      }
+    },
     batchCalcRibbonTotalData() {
       /**
        * 筛选出从PLC传入的数据。特征：1.没有综合级别，2.有带材厚度，韧性等级code，外观等级code
@@ -976,7 +1011,9 @@ export default {
           message: `没有找到需要计算综合级别的带材，请确认 带材厚度/带宽/韧性等级/外观等级 等数据是否完整`,
           type: "error"
         });
-      this.$http("PUT", urlmap.updateMeasureByBatch, { listJson: JSON.stringify(list) })
+      this.$http("PUT", urlmap.updateMeasureByBatch, {
+        listJson: JSON.stringify(list)
+      })
         .then(res => {
           this.getTableData({ current: this.pageConfig.current || 1 });
         })
@@ -1247,13 +1284,10 @@ export default {
       // )[row.ribbonToughness];
 
       // 根据韧性等级来获取韧性描述
-      row.ribbonToughness = this.ribbonToughnessLevelList.reduce(
-        (acc, cur) => {
-          acc[cur.ribbonToughnessLevel] = cur.ribbonToughness;
-          return acc;
-        },
-        {}
-      )[row.ribbonToughnessLevel];
+      row.ribbonToughness = this.ribbonToughnessLevelList.reduce((acc, cur) => {
+        acc[cur.ribbonToughnessLevel] = cur.ribbonToughness;
+        return acc;
+      }, {})[row.ribbonToughnessLevel];
 
       // 根据外观描述判定外观等级 appearenceLevel
       // row.appearenceLevel = this.appearenceList.reduce((acc, cur) => {
@@ -1530,7 +1564,7 @@ export default {
         return "不合格";
       }
 
-      // 如果带材韧性为D/E，同时带材宽度超出规格±0.2mm，此带材为不合格，否则加E，正偏差为+E,负偏差为-E
+      // 如果规格<50mm，带材韧性为D/E，同时带材宽度超出规格±0.2mm，此带材为不合格，否则加E，正偏差为+E,负偏差为-E
       if (
         row.ribbonWidth < 50 &&
         isFragile &&

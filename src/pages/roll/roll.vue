@@ -151,7 +151,7 @@
           width="70px"
         >
           <template slot-scope="scope">
-            <span>{{ getRollerName(scope.row.roller) }}</span>
+            <span>{{ scope.row.rollerName }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -328,6 +328,9 @@ export default {
           data.list &&
             data.list.forEach(item => {
               item.clients = item.clients ? item.clients.split(",") : [];
+              item.rollerName = item.rollerName
+                ? item.rollerName
+                : this.getRollerName(item.roller);
             });
           this.tableData = data.list;
         })
@@ -402,7 +405,7 @@ export default {
       if (
         [1, 2, 3, 15].includes(this.userinfo.roleId) ||
         (this.userinfo.roleId === 4 &&
-          this.getRollerName(row.roller) === this.userinfo.adminname)
+          row.rollerName === this.userinfo.adminname)
       ) {
         return false;
       } else {

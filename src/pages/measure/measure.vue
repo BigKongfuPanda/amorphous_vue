@@ -515,8 +515,7 @@
           align="center"
           width="70px"
         >
-          <template slot-scope="scope">
-            <!-- <div v-if="scope.row.isEditing === false"> -->
+          <!-- <template slot-scope="scope">
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
             >
@@ -536,7 +535,7 @@
                 ></el-option>
               </el-select>
             </div>
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column
           prop="ribbonToughnessLevel"
@@ -739,7 +738,6 @@
           :show-overflow-tooltip="true"
         >
           <template slot-scope="scope">
-            <!-- <div v-if="scope.row.isEditing === false" class="text_danger"> -->
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
               class="text_danger"
@@ -762,7 +760,6 @@
           :show-overflow-tooltip="true"
         >
           <template slot-scope="scope">
-            <!-- <div v-if="scope.row.isEditing === false"> -->
             <div
               v-if="scope.row.isMeasureConfirmed === 1 || userinfo.roleId != 5"
             >
@@ -812,7 +809,6 @@
               :disabled="!isEditable"
               >保存</el-button
             >
-            <!-- <el-button size="mini" type="danger" @click="del(scope.row)" v-if="isDeleteable">删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -983,6 +979,11 @@ export default {
             item.appearenceLevel
           ].every(el => !!el)
       );
+      if (!Array.isArray(list) || list.length === 0)
+        return Message({
+          message: `没有找到需要计算综合级别的带材，请确认 带材厚度/带宽/韧性等级/外观等级 等数据是否完整`,
+          type: "error"
+        });
       /**
        * 计算：
        * 1.平均厚度，最大偏差，厚度等级
@@ -1006,11 +1007,7 @@ export default {
           ...result
         };
       });
-      if (!Array.isArray(list) || list.length === 0)
-        return Message({
-          message: `没有找到需要计算综合级别的带材，请确认 带材厚度/带宽/韧性等级/外观等级 等数据是否完整`,
-          type: "error"
-        });
+
       this.$http("PUT", urlmap.updateMeasureByBatch, {
         listJson: JSON.stringify(list)
       })
@@ -1239,28 +1236,6 @@ export default {
       }
       // row.isEditing = true;
     },
-    // del(row) {
-    //   const { measureId, furnace, coilNumber } = row;
-    //   this.$confirm(
-    //     `删除后数据无法恢复，确定删除 ${furnace} 的第 ${coilNumber} 盘吗？`,
-    //     "提示",
-    //     {
-    //       confirmButtonText: "确定",
-    //       cancelButtonText: "取消",
-    //       type: "warning",
-    //     }
-    //   )
-    //     .then(() => {
-    //       this.$http("delete", urlmap.delRoll, { measureId })
-    //         .then((data) => {
-    //           this.getTableData();
-    //         })
-    //         .catch((error) => {
-    //           console.log(error);
-    //         });
-    //     })
-    //     .catch(() => {});
-    // },
     customerNumer(value) {
       return typeof value === "string" ? Number(value.trim()) : value;
     },
@@ -1284,10 +1259,11 @@ export default {
       // )[row.ribbonToughness];
 
       // 根据韧性等级来获取韧性描述
-      row.ribbonToughness = this.ribbonToughnessLevelList.reduce((acc, cur) => {
-        acc[cur.ribbonToughnessLevel] = cur.ribbonToughness;
-        return acc;
-      }, {})[row.ribbonToughnessLevel];
+      row.ribbonToughness =
+        this.ribbonToughnessLevelList.reduce((acc, cur) => {
+          acc[cur.ribbonToughnessLevel] = cur.ribbonToughness;
+          return acc;
+        }, {})[row.ribbonToughnessLevel] || "";
 
       // 根据外观描述判定外观等级 appearenceLevel
       // row.appearenceLevel = this.appearenceList.reduce((acc, cur) => {
@@ -1335,118 +1311,6 @@ export default {
 
       // 综合级别
       row.ribbonTotalLevel = this.calcRibbonTotalLevel(row);
-      // 叠片系数不合格，或者外观等级为不合格，则综合级别为不合格
-      // row.ribbonTotalLevel =
-      //   row.laminationLevel === "不合格" || row.appearenceLevel === "不合格"
-      //     ? "不合格"
-      //     : row.ribbonThicknessLevel +
-      //       row.laminationLevel +
-      //       row.ribbonToughnessLevel +
-      //       row.appearenceLevel;
-      // /**
-      //  * 针对1K107B：
-      //  * 1.d＞34μm，判定为不合格;
-      //  * 2.叠片在0.72-0.75范围内，叠片级别为8，叠片小于0.72，判定为不合格
-      //  */
-      // if (row.ribbonTypeName == "1K107B") {
-      //   if (row.ribbonThickness > 34) {
-      //     row.ribbonTotalLevel = "不合格";
-      //   }
-      //   if (row.laminationLevel === 8) {
-      //     row.ribbonTotalLevel = "不合格";
-      //   }
-      // }
-      // // 规格 为 32/42/，材质为 1K107B 的带材，如果韧性为D或E，则综合级别为不合格
-      // if (
-      //   [32, 42].includes(row.ribbonWidth) &&
-      //   row.ribbonTypeName == "1K107B" &&
-      //   ["D", "E"].includes(row.ribbonToughnessLevel)
-      // ) {
-      //   row.ribbonTotalLevel = "不合格";
-      // }
-      // //如果规格<50mm，带材厚度偏差大于3，同时韧性为D/E,此带材为不合格，否则加F
-      // if (
-      //   row.ribbonThicknessDeviation > 3 &&
-      //   row.ribbonWidth < 50 &&
-      //   ["D", "E"].includes(row.ribbonToughnessLevel)
-      // ) {
-      //   row.ribbonTotalLevel = "不合格";
-      // }
-      // // 如果带材韧性为D/E，同时带材宽度超出规格±0.2mm，此带材为不合格，否则加E，正偏差为+E,负偏差为-E
-      // if (row.ribbonWidth < 50) {
-      //   if (
-      //     ["D", "E"].includes(row.ribbonToughnessLevel) &&
-      //     Math.abs(row.realRibbonWidth - row.ribbonWidth) > 0.2
-      //   ) {
-      //     row.ribbonTotalLevel = "不合格";
-      //   }
-      // } else if (row.ribbonWidth >= 50) {
-      //   if (
-      //     ["D", "E"].includes(row.ribbonToughnessLevel) &&
-      //     Math.abs(row.realRibbonWidth - row.ribbonWidth) > 0.3
-      //   ) {
-      //     row.ribbonTotalLevel = "不合格";
-      //   }
-      // }
-      // if (["AD25", "ND25"].includes(row.ribbonTypeName)) {
-      //   let _width = row.realRibbonWidth - row.ribbonWidth;
-      //   _width = _width.toFixed(1);
-      //   if (_width >= 0.1 || _width <= -0.2) {
-      //     row.ribbonTotalLevel = "不合格";
-      //   }
-      // }
-
-      // if (row.ribbonTotalLevel !== "不合格") {
-      //   // 如果厚度为20-22，则加G，厚度为23-24，加L
-      //   if (row.ribbonThickness >= 20 && row.ribbonThickness < 22) {
-      //     row.ribbonTotalLevel = row.ribbonTotalLevel + "G";
-      //   }
-      //   if (row.ribbonThickness >= 23 && row.ribbonThickness < 24) {
-      //     row.ribbonTotalLevel = row.ribbonTotalLevel + "L";
-      //   }
-      //   // 如果带材厚度偏差大于3，同时韧性为A,B,C,此带材加F
-      //   if (
-      //     row.ribbonThicknessDeviation > 3 &&
-      //     ["A", "B", "C"].includes(row.ribbonToughnessLevel)
-      //   ) {
-      //     row.ribbonTotalLevel = row.ribbonTotalLevel + "F";
-      //   }
-      //   // 如果带材韧性为A/B/C，同时带材宽度超出规格±0.2mm，加E，正偏差为+E,负偏差为-E
-      //   let _width = row.realRibbonWidth - row.ribbonWidth;
-      //   _width = _width.toFixed(1);
-      //   if (row.ribbonWidth < 50) {
-      //     if (
-      //       Math.abs(_width) > 0.2 &&
-      //       ["A", "B", "C"].includes(row.ribbonToughnessLevel)
-      //     ) {
-      //       if (_width < -0.2) {
-      //         row.ribbonTotalLevel = row.ribbonTotalLevel + "-E";
-      //       } else if (_width > 0.2) {
-      //         row.ribbonTotalLevel = row.ribbonTotalLevel + "+E";
-      //       }
-      //     }
-      //   } else if (row.ribbonWidth >= 50) {
-      //     if (
-      //       Math.abs(_width) > 0.3 &&
-      //       ["A", "B", "C"].includes(row.ribbonToughnessLevel)
-      //     ) {
-      //       if (_width < -0.3) {
-      //         row.ribbonTotalLevel = row.ribbonTotalLevel + "-E";
-      //       } else if (_width > 0.3) {
-      //         row.ribbonTotalLevel = row.ribbonTotalLevel + "+E";
-      //       }
-      //     }
-      //   }
-      // }
-
-      // if (
-      //   ["", undefined, null].includes(row.ribbonThicknessLevel) ||
-      //   ["", undefined, null].includes(row.laminationLevel) ||
-      //   ["", undefined, null].includes(row.ribbonToughnessLevel) ||
-      //   ["", undefined, null].includes(row.appearenceLevel)
-      // ) {
-      //   row.ribbonTotalLevel = "";
-      // }
 
       // 是否入库：不合格不能入库，端面有问题的不能入库，不满足入库规则的不能入库
       if (row.ribbonTotalLevel === "不合格") {
@@ -1545,7 +1409,7 @@ export default {
         if (row.ribbonThickness > 34) {
           return "不合格";
         }
-        if (row.laminationLevel === 8) {
+        if (row.laminationLevel == "8") {
           return "不合格";
         }
 
@@ -1967,20 +1831,26 @@ export default {
       const params = {
         castId: this.castId,
         startTime: this.searchForm.date[0],
-        endTime: this.searchForm.date[1],
-        caster: this.searchForm.caster,
-        furnace: this.searchForm.furnace,
-        ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
-        ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths),
-        ribbonThicknessLevelJson: JSON.stringify(
-          this.searchForm.ribbonThicknessLevels
-        ),
-        laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
-        ribbonToughnessLevelJson: JSON.stringify(
-          this.searchForm.ribbonToughnessLevels
-        ),
-        appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels)
+        endTime: this.searchForm.date[1]
+        // caster: this.searchForm.caster,
+        // furnace: this.searchForm.furnace,
+        // ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
+        // ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths),
+        // ribbonThicknessLevelJson: JSON.stringify(
+        //   this.searchForm.ribbonThicknessLevels
+        // ),
+        // laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
+        // ribbonToughnessLevelJson: JSON.stringify(
+        //   this.searchForm.ribbonToughnessLevels
+        // ),
+        // appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels)
       };
+      if (!params.startTime || !params.endTime) {
+        return this.$message({
+          message: "请选择生产日期",
+          type: "error"
+        });
+      }
       const url = `${urlmap.exportMeasure}?${qs.stringify(params)}`;
       window.open(url);
     },

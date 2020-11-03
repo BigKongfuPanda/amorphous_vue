@@ -17,8 +17,7 @@
       >
         <el-submenu index="1">
           <template slot="title">
-            <i class="el-icon-tickets"></i>
-            <span>生产计划</span>
+            <i class="el-icon-tickets"></i> <span>生产计划</span>
           </template>
           <router-link to="/plan/6">
             <el-menu-item index="/plan/6">6号机组</el-menu-item>
@@ -35,8 +34,7 @@
         </el-submenu>
         <el-submenu index="2">
           <template slot="title">
-            <i class="el-icon-tickets"></i>
-            <span>冶炼记录</span>
+            <i class="el-icon-tickets"></i> <span>冶炼记录</span>
           </template>
           <router-link to="/melt/6">
             <el-menu-item index="/melt/6">6号机组</el-menu-item>
@@ -53,8 +51,7 @@
         </el-submenu>
         <el-submenu index="3">
           <template slot="title">
-            <i class="el-icon-tickets"></i>
-            <span>喷带记录</span>
+            <i class="el-icon-tickets"></i> <span>喷带记录</span>
           </template>
           <router-link to="/cast/6">
             <el-menu-item index="/cast/6">6号机组</el-menu-item>
@@ -71,8 +68,7 @@
         </el-submenu>
         <el-submenu index="4">
           <template slot="title">
-            <i class="el-icon-tickets"></i>
-            <span>重卷记录</span>
+            <i class="el-icon-tickets"></i> <span>重卷记录</span>
           </template>
           <router-link to="/roll/6">
             <el-menu-item index="/roll/6">6号机组</el-menu-item>
@@ -89,8 +85,7 @@
         </el-submenu>
         <el-submenu index="5">
           <template slot="title">
-            <i class="el-icon-tickets"></i>
-            <span>检测记录</span>
+            <i class="el-icon-tickets"></i> <span>检测记录</span>
           </template>
           <router-link to="/measure/6">
             <el-menu-item index="/measure/6">6号机组</el-menu-item>
@@ -107,9 +102,11 @@
         </el-submenu>
         <el-submenu index="6" v-if="[1, 2, 3, 5, 6].includes(roleId)">
           <template slot="title">
-            <i class="el-icon-tickets"></i>
-            <span>库房记录</span>
+            <i class="el-icon-tickets"></i> <span>库房记录</span>
           </template>
+          <router-link to="/applyStore">
+            <el-menu-item index="/applyStore">申请入库</el-menu-item>
+          </router-link>
           <router-link to="/storage/6">
             <el-menu-item index="/storage/6">6号机组</el-menu-item>
           </router-link>
@@ -128,8 +125,7 @@
         </el-submenu>
         <el-submenu index="7" v-if="[1, 2, 3, 5, 6].includes(roleId)">
           <template slot="title">
-            <i class="el-icon-tickets"></i>
-            <span>退货处理</span>
+            <i class="el-icon-tickets"></i> <span>退货处理</span>
           </template>
           <router-link to="/returnTreatment">
             <el-menu-item index="/returnTreatment">退货操作</el-menu-item>
@@ -143,8 +139,7 @@
           v-if="roleId === 1 || roleId === 2 || roleId === 3"
         >
           <template slot="title">
-            <i class="el-icon-tickets"></i>
-            <span>数据统计</span>
+            <i class="el-icon-tickets"></i> <span>数据统计</span>
           </template>
           <router-link to="/statisticsOfRatio">
             <el-menu-item index="/statisticsOfRatio">直通率统计表</el-menu-item>
@@ -156,13 +151,9 @@
             <el-menu-item index="/statisticsOder">订单统计表</el-menu-item>
           </router-link>
         </el-submenu>
-        <el-submenu
-          index="9"
-          v-if="[1,2,3,5].includes(roleId)"
-        >
+        <el-submenu index="9" v-if="[1, 2, 3, 5].includes(roleId)">
           <template slot="title">
-            <i class="el-icon-tickets"></i>
-            <span>带材管理</span>
+            <i class="el-icon-tickets"></i> <span>带材管理</span>
           </template>
           <router-link to="/ribbonType">
             <el-menu-item index="/ribbonType">牌号列表</el-menu-item>
@@ -195,8 +186,7 @@
         </el-submenu>
         <el-submenu index="10" v-if="[1, 2, 3, 15].includes(roleId)">
           <template slot="title">
-            <i class="el-icon-tickets"></i>
-            <span>账号管理</span>
+            <i class="el-icon-tickets"></i> <span>账号管理</span>
           </template>
           <router-link to="/user" v-if="[1, 2, 3].includes(roleId)">
             <el-menu-item index="/user">用户列表</el-menu-item>
@@ -212,8 +202,7 @@
         <div class="logo"></div>
         <div class="signout">
           <label>
-            当前用户：
-            <span style="margin-right: 20px">{{ adminname }}</span>
+            当前用户： <span style="margin-right: 20px">{{ adminname }}</span>
           </label>
           <el-button
             type="primary"
@@ -231,9 +220,7 @@
           >
         </div>
       </el-header>
-      <el-main class="main">
-        <router-view></router-view>
-      </el-main>
+      <el-main class="main"> <router-view></router-view> </el-main>
     </el-container>
     <!-- 修改密码 -->
     <el-dialog
@@ -308,7 +295,7 @@ export default {
       formData: {
         password: "",
         newPassword: "",
-        newPasswordVerify: "",
+        newPasswordVerify: ""
       },
       rules: {
         password: [
@@ -317,8 +304,8 @@ export default {
             min: 6,
             max: 20,
             message: "长度在 6 到 20 个字符",
-            trigger: "blur",
-          },
+            trigger: "blur"
+          }
         ],
         newPassword: [
           { required: true, message: "请输入新密码", trigger: "blur" },
@@ -326,8 +313,8 @@ export default {
             min: 6,
             max: 20,
             message: "长度在 6 到 20 个字符",
-            trigger: "blur",
-          },
+            trigger: "blur"
+          }
         ],
         newPasswordVerify: [
           { required: true, message: "请输入新密码", trigger: "blur" },
@@ -335,11 +322,11 @@ export default {
             min: 6,
             max: 20,
             message: "长度在 6 到 20 个字符",
-            trigger: "blur",
+            trigger: "blur"
           },
-          { validator: verifyPassword, trigger: "blur" },
-        ],
-      },
+          { validator: verifyPassword, trigger: "blur" }
+        ]
+      }
     };
   },
   created() {
@@ -356,12 +343,12 @@ export default {
     signout() {
       this.isDisabled = true;
       this.$http("POST", urlmap.signout, {})
-        .then((data) => {
+        .then(data => {
           localStorage.removeItem("userinfo");
-          const returnUrl = encodeURIComponent(window.location.href)
-          this.$router.push({ path: "/login", query: {returnUrl} });
+          const returnUrl = encodeURIComponent(window.location.href);
+          this.$router.push({ path: "/login", query: { returnUrl } });
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         })
         .finally(() => {
@@ -375,19 +362,19 @@ export default {
       this.dialogVisible = false;
     },
     submitForm() {
-      this.$refs.form.validate((valid) => {
+      this.$refs.form.validate(valid => {
         if (valid) {
           this.loading = true;
           const params = {
             username: this.username,
             password: this.formData.password,
-            newPassword: this.formData.newPassword,
+            newPassword: this.formData.newPassword
           };
           this.$http("PUT", urlmap.updatePassword, params)
-            .then((data) => {
+            .then(data => {
               this.dialogVisible = false;
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err);
             })
             .finally(() => {
@@ -397,8 +384,8 @@ export default {
           return false;
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

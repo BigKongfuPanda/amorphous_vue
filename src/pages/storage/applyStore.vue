@@ -2,32 +2,10 @@
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right" class="crumb">
       <el-breadcrumb-item>库存记录</el-breadcrumb-item>
-      <el-breadcrumb-item>{{ castId }}号机组</el-breadcrumb-item>
+      <el-breadcrumb-item>申请入库</el-breadcrumb-item>
     </el-breadcrumb>
     <Collapse>
       <el-form class="search_bar" :model="searchForm" :inline="true">
-        <el-form-item label="入库日期：">
-          <el-date-picker
-            v-model="searchForm.date"
-            type="daterange"
-            :default-time="['00:00:00', '23:59:59']"
-            :clearable="false"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          >
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="出库日期：">
-          <el-date-picker
-            v-model="searchForm.outDate"
-            type="daterange"
-            :default-time="['00:00:00', '23:59:59']"
-            :clearable="false"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          >
-          </el-date-picker>
-        </el-form-item>
         <el-form-item label="炉号：">
           <!-- <el-input v-model="searchForm.furnace" placeholder="请输入炉号"></el-input> -->
           <el-select
@@ -48,101 +26,34 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="材质：">
-          <el-select
-            v-model="searchForm.ribbonTypeNames"
-            placeholder="请选择"
-            multiple
-            collapse-tags
-          >
-            <el-option
-              v-for="item in ribbonTypeList"
-              :key="item.ribbonTypeId"
-              :value="item.ribbonTypeName"
-              :label="item.ribbonTypeName"
-            ></el-option>
+        <el-form-item label="机组：">
+          <el-select v-model="searchForm.castIds" placeholder="请选择" multiple>
+            <el-option :value="6" label="6"></el-option>
+            <el-option :value="7" label="7"></el-option>
+            <el-option :value="8" label="8"></el-option>
+            <el-option :value="9" label="9"></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- <el-form-item label="材质：">
+          <el-select v-model="searchForm.ribbonTypeNames" placeholder="请选择" multiple collapse-tags>
+            <el-option v-for="item in ribbonTypeList" :key="item.ribbonTypeId" :value="item.ribbonTypeName" :label="item.ribbonTypeName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="规格：">
-          <el-select
-            v-model="searchForm.ribbonWidths"
-            placeholder="请选择"
-            multiple
-            collapse-tags
-          >
-            <el-option
-              v-for="item in ribbonWidthList"
-              :key="item.ribbonWidthId"
-              :label="item.ribbonWidth"
-              :value="item.ribbonWidth"
-            ></el-option>
+          <el-select v-model="searchForm.ribbonWidths" placeholder="请选择" multiple collapse-tags>
+            <el-option v-for="item in ribbonWidthList" :key="item.ribbonWidthId" :label="item.ribbonWidth" :value="item.ribbonWidth"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="厚度级别：">
-          <el-select
-            v-model="searchForm.ribbonThicknessLevels"
-            placeholder="请选择"
-            multiple
-            collapse-tags
-          >
-            <el-option
-              v-for="item in ribbonThicknessLevelList"
-              :key="item.ribbonThicknessLevelId"
-              :label="item.ribbonThicknessLevel"
-              :value="item.ribbonThicknessLevel"
-            ></el-option>
+          <el-select v-model="searchForm.ribbonThicknessLevels" placeholder="请选择" multiple collapse-tags>
+            <el-option v-for="item in ribbonThicknessLevelList" :key="item.ribbonThicknessLevelId" :label="item.ribbonThicknessLevel" :value="item.ribbonThicknessLevel"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="叠片级别：">
-          <el-select
-            v-model="searchForm.laminationLevels"
-            placeholder="请选择"
-            multiple
-            collapse-tags
-          >
-            <el-option
-              v-for="item in laminationLevelList"
-              :key="item.laminationLevelId"
-              :label="item.laminationLevel"
-              :value="item.laminationLevel"
-            ></el-option>
+          <el-select v-model="searchForm.laminationLevels" placeholder="请选择" multiple collapse-tags>
+            <el-option v-for="item in laminationLevelList" :key="item.laminationLevelId" :label="item.laminationLevel" :value="item.laminationLevel"></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="综合级别：">
-          <el-input
-            v-model="searchForm.ribbonTotalLevels"
-            placeholder="请输入综合级别，以逗号分隔"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="仓位：">
-          <el-input
-            v-model="searchForm.place"
-            placeholder="请输入仓位，以逗号分隔"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="去向：">
-          <el-select
-            v-model="searchForm.takebys"
-            placeholder="请选择"
-            multiple
-            collapse-tags
-          >
-            <el-option label="J" value="J"></el-option>
-            <el-option label="F" value="F"></el-option>
-            <el-option label="Z" value="Z"></el-option>
-            <el-option label="S" value="S"></el-option>
-            <el-option label="G" value="G"></el-option>
-            <el-option label="W" value="W"></el-option>
-            <el-option label="H" value="H"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="结余：">
-          <el-select v-model="searchForm.isRemain" placeholder="">
-            <el-option value="" label="全部"></el-option>
-            <el-option :value="0" label="=0"></el-option>
-            <el-option :value="1" label=">0"></el-option>
-          </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="clickSearch"
             >搜索</el-button
@@ -166,29 +77,9 @@
           v-if="isExportable"
           >导出</el-button
         >
-        <el-button
-          type="primary"
-          icon="el-icon-upload"
-          @click="uploadExcelHandler"
-          v-if="userinfo.roleId == 6"
-          >批量入仓</el-button
-        >
-        <el-button
-          type="primary"
-          icon="el-icon-menu"
-          @click="allOutStoreHandler"
-          v-if="isOutStoreable"
-          class="pull_right"
-          >整托出库</el-button
-        >
-        <el-button
-          type="primary"
-          icon="el-icon-rank"
-          @click="batchOutStoreHandler"
-          v-if="isOutStoreable"
-          class="pull_right"
-          >批量出库</el-button
-        >
+        <!-- <el-button type="primary" icon="el-icon-upload" @click="uploadExcelHandler" v-if="userinfo.roleId == 6">批量入仓</el-button>
+        <el-button type="primary" icon="el-icon-menu" @click="allOutStoreHandler" v-if="isOutStoreable" class="pull_right">整托出库</el-button>
+        <el-button type="primary" icon="el-icon-rank" @click="batchOutStoreHandler" v-if="isOutStoreable" class="pull_right">批量出库</el-button> -->
       </el-col>
       <el-table
         :data="tableData"
@@ -349,32 +240,13 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="150px">
+        <!-- <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="primary"
-              @click="edit(scope.row)"
-              v-if="scope.row.isEditing === false"
-              :disabled="!isEditable"
-              >修改</el-button
-            >
-            <el-button
-              size="mini"
-              type="success"
-              @click="save(scope.row)"
-              v-else
-              >保存</el-button
-            >
-            <el-button
-              size="mini"
-              type="danger"
-              @click="del(scope.row)"
-              v-if="isDeleteable"
-              >退库</el-button
-            >
+            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button>
+            <el-button size="mini" type="success" @click="save(scope.row)" v-else>保存</el-button>
+            <el-button size="mini" type="danger" @click="del(scope.row)" v-if="isDeleteable">退库</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <el-pagination
         background

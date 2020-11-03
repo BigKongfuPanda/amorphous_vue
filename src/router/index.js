@@ -72,6 +72,8 @@ const Roller = () =>
 
 const LinerWeight = () =>
   import(/* webpackChunkName: "linerWeight" */ "@/pages/linerWeight/index.vue");
+const ApplyStore = () =>
+  import(/* webpackChunkName: "ApplyStore" */ "@/pages/storage/applyStore.vue");
 
 export default new Router({
   routes: [
@@ -185,6 +187,12 @@ export default new Router({
           name: "storageTotal",
           component: StorageTotal,
           meta: { title: "库房总表", icon: "storageTotal" }
+        },
+        {
+          path: "applyStore",
+          name: "applyStore",
+          component: ApplyStore,
+          meta: { title: "申请入库清单", icon: "applyStore" }
         },
         {
           path: "statisticsOfRatio",

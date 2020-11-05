@@ -156,6 +156,7 @@
 
 <script>
 import qs from "qs";
+import { cloneDeep } from "lodash";
 import urlmap from "@/utils/urlmap";
 import { dateFormat, debounce, dateTimeFormat } from "@/utils/common";
 import Collapse from "@/components/collapse.vue";
@@ -176,7 +177,8 @@ export default {
       totalCoilNum: null,
       totalWeight: null,
       tableData: [],
-      tableHeight: 200
+      tableHeight: 200,
+      multipleSelection: []
     };
   },
 
@@ -305,7 +307,22 @@ export default {
         this.furnaceList = [];
       }
     },
-    confirmInStore() {}
+    confirmInStore() {
+      const selectionList = cloneDeep(this.multipleSelection);
+      if (selectionList.length === 0) {
+        return this.$alert("请选择要入库的带材", "提示", { type: "warning" });
+      }
+      // 发送请求，更新当前的数据
+      this.$http("POST", urlmap.addStorage, {
+        dataJson: JSON.stringify(selectionList)
+      })
+        .then(data => {
+          this.getTableData();
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   }
 };
 </script>

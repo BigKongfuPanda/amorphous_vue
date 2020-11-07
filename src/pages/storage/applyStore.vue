@@ -50,10 +50,7 @@
     </el-row>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button
-          type="primary"
-          icon="el-icon-download"
-          @click="confirmInStore"
+        <el-button type="primary" icon="el-icon-check" @click="confirmInStore"
           >确认入库</el-button
         >
       </el-col>

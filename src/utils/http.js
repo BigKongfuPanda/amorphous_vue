@@ -24,8 +24,7 @@ axios.interceptors.response.use(
         message: _data.message,
         type: "error"
       });
-      const returnUrl = encodeURIComponent(window.location.href);
-      return router.push({ path: "/login", query: { returnUrl } });
+      return router.push({ path: "/login" });
     }
 
     if (_data.status != 0) {

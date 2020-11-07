@@ -72,10 +72,10 @@
       <el-col class="table_hd">
         <el-button
           type="primary"
-          icon="el-icon-download"
+          icon="el-icon-check"
           @click="exportExcel"
           v-if="isExportable"
-          >导出</el-button
+          >确认入库</el-button
         >
         <!-- <el-button type="primary" icon="el-icon-upload" @click="uploadExcelHandler" v-if="userinfo.roleId == 6">批量入仓</el-button>
         <el-button type="primary" icon="el-icon-menu" @click="allOutStoreHandler" v-if="isOutStoreable" class="pull_right">整托出库</el-button>

@@ -43,6 +43,8 @@ export default {
   delStorage: "/storage",
   exportStorage: "/storage/exportstorage",
   uploadStorage: "/storage/uploadstorage",
+  queryApplyStorage: "/storage/queryApplyStorage",
+  addStorage: "storage/addStorage",
   // 退货处理
   queryReturnGoods: "/returnGoods",
   addReturnGoods: "/returnGoods",

@@ -344,6 +344,32 @@
             <el-button size="mini" type="danger" @click="del(scope.row)" v-if="isDeleteable">退库</el-button>
           </template>
         </el-table-column> -->
+        <el-table-column label="操作" align="center" width="150px">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="primary"
+              @click="edit(scope.row)"
+              v-if="scope.row.isEditing === false"
+              :disabled="!isEditable"
+              >修改</el-button
+            >
+            <el-button
+              size="mini"
+              type="success"
+              @click="save(scope.row)"
+              v-else
+              >保存</el-button
+            >
+            <el-button
+              size="mini"
+              type="danger"
+              @click="del(scope.row)"
+              v-if="isDeleteable"
+              >退库</el-button
+            >
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         background

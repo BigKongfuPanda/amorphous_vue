@@ -708,13 +708,26 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="isStored"
+          prop="isStorageConfirmed"
           label="是否入库"
           align="center"
           width="60px"
         >
           <template slot-scope="scope">
-            <div v-if="scope.row.isMeasureConfirmed === 1">
+            <div>
+              <span v-if="scope.row.isStorageConfirmed === 1">是</span>
+              <span v-else class="text_danger">否</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="isStored"
+          label="入库类别"
+          align="center"
+          width="60px"
+        >
+          <template slot-scope="scope">
+            <div v-if="scope.row.isStorageConfirmed === 1">
               <span v-if="scope.row.isStored === 1">计划内</span>
               <span v-if="scope.row.isStored === 2">计划外</span>
               <span v-if="scope.row.isStored === 3" class="text_danger"
@@ -1869,6 +1882,15 @@ export default {
       const selectionList = cloneDeep(this.multipleSelection);
       if (selectionList.length === 0) {
         return this.$alert("请选择要入库的带材", "提示", { type: "warning" });
+      }
+      if (
+        selectionList.some(item => !item.clients || item.clients.length === 0)
+      ) {
+        return this.$alert(
+          "申请入库的带材没有填写检测去向，请检查后再提交",
+          "提示",
+          { type: "warning" }
+        );
       }
       selectionList.forEach(row => {
         row.isMeasureConfirmed = 1; // 1-检测确认入库，0-还没有确认

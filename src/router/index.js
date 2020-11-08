@@ -74,6 +74,8 @@ const LinerWeight = () =>
   import(/* webpackChunkName: "linerWeight" */ "@/pages/linerWeight/index.vue");
 const ApplyStore = () =>
   import(/* webpackChunkName: "ApplyStore" */ "@/pages/storage/applyStore.vue");
+const RibbonInfo = () =>
+  import(/* webpackChunkName: "ribbonInfo" */ "@/pages/ribbonInfo/ribbonInfo.vue");
 
 export default new Router({
   routes: [
@@ -83,9 +85,9 @@ export default new Router({
       component: Login
     },
     {
-      path: "/qrcode", // http://192.168.0.89/#/qrcode?f=炉号&c=盘号
-      name: "qrcode",
-      component: Login
+      path: "/ribbonInfo", // http://192.168.0.89/#/ribbonInfo?f=炉号&c=盘号
+      name: "ribbonInfo",
+      component: RibbonInfo
     },
     {
       path: "/",

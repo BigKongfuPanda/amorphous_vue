@@ -20,7 +20,8 @@
       {
         "libraryName": "element-ui",
         "styleLibraryName": "theme-chalk"
-      }
+      },
+      "element-ui"
     ]
   ]
 }

@@ -50,7 +50,11 @@
     </el-row>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-check" @click="confirmInStore"
+        <el-button
+          type="primary"
+          icon="el-icon-check"
+          @click="confirmInStore"
+          v-if="roleId === 6"
           >确认入库</el-button
         >
       </el-col>
@@ -163,7 +167,7 @@ export default {
   components: { Collapse },
   data() {
     return {
-      userinfo: {},
+      roleId: 0,
       searchForm: {
         castIds: [],
         furnaces: []
@@ -180,7 +184,8 @@ export default {
   },
 
   created() {
-    this.userinfo = JSON.parse(localStorage.getItem("userinfo"));
+    const userinfo = JSON.parse(localStorage.getItem("userinfo"));
+    this.roleId = (userinfo && userinfo.roleId) || 0;
     this.getTableData();
   },
   mounted() {

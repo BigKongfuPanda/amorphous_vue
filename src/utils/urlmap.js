@@ -36,8 +36,10 @@ export default {
   updateMeasure: "/measure/updateMeasure",
   updateMeasureByBatch: "/measure/updateMeasureByBatch",
   exportMeasure: "/measure/exportmeasure",
+  queryRibbonInfo: "measure/queryRibbonInfo",
   // 库房
   queryFurnaceList: "/storage/furnace",
+  queryRibbonTotalLevelList: "/storage/ribbonTotalLevel",
   queryStorage: "/storage",
   updateStorage: "/storage",
   delStorage: "/storage",
@@ -45,6 +47,7 @@ export default {
   uploadStorage: "/storage/uploadstorage",
   queryApplyStorage: "/storage/queryApplyStorage",
   addStorage: "storage/addStorage",
+  scanConfirm: "storage/scanConfirm",
   // 退货处理
   queryReturnGoods: "/returnGoods",
   addReturnGoods: "/returnGoods",

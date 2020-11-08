@@ -38,7 +38,7 @@
             remote
             collapse-tags
             :loading="selectLoading"
-            :remote-method="remoteMethod"
+            :remote-method="query => remoteMethod(query, 'furnace')"
           >
             <el-option
               v-for="furnace in furnaceList"
@@ -109,10 +109,27 @@
           </el-select>
         </el-form-item>
         <el-form-item label="综合级别：">
-          <el-input
+          <!-- <el-input
             v-model="searchForm.ribbonTotalLevels"
             placeholder="请输入综合级别，以逗号分隔"
-          ></el-input>
+          ></el-input> -->
+          <el-select
+            v-model="searchForm.ribbonTotalLevels"
+            placeholder="请输入综合级别关键字"
+            multiple
+            filterable
+            remote
+            collapse-tags
+            :loading="selectLoading"
+            :remote-method="query => remoteMethod(query, 'ribbonTotalLevel')"
+          >
+            <el-option
+              v-for="ribbonTotalLevel in ribbonTotalLevelList"
+              :key="ribbonTotalLevel"
+              :label="ribbonTotalLevel"
+              :value="ribbonTotalLevel"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="仓位：">
           <el-input
@@ -521,7 +538,7 @@ export default {
         outDate: [],
         ribbonTypeNames: [],
         ribbonWidths: [],
-        ribbonTotalLevels: "",
+        ribbonTotalLevels: [],
         ribbonThicknessLevels: [],
         laminationLevels: [],
         takebys: [],
@@ -531,6 +548,7 @@ export default {
       loading: false,
       selectLoading: false,
       furnaceList: [],
+      ribbonTotalLevelList: [],
       totalCoilNum: null,
       totalWeight: null,
       tableData: [],
@@ -680,7 +698,7 @@ export default {
         furnaces: [],
         date: [],
         outDate: [],
-        ribbonTotalLevels: "",
+        ribbonTotalLevels: [],
         ribbonTypeNames: [],
         ribbonWidths: [],
         ribbonThicknessLevels: [],
@@ -709,7 +727,7 @@ export default {
           this.searchForm.ribbonThicknessLevels
         ),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
-        ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
+        ribbonTotalLevelJson: JSON.stringify(this.searchForm.ribbonTotalLevels),
         takebyJson: JSON.stringify(this.searchForm.takebys),
         place: this.searchForm.place,
         isRemain: this.searchForm.isRemain
@@ -792,14 +810,14 @@ export default {
         outStartTime: this.searchForm.outDate[0],
         outEndTime: this.searchForm.outDate[1],
         caster: this.searchForm.caster,
-        furnace: this.searchForm.furnace,
+        furnaceJson: JSON.stringify(this.searchForm.furnaces),
         ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
         ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths),
         ribbonThicknessLevelJson: JSON.stringify(
           this.searchForm.ribbonThicknessLevels
         ),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
-        ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
+        ribbonTotalLevelJson: JSON.stringify(this.searchForm.ribbonTotalLevels),
         takebyJson: JSON.stringify(this.searchForm.takebys),
         place: this.searchForm.place,
         isRemain: this.searchForm.isRemain
@@ -963,12 +981,22 @@ export default {
       this.pageConfig.current = 1;
       this.getTableData(params);
     },
-    remoteMethod(query) {
+    remoteMethod(query, type) {
+      const { url, key } = {
+        furnace: {
+          url: urlmap.queryFurnaceList,
+          key: "furnaceList"
+        },
+        ribbonTotalLevel: {
+          url: urlmap.queryRibbonTotalLevelList,
+          key: "ribbonTotalLevelList"
+        }
+      }[type];
       if (query !== "") {
         this.selectLoading = true;
-        this.$http("GET", urlmap.queryFurnaceList, { query })
+        this.$http("GET", url, { query })
           .then(data => {
-            this.furnaceList = data.list;
+            this[key] = data.list;
           })
           .catch(err => {
             console.log(err);
@@ -977,7 +1005,7 @@ export default {
             this.selectLoading = false;
           });
       } else {
-        this.furnaceList = [];
+        this[key] = [];
       }
     }
   }

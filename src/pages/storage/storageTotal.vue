@@ -46,7 +46,7 @@
             remote
             collapse-tags
             :loading="selectLoading"
-            :remote-method="remoteMethod"
+            :remote-method="query => remoteMethod(query, 'furnace')"
           >
             <el-option
               v-for="furnace in furnaceList"
@@ -117,10 +117,27 @@
           </el-select>
         </el-form-item>
         <el-form-item label="综合级别：">
-          <el-input
+          <!-- <el-input
             v-model="searchForm.ribbonTotalLevels"
             placeholder="请输入综合级别，以逗号分隔"
-          ></el-input>
+          ></el-input> -->
+          <el-select
+            v-model="searchForm.ribbonTotalLevels"
+            placeholder="请输入综合级别关键字"
+            multiple
+            filterable
+            remote
+            collapse-tags
+            :loading="selectLoading"
+            :remote-method="query => remoteMethod(query, 'ribbonTotalLevel')"
+          >
+            <el-option
+              v-for="ribbonTotalLevel in ribbonTotalLevelList"
+              :key="ribbonTotalLevel"
+              :label="ribbonTotalLevel"
+              :value="ribbonTotalLevel"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="仓位：">
           <el-input
@@ -337,13 +354,6 @@
             </div>
           </template>
         </el-table-column>
-        <!-- <el-table-column label="操作" align="center" width="150px">
-          <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button>
-            <el-button size="mini" type="success" @click="save(scope.row)" v-else>保存</el-button>
-            <el-button size="mini" type="danger" @click="del(scope.row)" v-if="isDeleteable">退库</el-button>
-          </template>
-        </el-table-column> -->
         <el-table-column label="操作" align="center" width="150px">
           <template slot-scope="scope">
             <el-button
@@ -508,7 +518,6 @@ export default {
   data() {
     return {
       userinfo: {},
-      castId: 6,
       searchForm: {
         castIds: [],
         caster: "",
@@ -517,7 +526,7 @@ export default {
         outDate: [],
         ribbonTypeNames: [],
         ribbonWidths: [],
-        ribbonTotalLevels: "",
+        ribbonTotalLevels: [],
         ribbonThicknessLevels: [],
         laminationLevels: [],
         takebys: [],
@@ -527,6 +536,7 @@ export default {
       loading: false,
       selectLoading: false,
       furnaceList: [],
+      ribbonTotalLevelList: [],
       totalCoilNum: null,
       totalWeight: null,
       tableData: [],
@@ -585,7 +595,6 @@ export default {
   },
   // 动态路由匹配
   beforeRouteUpdate(to, from, next) {
-    this.castId = to.params.castId;
     this.getTableData();
     this.isExportable = this.setExportable();
     this.isEditable = this.setEditable();
@@ -593,17 +602,16 @@ export default {
     next();
   },
   created() {
-    this.castId = this.$route.params.castId;
     this.userinfo = JSON.parse(localStorage.getItem("userinfo"));
-    this.isExportable = this.setExportable();
-    this.isEditable = this.setEditable();
-    this.isDeleteable = this.setDeleteable();
-    this.isOutStoreable = this.setOutStoreable();
     this.getTableData();
     this.getRibbonTypeList();
     this.getRibbonWidthList();
     this.getRibbonThicknessLevelList();
     this.getLaminationLevelList();
+    this.isExportable = this.setExportable();
+    this.isEditable = this.setEditable();
+    this.isDeleteable = this.setDeleteable();
+    this.isOutStoreable = this.setOutStoreable();
   },
   mounted() {
     const self = this;
@@ -677,7 +685,7 @@ export default {
         furnaces: [],
         date: [],
         outDate: [],
-        ribbonTotalLevels: "",
+        ribbonTotalLevels: [],
         ribbonTypeNames: [],
         ribbonWidths: [],
         ribbonThicknessLevels: [],
@@ -706,7 +714,7 @@ export default {
           this.searchForm.ribbonThicknessLevels
         ),
         laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
-        ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
+        ribbonTotalLevelJson: JSON.stringify(this.searchForm.ribbonTotalLevels),
         takebyJson: JSON.stringify(this.searchForm.takebys),
         place: this.searchForm.place,
         isRemain: this.searchForm.isRemain
@@ -960,12 +968,22 @@ export default {
       this.pageConfig.current = 1;
       this.getTableData(params);
     },
-    remoteMethod(query) {
+    remoteMethod(query, type) {
+      const { url, key } = {
+        furnace: {
+          url: urlmap.queryFurnaceList,
+          key: "furnaceList"
+        },
+        ribbonTotalLevel: {
+          url: urlmap.queryRibbonTotalLevelList,
+          key: "ribbonTotalLevelList"
+        }
+      }[type];
       if (query !== "") {
         this.selectLoading = true;
-        this.$http("GET", urlmap.queryFurnaceList, { query })
+        this.$http("GET", url, { query })
           .then(data => {
-            this.furnaceList = data.list;
+            this[key] = data.list;
           })
           .catch(err => {
             console.log(err);
@@ -974,7 +992,7 @@ export default {
             this.selectLoading = false;
           });
       } else {
-        this.furnaceList = [];
+        this[key] = [];
       }
     }
   }

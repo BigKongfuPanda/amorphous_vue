@@ -141,9 +141,7 @@ export default {
           this.disabled = false;
         });
     },
-    handleFinish() {
-      this.$router.push({path: '/scanList'});
-    }
+    handleFinish() {}
   }
 };
 </script>

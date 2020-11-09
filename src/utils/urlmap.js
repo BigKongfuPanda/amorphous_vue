@@ -46,8 +46,9 @@ export default {
   exportStorage: "/storage/exportstorage",
   uploadStorage: "/storage/uploadstorage",
   queryApplyStorage: "/storage/queryApplyStorage",
-  addStorage: "storage/addStorage",
-  scanConfirm: "storage/scanConfirm",
+  addStorage: "/storage/addStorage",
+  scanConfirm: "/storage/scanConfirm",
+  queryScanList: "/storage/queryScanList",
   // 退货处理
   queryReturnGoods: "/returnGoods",
   addReturnGoods: "/returnGoods",

@@ -76,6 +76,8 @@ const ApplyStore = () =>
   import(/* webpackChunkName: "ApplyStore" */ "@/pages/storage/applyStore.vue");
 const RibbonInfo = () =>
   import(/* webpackChunkName: "ribbonInfo" */ "@/pages/ribbonInfo/ribbonInfo.vue");
+  const ScanList = () =>
+  import(/* webpackChunkName: "ScanList" */ "@/pages/scanList/scanList.vue");
 
 export default new Router({
   routes: [
@@ -88,6 +90,11 @@ export default new Router({
       path: "/ribbonInfo", // http://192.168.0.89/#/ribbonInfo?f=炉号&c=盘号
       name: "ribbonInfo",
       component: RibbonInfo
+    },
+    {
+      path: "/scanList", 
+      name: "scanList",
+      component: ScanList
     },
     {
       path: "/",

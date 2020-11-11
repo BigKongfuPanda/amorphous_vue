@@ -92,7 +92,7 @@ export default new Router({
       component: RibbonInfo
     },
     {
-      path: "/scanList", 
+      path: "/scanList",
       name: "scanList",
       component: ScanList
     },

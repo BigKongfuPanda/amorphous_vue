@@ -6,6 +6,20 @@
     </mt-header>
     <!-- 带材信息 -->
     <div class="content">
+      <div class="scan-item">
+        <div>
+          <p>炉号</p>
+          <p>{{ info.furnace }}</p>
+        </div>
+        <div>
+          <p>盘号</p>
+          <p>{{ info.coilNumber }}</p>
+        </div>
+        <div>
+          <p>重量</p>
+          <p>{{ info.coilWeight }} kg</p>
+        </div>
+      </div>
       <mt-cell title="炉号" :value="info.furnace"></mt-cell>
       <mt-cell title="盘号" :value="info.coilNumber"></mt-cell>
       <mt-cell title="材质" :value="info.ribbonTypeName"></mt-cell>
@@ -175,5 +189,9 @@ export default {
 .tip {
   margin-top: 10px;
   line-height: 16px;
+}
+.scan-item {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

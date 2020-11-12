@@ -49,6 +49,9 @@ export default {
   addStorage: "/storage/addStorage",
   scanConfirm: "/storage/scanConfirm",
   queryScanList: "/storage/queryScanList",
+  delScanConfirm: '/storage/delScanConfirm',
+  batchUpdateRibbonWithPlace: '/storage/batchUpdateRibbonWithPlace',
+  batchOutStoreByScan: '/storage/batchOutStoreByScan',
   // 退货处理
   queryReturnGoods: "/returnGoods",
   addReturnGoods: "/returnGoods",

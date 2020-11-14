@@ -191,9 +191,29 @@
           v-if="isExportable"
           >导出</el-button
         >
-        <!-- <el-button type="primary" icon="el-icon-upload" @click="uploadExcelHandler" v-if="userinfo.roleId == 6">批量入仓</el-button>
-        <el-button type="primary" icon="el-icon-menu" @click="allOutStoreHandler" v-if="isOutStoreable" class="pull_right">整托出库</el-button>
-        <el-button type="primary" icon="el-icon-rank" @click="batchOutStoreHandler" v-if="isOutStoreable" class="pull_right">批量出库</el-button> -->
+        <!-- <el-button
+          type="primary"
+          icon="el-icon-upload"
+          @click="uploadExcelHandler"
+          v-if="userinfo.roleId == 6"
+          >批量入仓</el-button
+        > -->
+        <el-button
+          type="primary"
+          icon="el-icon-menu"
+          @click="allOutStoreHandler"
+          v-if="isOutStoreable"
+          class="pull_right"
+          >整托出库</el-button
+        >
+        <el-button
+          type="primary"
+          icon="el-icon-rank"
+          @click="batchOutStoreHandler"
+          v-if="isOutStoreable"
+          class="pull_right"
+          >批量出库</el-button
+        >
       </el-col>
       <el-table
         :data="tableData"
@@ -230,7 +250,17 @@
           align="center"
           width="50px"
           fixed
-        ></el-table-column>
+        >
+          <!-- <template slot-scope="scope"><div @click="() => showQrCode(row.furnace, row.coilNumber)">{{scope.row.coilNumber}}</div></template> -->
+          <template slot-scope="scope">
+            <el-popover placement="right" trigger="hover">
+              <Qrcode
+                :value="`${domain}/#/ribbonInfo?f=${scope.row.furnace}&c=${scope.row.coilNumber}`"
+              ></Qrcode>
+              <el-button slot="reference">{{ scope.row.coilNumber }}</el-button>
+            </el-popover>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="ribbonTypeName"
           label="材质"
@@ -511,10 +541,11 @@ import urlmap from "@/utils/urlmap";
 import { dateFormat, debounce } from "@/utils/common";
 import { mapState, mapActions } from "vuex";
 import Collapse from "@/components/collapse.vue";
+import Qrcode from "@chenfengyuan/vue-qrcode";
 
 export default {
   name: "storage",
-  components: { Collapse },
+  components: { Collapse, Qrcode },
   data() {
     return {
       userinfo: {},
@@ -587,6 +618,7 @@ export default {
         // url: 'http://localhost:8080/api/storage/uploadstorage',
         fileList: [],
       },
+      domain: "",
     };
   },
   computed: {
@@ -616,6 +648,7 @@ export default {
     this.isEditable = this.setEditable();
     this.isDeleteable = this.setDeleteable();
     this.isOutStoreable = this.setOutStoreable();
+    this.domain = window.location.origin;
   },
   mounted() {
     const self = this;
@@ -1009,6 +1042,7 @@ export default {
         this[key] = [];
       }
     },
+    showQrCode(furnace, coilNumber) {},
   },
 };
 </script>

@@ -19,7 +19,7 @@
         <el-button type="primary" icon="el-icon-check" v-if="(roleId === 1 || roleId === 2) && tableData.length > 0 && isApproved" disabled>已审批</el-button>
         <el-button type="primary" icon="el-icon-download" @click="exportVisible = true" v-if="isExportable" class="pull_right">导出</el-button>
       </el-col>
-      <el-table :data=tableData stripe border style="width: 100%" v-loading="loading" ref="table">
+      <el-table :data=tableData stripe border highlight-current-row style="width: 100%" v-loading="loading" ref="table">
         <el-table-column prop="date" label="日期" align="center" width="110px"></el-table-column>
         <el-table-column prop="castId" label="机组" align="center" width="60px"></el-table-column>
         <el-table-column prop="team" label="班组" align="center" width="50px"></el-table-column>

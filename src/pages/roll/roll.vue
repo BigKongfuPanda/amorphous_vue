@@ -78,6 +78,7 @@
         :data="tableData"
         stripe
         border
+        highlight-current-row
         style="width: 100%"
         v-loading="loading"
         ref="table"

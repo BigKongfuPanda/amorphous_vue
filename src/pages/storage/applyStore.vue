@@ -70,8 +70,9 @@
       >
         <el-table-column
           type="selection"
-          width="30"
+          width="50"
           align="center"
+          class-name="selection"
           :selectable="setSelectable"
         ></el-table-column>
         <el-table-column
@@ -141,17 +142,23 @@
           prop="measureConfirmDate"
           label="申请入库时间"
           align="center"
-          width="100px"
+          width="90px"
           :formatter="dateTimeFormat"
           :show-overflow-tooltip="true"
         ></el-table-column>
-        <!-- <el-table-column label="操作" align="center" width="150px">
+        <el-table-column label="操作" align="center" width="70px">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button>
-            <el-button size="mini" type="success" @click="save(scope.row)" v-else>保存</el-button>
-            <el-button size="mini" type="danger" @click="del(scope.row)" v-if="isDeleteable">退库</el-button>
+            <!-- <el-button size="mini" type="primary" @click="edit(scope.row)" v-if="scope.row.isEditing === false" :disabled="!isEditable">修改</el-button>
+            <el-button size="mini" type="success" @click="save(scope.row)" v-else>保存</el-button> -->
+            <el-button
+              size="mini"
+              type="danger"
+              @click="del(scope.row)"
+              v-if="[1, 6].includes(roleId)"
+              >驳回</el-button
+            >
           </template>
-        </el-table-column> -->
+        </el-table-column>
       </el-table>
     </div>
   </div>
@@ -172,7 +179,7 @@ export default {
       roleId: 0,
       searchForm: {
         castIds: [],
-        furnaces: [],
+        furnaces: []
       },
       loading: false,
       selectLoading: false,
@@ -181,7 +188,7 @@ export default {
       totalWeight: null,
       tableData: [],
       tableHeight: 200,
-      multipleSelection: [],
+      multipleSelection: []
     };
   },
 
@@ -213,29 +220,25 @@ export default {
     reset() {
       this.searchForm = {
         castIds: [],
-        furnaces: [],
+        furnaces: []
       };
       this.getTableData();
     },
     getTableData() {
       const params = {
         castIds: JSON.stringify(this.searchForm.castIds),
-        furnaceJson: JSON.stringify(this.searchForm.furnaces),
+        furnaceJson: JSON.stringify(this.searchForm.furnaces)
       };
       this.$http("get", urlmap.queryApplyStorage, params)
         .then(({ list }) => {
-          // list &&
-          //   list.forEach(item => {
-          //     item.isEditing = false;
-          //   });
-          this.totalCoilNum = list.length;
-          this.totalWeight = list.reduce((acc, cur) => {
-            const sum = acc + cur.coilNetWeight;
-            return sum;
-          }, 0);
+          // this.totalCoilNum = list.length;
+          // this.totalWeight = list.reduce((acc, cur) => {
+          //   const sum = acc + cur.coilNetWeight;
+          //   return sum;
+          // }, 0);
           this.tableData = list;
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         })
         .finally(() => {
@@ -246,22 +249,18 @@ export default {
       row.isEditing = true;
     },
     del(row) {
-      const { storageId, furnace, coilNumber } = row;
-      this.$confirm(`确定退库 ${furnace} 的第 ${coilNumber} 盘吗？`, "提示", {
+      const { measureId, furnace, coilNumber } = row;
+      this.$confirm(`确定驳回 ${furnace} 的第 ${coilNumber} 盘吗？`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       })
         .then(() => {
-          this.$http("delete", urlmap.delStorage, {
-            storageId,
-            furnace,
-            coilNumber,
-          })
-            .then((data) => {
+          this.$http("post", urlmap.rejectApplyStorage, { measureId })
+            .then(data => {
               this.getTableData();
             })
-            .catch((error) => {
+            .catch(error => {
               console.log(error);
             });
         })
@@ -279,29 +278,30 @@ export default {
 
       // 发送请求，更新当前的数据
       this.$http("PUT", urlmap.updateStorage, row)
-        .then((data) => {})
-        .catch((error) => {
+        .then(data => {})
+        .catch(error => {
           console.log(error);
         });
     },
     setSelectable(row, index) {
-      // 合格并且已经检测过了的，才可以被选中来入库
-      // if ([1, 2].includes(row.isStored) && !row.isMeasureConfirmed ) {
-      //   return true;
-      // }
       return true;
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+      this.totalCoilNum = this.multipleSelection.length;
+      this.totalWeight = this.multipleSelection.reduce((acc, cur) => {
+        const sum = acc + cur.coilNetWeight;
+        return sum;
+      }, 0);
     },
     remoteMethod(query) {
       if (query !== "") {
         this.selectLoading = true;
         this.$http("GET", urlmap.queryFurnaceList, { query })
-          .then((data) => {
+          .then(data => {
             this.furnaceList = data.list;
           })
-          .catch((err) => {
+          .catch(err => {
             console.log(err);
           })
           .finally(() => {
@@ -318,16 +318,16 @@ export default {
       }
       // 发送请求，更新当前的数据
       this.$http("POST", urlmap.addStorage, {
-        dataJson: JSON.stringify(selectionList),
+        dataJson: JSON.stringify(selectionList)
       })
-        .then((data) => {
+        .then(data => {
           this.getTableData();
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
         });
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

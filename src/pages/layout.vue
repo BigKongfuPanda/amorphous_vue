@@ -107,7 +107,7 @@
           <router-link to="/applyStore">
             <el-menu-item index="/applyStore">申请入库</el-menu-item>
           </router-link>
-          <router-link to="/storage/6">
+          <!-- <router-link to="/storage/6">
             <el-menu-item index="/storage/6">6号机组</el-menu-item>
           </router-link>
           <router-link to="/storage/7">
@@ -118,9 +118,9 @@
           </router-link>
           <router-link to="/storage/9">
             <el-menu-item index="/storage/9">9号机组</el-menu-item>
-          </router-link>
+          </router-link> -->
           <router-link to="/storageTotal">
-            <el-menu-item index="/storageTotal">库存总表</el-menu-item>
+            <el-menu-item index="/storageTotal">库存主表</el-menu-item>
           </router-link>
         </el-submenu>
         <el-submenu index="7" v-if="[1, 2, 3, 5, 6].includes(roleId)">

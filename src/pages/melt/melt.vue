@@ -44,7 +44,7 @@
         <el-button type="primary" icon="el-icon-plus" @click="createMelt" v-if="isAble">创建冶炼记录</el-button>
         <el-button type="primary" icon="el-icon-download" @click="exportExcel" v-if="userinfo.roleId === 1 || userinfo.roleId === 2 || userinfo.roleId === 3" class="pull_right">导出</el-button>
       </el-col>
-      <el-table :data="tableData" stripe border style="width:100%" v-loading="loading" ref="table" :height="tableHeight">
+      <el-table :data="tableData" stripe border highlight-current-row style="width:100%" v-loading="loading" ref="table" :height="tableHeight">
         <el-table-column prop="createTime" label="冶炼日期" align="center" width="80px" :formatter="dateFormat" fixed></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="60px" fixed></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="130px" fixed></el-table-column>

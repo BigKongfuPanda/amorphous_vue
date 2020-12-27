@@ -24,8 +24,23 @@
     </div>
     <!-- 按钮 -->
     <div class="btn-wrapp" v-if="roleId === 6">
-      <mt-button plain @click="handleFinish">结束了</mt-button>
-      <mt-button type="primary" @click="scanConfirm" :disabled="disabled"
+      <!-- <mt-button plain @click="handleFinish">结束了</mt-button> -->
+      <mt-button
+        type="primary"
+        @click="addStorage"
+        :disabled="disabled"
+        v-if="
+          info.isMeasureConfirmed === 1 &&
+          info.isStorageConfirmed === 0 &&
+          info.isRollConfirmed === 1
+        "
+        >确认入库</mt-button
+      >
+      <mt-button
+        type="primary"
+        @click="scanConfirm"
+        :disabled="disabled"
+        v-if="info.isStorageConfirmed === 1 && !info.place"
         >下一盘</mt-button
       >
     </div>
@@ -50,7 +65,7 @@ export default {
       info: {},
       furnace: this.$route.query.f,
       coilNumber: this.$route.query.c,
-      disabled: false
+      disabled: false,
     };
   },
   computed: {
@@ -60,7 +75,7 @@ export default {
         isRollConfirmed,
         isMeasureConfirmed,
         isStorageConfirmed,
-        isStored
+        isStored,
       } = this.info;
       if (isRollConfirmed === 1) {
         text = "已送检";
@@ -83,7 +98,7 @@ export default {
         type = "计划外入库";
       }
       return type;
-    }
+    },
   },
   created() {
     const that = this;
@@ -92,7 +107,7 @@ export default {
     this.roleId = userinfo.roleId;
     this.actions = [
       { name: `当前登录：${this.adminname}` },
-      { name: "退出登录", method: this.signout }
+      { name: "退出登录", method: this.signout },
     ];
     this.getData();
   },
@@ -103,12 +118,12 @@ export default {
     signout() {
       this.isDisabled = true;
       this.$http("POST", urlmap.signout, {})
-        .then(data => {
+        .then((data) => {
           localStorage.removeItem("userinfo");
           const returnUrl = encodeURIComponent(window.location.href);
           this.$router.push({ path: "/login", query: { returnUrl } });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         })
         .finally(() => {
@@ -119,32 +134,42 @@ export default {
       const furnace = this.furnace;
       const coilNumber = this.coilNumber;
       this.$http("GET", urlmap.queryRibbonInfo, { furnace, coilNumber })
-        .then(data => {
+        .then((data) => {
           const info = (Array.isArray(data.list) && data.list[0]) || {};
           this.info = info;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
     scanConfirm() {
       const params = {
         furnace: this.furnace,
-        coilNumber: this.coilNumber
+        coilNumber: this.coilNumber,
       };
       this.$http("POST", urlmap.scanConfirm, params)
-        .then(data => {
+        .then((data) => {
           data.status ? (this.disabled = false) : (this.disabled = true);
         })
-        .catch(err => {
+        .catch((err) => {
+          console.log(err);
+          this.disabled = false;
+        });
+    },
+    addStorage() {
+      this.$http("POST", urlmap.addStorage, { data: this.info })
+        .then((data) => {
+          data.status ? (this.disabled = false) : (this.disabled = true);
+        })
+        .catch((err) => {
           console.log(err);
           this.disabled = false;
         });
     },
     handleFinish() {
-      this.$router.push({path: '/scanList'});
-    }
-  }
+      this.$router.push({ path: "/scanList" });
+    },
+  },
 };
 </script>
 
@@ -155,9 +180,9 @@ export default {
 }
 /deep/ .mint-button {
   width: 100%;
-  &:last-child {
-    margin-left: 30px;
-  }
+  // &:last-child {
+  //   margin-left: 30px;
+  // }
 }
 /deep/ .mint-button--default.is-plain {
   border: 1px solid #26a2ff;

@@ -179,7 +179,7 @@ export default {
       roleId: 0,
       searchForm: {
         castIds: [],
-        furnaces: []
+        furnaces: [],
       },
       loading: false,
       selectLoading: false,
@@ -188,7 +188,7 @@ export default {
       totalWeight: null,
       tableData: [],
       tableHeight: 200,
-      multipleSelection: []
+      multipleSelection: [],
     };
   },
 
@@ -220,14 +220,14 @@ export default {
     reset() {
       this.searchForm = {
         castIds: [],
-        furnaces: []
+        furnaces: [],
       };
       this.getTableData();
     },
     getTableData() {
       const params = {
         castIds: JSON.stringify(this.searchForm.castIds),
-        furnaceJson: JSON.stringify(this.searchForm.furnaces)
+        furnaceJson: JSON.stringify(this.searchForm.furnaces),
       };
       this.$http("get", urlmap.queryApplyStorage, params)
         .then(({ list }) => {
@@ -238,7 +238,7 @@ export default {
           // }, 0);
           this.tableData = list;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         })
         .finally(() => {
@@ -253,14 +253,14 @@ export default {
       this.$confirm(`确定驳回 ${furnace} 的第 ${coilNumber} 盘吗？`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           this.$http("post", urlmap.rejectApplyStorage, { measureId })
-            .then(data => {
+            .then((data) => {
               this.getTableData();
             })
-            .catch(error => {
+            .catch((error) => {
               console.log(error);
             });
         })
@@ -278,8 +278,8 @@ export default {
 
       // 发送请求，更新当前的数据
       this.$http("PUT", urlmap.updateStorage, row)
-        .then(data => {})
-        .catch(error => {
+        .then((data) => {})
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -298,10 +298,10 @@ export default {
       if (query !== "") {
         this.selectLoading = true;
         this.$http("GET", urlmap.queryFurnaceList, { query })
-          .then(data => {
+          .then((data) => {
             this.furnaceList = data.list;
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
           })
           .finally(() => {
@@ -317,17 +317,17 @@ export default {
         return this.$alert("请选择要入库的带材", "提示", { type: "warning" });
       }
       // 发送请求，更新当前的数据
-      this.$http("POST", urlmap.addStorage, {
-        dataJson: JSON.stringify(selectionList)
+      this.$http("POST", urlmap.batchAddStorage, {
+        dataJson: JSON.stringify(selectionList),
       })
-        .then(data => {
+        .then((data) => {
           this.getTableData();
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

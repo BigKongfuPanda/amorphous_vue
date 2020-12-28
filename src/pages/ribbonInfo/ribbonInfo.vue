@@ -18,9 +18,10 @@
         :value="storeType"
         v-if="info.isStorageConfirmed === 1"
       ></mt-cell>
-      <!-- <p class="text_danger tip" v-if="roleId === 6">
-        备注：如果要继续扫下一盘，则点击【下一盘】，关闭页面继续扫码；如果扫完了，打算入仓位或者出库，则点击【结束了】
-      </p> -->
+      <p class="text_danger tip" v-if="roleId === 6">
+        备注： 1. 如果要入库，则点击【确认入库】； 2.
+        如果要继续扫下一盘，则点击【下一盘】；
+      </p>
     </div>
     <!-- 按钮 -->
     <div class="btn-wrapp" v-if="roleId === 6">

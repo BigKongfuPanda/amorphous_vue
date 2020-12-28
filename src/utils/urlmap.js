@@ -47,6 +47,7 @@ export default {
   uploadStorage: "/storage/uploadstorage",
   queryApplyStorage: "/storage/queryApplyStorage",
   rejectApplyStorage: "/storage/rejectApplyStorage",
+  addStorage: "/storage/addStorage",
   batchAddStorage: "/storage/batchAddStorage",
   scanConfirm: "/storage/scanConfirm",
   queryScanList: "/storage/queryScanList",

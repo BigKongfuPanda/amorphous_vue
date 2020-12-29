@@ -246,6 +246,12 @@
           width="70px"
         ></el-table-column>
         <el-table-column
+          prop="coilNetWeight"
+          label="净重(kg)"
+          align="center"
+          width="70px"
+        ></el-table-column>
+        <el-table-column
           prop="laminationFactor"
           label="叠片系数"
           align="center"
@@ -1413,6 +1419,11 @@ export default {
     },
     calcRibbonTotalLevel(row) {
       /* ~~~~~~~~~~~首先判定不合格的情况~~~~~~~~~~~~~~ */
+      
+      /** 叠片不合格 */
+      if (row.laminationLevel === '不合格') {
+        return '不合格'
+      }
 
       // 带材是否脆
       const isFragile = ["D", "E"].includes(row.ribbonToughnessLevel);

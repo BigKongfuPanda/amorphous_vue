@@ -1418,15 +1418,18 @@ export default {
       this.getTableData(params);
     },
     calcRibbonTotalLevel(row) {
-      /* ~~~~~~~~~~~首先判定不合格的情况~~~~~~~~~~~~~~ */
-      
-      /** 叠片不合格 */
-      if (row.laminationLevel === '不合格') {
-        return '不合格'
-      }
-
       // 带材是否脆
       const isFragile = ["D", "E"].includes(row.ribbonToughnessLevel);
+      let _width = row.realRibbonWidth - row.ribbonWidth;
+      _width = _width.toFixed(1);
+
+      /* ~~~~~~~~~~~首先判定不合格的情况~~~~~~~~~~~~~~ */
+
+      /** 叠片不合格 */
+      if (row.laminationLevel === "不合格") {
+        return "不合格";
+      }
+
       /**
        * 针对1K107B：
        * 1.d＞34μm，判定为不合格;
@@ -1440,8 +1443,8 @@ export default {
           return "不合格";
         }
 
-        // 规格 为 32/42/，材质为 1K107B 的带材，如果韧性为D或E，则综合级别为不合格
-        if ([32, 42].includes(row.ribbonWidth) && isFragile) {
+        // 规格 为 32/35/42/，材质为 1K107B 的带材，如果韧性为D或E，则综合级别为不合格
+        if ([32, 35, 42].includes(row.ribbonWidth) && isFragile) {
           return "不合格";
         }
       }
@@ -1473,8 +1476,8 @@ export default {
 
       // AD25 ND25 的带材，宽度偏差>=0.1，或者 <= -0.2的带材，不合格
       if (["AD25", "ND25"].includes(row.ribbonTypeName)) {
-        let _width = row.realRibbonWidth - row.ribbonWidth;
-        _width = _width.toFixed(1);
+        // let _width = row.realRibbonWidth - row.ribbonWidth;
+        // _width = _width.toFixed(1);
         if (_width >= 0.1 || _width <= -0.2) {
           return "不合格";
         }
@@ -1497,17 +1500,21 @@ export default {
       }
 
       // 针对成分为 1K107O的直喷带材，任意规格:
-      // 1. 厚度>23μm或叠片＜0.78，判定为不合格；
-      // 2. 带面划痕严重或带偏≥2μm直接判定为不合格；
+      // 客户要求：22-28，>0.78，带偏≤2，带宽≤0.3，韧性不合格，其余判定不合格
+      // 1. 厚度>28μm 或 厚度<22μm判定为不合格；
+      // 2. 叠片＜0.78，判定为不合格；
+      // 3. 带偏>2μm直接判定为不合格；
+      // 4. 带宽>0.3mm 或 带宽 <-0.3mm，判定不合格
       if (["1K107O"].includes(row.ribbonTypeName)) {
         if (
           row.ribbonThickness < 22 ||
           row.ribbonThickness > 28 ||
-          row.laminationFactor < 0.78
+          row.laminationFactor < 0.78 ||
+          row.ribbonThicknessDeviation > 2
         ) {
           return "不合格";
         }
-        if (row.appearenceLevel === "C" || row.ribbonThicknessDeviation >= 2) {
+        if (_width > 0.3 || _width < -0.3) {
           return "不合格";
         }
       }
@@ -1565,8 +1572,8 @@ export default {
         ribbonTotalLevel = ribbonTotalLevel + "F";
       }
       // 如果带材韧性为A/B/C，同时带材宽度超出规格±0.2mm，加E，正偏差为+E,负偏差为-E
-      let _width = row.realRibbonWidth - row.ribbonWidth;
-      _width = _width.toFixed(1);
+      // let _width = row.realRibbonWidth - row.ribbonWidth;
+      // _width = _width.toFixed(1);
       if (row.ribbonWidth < 50) {
         if (
           Math.abs(_width) > 0.2 &&

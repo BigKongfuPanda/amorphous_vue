@@ -37,6 +37,9 @@ export default {
   updateMeasureByBatch: "/measure/updateMeasureByBatch",
   exportMeasure: "/measure/exportmeasure",
   queryRibbonInfo: "measure/queryRibbonInfo",
+  queryApplyStorageByFurnace: "measure/queryApplyStorageByFurnace",
+  queryMeasureStatics: "measure/queryMeasureStatics",
+
   // 库房
   queryFurnaceList: "/storage/furnace",
   queryRibbonTotalLevelList: "/storage/ribbonTotalLevel",

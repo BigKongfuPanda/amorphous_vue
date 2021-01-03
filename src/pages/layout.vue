@@ -99,6 +99,9 @@
           <router-link to="/measure/9">
             <el-menu-item index="/measure/9">9号机组</el-menu-item>
           </router-link>
+          <router-link to="/measureStatics">
+            <el-menu-item index="/measureStatics">合格率统计</el-menu-item>
+          </router-link>
         </el-submenu>
         <el-submenu index="6" v-if="[1, 2, 3, 5, 6].includes(roleId)">
           <template slot="title">

@@ -17,19 +17,29 @@ const Cast = () =>
   import(/* webpackChunkName: "cast" */ "@/pages/cast/cast.vue");
 
 const RibbonType = () =>
-  import(/* webpackChunkName: "ribbonType" */ "@/pages/ribbonType/ribbonType.vue");
+  import(
+    /* webpackChunkName: "ribbonType" */ "@/pages/ribbonType/ribbonType.vue"
+  );
 
 const RibbonWidth = () =>
-  import(/* webpackChunkName: "ribbonWidth" */ "@/pages/ribbonWidth/ribbonWidth.vue");
+  import(
+    /* webpackChunkName: "ribbonWidth" */ "@/pages/ribbonWidth/ribbonWidth.vue"
+  );
 
 const RibbonThicknessLevel = () =>
-  import(/* webpackChunkName: "ribbonThicknessLevel" */ "@/pages/ribbonThicknessLevel/ribbonThicknessLevel.vue");
+  import(
+    /* webpackChunkName: "ribbonThicknessLevel" */ "@/pages/ribbonThicknessLevel/ribbonThicknessLevel.vue"
+  );
 
 const RibbonToughnessLevel = () =>
-  import(/* webpackChunkName: "RibbonToughnessLevel" */ "@/pages/ribbonToughnessLevel/ribbonToughnessLevel.vue");
+  import(
+    /* webpackChunkName: "RibbonToughnessLevel" */ "@/pages/ribbonToughnessLevel/ribbonToughnessLevel.vue"
+  );
 
 const LaminationLevel = () =>
-  import(/* webpackChunkName: "LaminationLevel" */ "@/pages/laminationLevel/laminationLevel.vue");
+  import(
+    /* webpackChunkName: "LaminationLevel" */ "@/pages/laminationLevel/laminationLevel.vue"
+  );
 
 const User = () =>
   import(/* webpackChunkName: "user" */ "@/pages/user/user.vue");
@@ -40,32 +50,51 @@ const Roll = () =>
 const Measure = () =>
   import(/* webpackChunkName: "measure" */ "@/pages/measure/measure.vue");
 
+const MeasureStatics = () =>
+  import(
+    /* webpackChunkName: "measureStatics" */ "@/pages/measure/measureStatics.vue"
+  );
+
 const Storage = () =>
   import(/* webpackChunkName: "storage" */ "@/pages/storage/storage.vue");
 
 const StorageTotal = () =>
-  import(/* webpackChunkName: "storageTotal" */ "@/pages/storage/storageTotal.vue");
+  import(
+    /* webpackChunkName: "storageTotal" */ "@/pages/storage/storageTotal.vue"
+  );
 
 const StatisticsOfRatio = () =>
-  import(/* webpackChunkName: "statisticsOfRatio" */ "@/pages/statistics/statisticsOfRatio.vue");
+  import(
+    /* webpackChunkName: "statisticsOfRatio" */ "@/pages/statistics/statisticsOfRatio.vue"
+  );
 
 const StatisticsQuality = () =>
-  import(/* webpackChunkName: "statisticsQuality" */ "@/pages/statistics/statisticsQuality.vue");
+  import(
+    /* webpackChunkName: "statisticsQuality" */ "@/pages/statistics/statisticsQuality.vue"
+  );
 
 const StatisticsOder = () =>
-  import(/* webpackChunkName: "statisticsOder" */ "@/pages/statistics/statisticsOder.vue");
+  import(
+    /* webpackChunkName: "statisticsOder" */ "@/pages/statistics/statisticsOder.vue"
+  );
 
 const ReturnTreatment = () =>
-  import(/* webpackChunkName: "returnTreatment" */ "@/pages/returnGoods/returnTreatment.vue");
+  import(
+    /* webpackChunkName: "returnTreatment" */ "@/pages/returnGoods/returnTreatment.vue"
+  );
 
 const ReturnRecord = () =>
-  import(/* webpackChunkName: "returnRecord" */ "@/pages/returnGoods/returnRecord.vue");
+  import(
+    /* webpackChunkName: "returnRecord" */ "@/pages/returnGoods/returnRecord.vue"
+  );
 
 const Clients = () =>
   import(/* webpackChunkName: "clients" */ "@/pages/clients/clients.vue");
 
 const AppearenceLevel = () =>
-  import(/* webpackChunkName: "appearenceLevel" */ "@/pages/appearenceLevel/appearenceLevel.vue");
+  import(
+    /* webpackChunkName: "appearenceLevel" */ "@/pages/appearenceLevel/appearenceLevel.vue"
+  );
 
 const Roller = () =>
   import(/* webpackChunkName: "roller" */ "@/pages/roller/index.vue");
@@ -75,8 +104,10 @@ const LinerWeight = () =>
 const ApplyStore = () =>
   import(/* webpackChunkName: "ApplyStore" */ "@/pages/storage/applyStore.vue");
 const RibbonInfo = () =>
-  import(/* webpackChunkName: "ribbonInfo" */ "@/pages/ribbonInfo/ribbonInfo.vue");
-  const ScanList = () =>
+  import(
+    /* webpackChunkName: "ribbonInfo" */ "@/pages/ribbonInfo/ribbonInfo.vue"
+  );
+const ScanList = () =>
   import(/* webpackChunkName: "ScanList" */ "@/pages/scanList/scanList.vue");
 
 export default new Router({
@@ -184,6 +215,12 @@ export default new Router({
           name: "measure",
           component: Measure,
           meta: { title: "检测记录表", icon: "measure" }
+        },
+        {
+          path: "measureStatics",
+          name: "measureStatics",
+          component: MeasureStatics,
+          meta: { title: "检测合格率", icon: "measureStatics" }
         },
         {
           path: "storage/:castId",

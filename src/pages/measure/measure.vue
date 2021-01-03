@@ -302,7 +302,7 @@
                 size="mini"
                 v-model="scope.row.ribbonThickness1"
                 @keyup.native="
-                  ($event) => thicknessChangeHandler($event, scope.row)
+                  $event => thicknessChangeHandler($event, scope.row)
                 "
               ></el-input>
             </div>
@@ -326,7 +326,7 @@
                 size="mini"
                 v-model="scope.row.ribbonThickness2"
                 @keyup.native="
-                  ($event) => thicknessChangeHandler($event, scope.row)
+                  $event => thicknessChangeHandler($event, scope.row)
                 "
               ></el-input>
             </div>
@@ -350,7 +350,7 @@
                 size="mini"
                 v-model="scope.row.ribbonThickness3"
                 @keyup.native="
-                  ($event) => thicknessChangeHandler($event, scope.row)
+                  $event => thicknessChangeHandler($event, scope.row)
                 "
               ></el-input>
             </div>
@@ -374,7 +374,7 @@
                 size="mini"
                 v-model="scope.row.ribbonThickness4"
                 @keyup.native="
-                  ($event) => thicknessChangeHandler($event, scope.row)
+                  $event => thicknessChangeHandler($event, scope.row)
                 "
               ></el-input>
             </div>
@@ -398,7 +398,7 @@
                 size="mini"
                 v-model="scope.row.ribbonThickness5"
                 @keyup.native="
-                  ($event) => thicknessChangeHandler($event, scope.row)
+                  $event => thicknessChangeHandler($event, scope.row)
                 "
               ></el-input>
             </div>
@@ -422,7 +422,7 @@
                 size="mini"
                 v-model="scope.row.ribbonThickness6"
                 @keyup.native="
-                  ($event) => thicknessChangeHandler($event, scope.row)
+                  $event => thicknessChangeHandler($event, scope.row)
                 "
               ></el-input>
             </div>
@@ -446,7 +446,7 @@
                 size="mini"
                 v-model="scope.row.ribbonThickness7"
                 @keyup.native="
-                  ($event) => thicknessChangeHandler($event, scope.row)
+                  $event => thicknessChangeHandler($event, scope.row)
                 "
               ></el-input>
             </div>
@@ -470,7 +470,7 @@
                 size="mini"
                 v-model="scope.row.ribbonThickness8"
                 @keyup.native="
-                  ($event) => thicknessChangeHandler($event, scope.row)
+                  $event => thicknessChangeHandler($event, scope.row)
                 "
               ></el-input>
             </div>
@@ -494,7 +494,7 @@
                 size="mini"
                 v-model="scope.row.ribbonThickness9"
                 @keyup.native="
-                  ($event) => thicknessChangeHandler($event, scope.row)
+                  $event => thicknessChangeHandler($event, scope.row)
                 "
               ></el-input>
             </div>
@@ -669,6 +669,14 @@
             >
           </template>
         </el-table-column>
+        <el-table-column
+          prop="unQualifiedReason"
+          label="不合格原因"
+          align="center"
+          width="70px"
+          :show-overflow-tooltip="true"
+        >
+        </el-table-column>
         <el-table-column label="入库规则" align="center" width="60px">
           <template slot-scope="scope">
             <el-popover placement="right" trigger="hover">
@@ -842,6 +850,13 @@
         :page-size="pageConfig.pageSize"
         @current-change="handleCurrentChange"
       ></el-pagination>
+      <ApplyInStoreModal
+        :castId="Number(castId)"
+        :visible="applyInStoreModalVisible"
+        v-if="applyInStoreModalVisible"
+        @close="() => (this.applyInStoreModalVisible = false)"
+        @submit="() => (this.applyInStoreModalVisible = false)"
+      />
     </div>
   </div>
 </template>
@@ -854,11 +869,13 @@ import urlmap from "@/utils/urlmap";
 import { dateFormat, dateTimeFormat, debounce } from "@/utils/common";
 import { mapState, mapActions } from "vuex";
 import Collapse from "@/components/collapse.vue";
+import ApplyInStoreModal from "./components/ApplyInStoreModal.vue";
 
 export default {
   name: "melt",
   components: {
     Collapse,
+    ApplyInStoreModal
   },
   data() {
     return {
@@ -874,14 +891,14 @@ export default {
         laminationLevels: [],
         ribbonToughnessLevels: [],
         appearenceLevels: [],
-        thicknessDivation: "",
+        thicknessDivation: ""
       },
       loading: false,
       tableData: [],
       pageConfig: {
         total: 1,
         current: 1,
-        pageSize: 10,
+        pageSize: 10
       },
       isExportable: false,
       isEditable: false,
@@ -892,6 +909,7 @@ export default {
       isAutoQuerying: false,
       pollTimer: null,
       // uniqueAppearenceLevelList: []
+      applyInStoreModalVisible: false
     };
   },
   computed: {
@@ -901,7 +919,7 @@ export default {
           ? "el-icon-video-pause"
           : "el-icon-video-play",
         text: this.isAutoQuerying ? "停止自动更新" : "启动自动更新",
-        type: this.isAutoQuerying ? "danger" : "primary",
+        type: this.isAutoQuerying ? "danger" : "primary"
       };
     },
     ...mapState([
@@ -912,7 +930,7 @@ export default {
       "laminationLevelList",
       "clientsList",
       "appearenceList",
-      "linerWeightList",
+      "linerWeightList"
     ]),
     uniqueAppearenceLevelList() {
       return this.appearenceList.reduce((acc, cur) => {
@@ -921,7 +939,7 @@ export default {
         }
         return acc;
       }, []);
-    },
+    }
   },
   // 动态路由匹配
   beforeRouteUpdate(to, from, next) {
@@ -984,7 +1002,7 @@ export default {
        * 筛选出从PLC传入的数据。特征：1.没有综合级别，2.有带材厚度，韧性等级code，外观等级code
        */
       let list = this.tableData.filter(
-        (item) =>
+        item =>
           !item.ribbonTotalLevel &&
           [
             item.ribbonThickness1,
@@ -998,13 +1016,13 @@ export default {
             item.ribbonThickness9,
             item.realRibbonWidth,
             item.ribbonToughnessLevel,
-            item.appearenceLevel,
-          ].every((el) => !!el)
+            item.appearenceLevel
+          ].every(el => !!el)
       );
       if (!Array.isArray(list) || list.length === 0)
         return Message({
           message: `没有找到需要计算综合级别的带材，请确认 带材厚度/带宽/韧性等级/外观等级 等数据是否完整`,
-          type: "error",
+          type: "error"
         });
       /**
        * 计算：
@@ -1016,7 +1034,7 @@ export default {
        * 6.合格情况
        *
        */
-      list = list.map((item) => {
+      list = list.map(item => {
         // 根据PLC数据获取韧性等级
         // const ribbonToughnessItem = this.ribbonToughnessLevelList.find(ribbon => ribbon.ribbonToughnessLevelCode === item.ribbonToughnessLevelCode) || {}
         // item.ribbonToughnessLevel = ribbonToughnessItem.ribbonToughnessLevel;
@@ -1026,17 +1044,17 @@ export default {
         const result = this.calcRibbonTotalData(item);
         return {
           ...item,
-          ...result,
+          ...result
         };
       });
 
       this.$http("PUT", urlmap.updateMeasureByBatch, {
-        listJson: JSON.stringify(list),
+        listJson: JSON.stringify(list)
       })
-        .then((res) => {
+        .then(res => {
           this.getTableData({ current: this.pageConfig.current || 1 });
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     },
     thicknessChangeHandler(e, row) {
       let ribbonThicknessList = [
@@ -1048,15 +1066,15 @@ export default {
         row.ribbonThickness6,
         row.ribbonThickness7,
         row.ribbonThickness8,
-        row.ribbonThickness9,
+        row.ribbonThickness9
       ];
       ribbonThicknessList = ribbonThicknessList
-        .map((item) => {
+        .map(item => {
           if (item !== "") {
             return Number(item);
           }
         })
-        .filter((item) => item !== undefined);
+        .filter(item => item !== undefined);
       row.ribbonThicknessDeviation = this.calcMaxDeviation(ribbonThicknessList);
       row.ribbonThickness =
         ribbonThicknessList.length > 0
@@ -1077,7 +1095,7 @@ export default {
       "getLaminationLevelList",
       "getClientsList",
       "getAppearenceLevelList",
-      "getLinerWeightList",
+      "getLinerWeightList"
     ]),
     dateFormat(row, column) {
       return dateFormat(row.castDate);
@@ -1130,13 +1148,13 @@ export default {
        */
       ribbonWidth = Number(ribbonWidth);
       const { linerWeight } =
-        this.linerWeightList.find((item) => item.ribbonWidth === ribbonWidth) ||
+        this.linerWeightList.find(item => item.ribbonWidth === ribbonWidth) ||
         {};
 
       if (!linerWeight) {
         Message({
           message: `带材宽度${ribbonWidth}没有配置所用内衬重量，请联系管理员进行配置！`,
-          type: "error",
+          type: "error"
         });
         return 0;
       }
@@ -1160,7 +1178,7 @@ export default {
     clickSearch() {
       // 重置当前页码为1
       const params = {
-        current: 1,
+        current: 1
       };
       this.pageConfig.current = 1;
       this.getTableData(params);
@@ -1175,10 +1193,10 @@ export default {
         ribbonThicknessLevels: [],
         laminationLevels: [],
         ribbonToughnessLevels: [],
-        appearenceLevels: [],
+        appearenceLevels: []
       };
       const params = {
-        current: 1,
+        current: 1
       };
       this.pageConfig.current = 1;
       this.getTableData(params);
@@ -1200,15 +1218,15 @@ export default {
           this.searchForm.ribbonToughnessLevels
         ),
         appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels),
-        thicknessDivation: this.searchForm.thicknessDivation,
+        thicknessDivation: this.searchForm.thicknessDivation
       };
       Object.assign(params, _params);
       this.$http("get", urlmap.queryMeasure, params)
-        .then((data) => {
+        .then(data => {
           this.pageConfig.total = data.count;
           this.pageConfig.pageSize = data.limit;
           data.list &&
-            data.list.forEach((item) => {
+            data.list.forEach(item => {
               this.userinfo.roleId == 5
                 ? (item.isEditing = true)
                 : (item.isEditing = false);
@@ -1225,7 +1243,7 @@ export default {
                   Number(this.userinfo.roleId)
                 )
                   ? JSON.parse(item.qualifiedDemands)
-                  : [],
+                  : []
               };
               item.clients = item.clients ? item.clients.split(",") : [];
               item.appearence = item.appearence
@@ -1238,7 +1256,7 @@ export default {
             });
           this.tableData = data.list;
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         })
         .finally(() => {
@@ -1253,7 +1271,7 @@ export default {
         // 已经入库
         return this.$message({
           message: "该带材已经入库，您无权限操作，请联系库房主管人员！",
-          type: "error",
+          type: "error"
         });
       }
       // row.isEditing = true;
@@ -1313,7 +1331,7 @@ export default {
         row.ribbonThickness6,
         row.ribbonThickness7,
         row.ribbonThickness8,
-        row.ribbonThickness9,
+        row.ribbonThickness9
       ]);
       row.ribbonThickness = (
         (row.ribbonThickness1 +
@@ -1332,7 +1350,12 @@ export default {
       );
 
       // 综合级别
-      row.ribbonTotalLevel = this.calcRibbonTotalLevel(row);
+      // row.ribbonTotalLevel = this.calcRibbonTotalLevel(row);
+      const [ribbonTotalLevel, unQualifiedReason] = this.calcRibbonTotalLevel(
+        row
+      );
+      row.ribbonTotalLevel = ribbonTotalLevel;
+      row.unQualifiedReason = unQualifiedReason;
 
       // 是否入库：不合格不能入库，端面有问题的不能入库，不满足入库规则的不能入库
       if (row.ribbonTotalLevel === "不合格") {
@@ -1392,7 +1415,7 @@ export default {
       clone.appearence = clone.appearence.join();
 
       // 去掉值为null或者undefined的参数
-      Object.keys(clone).forEach((key) => {
+      Object.keys(clone).forEach(key => {
         if (clone[key] == null) {
           delete clone[key];
         }
@@ -1406,18 +1429,20 @@ export default {
       const clone = this.calcRibbonTotalData(row);
       // 发送请求，更新当前的数据
       this.$http("PUT", urlmap.updateMeasure, clone)
-        .then((data) => {})
-        .catch((error) => {
+        .then(data => {})
+        .catch(error => {
           console.log(error);
         });
     },
     handleCurrentChange(val) {
       const params = {
-        current: val,
+        current: val
       };
       this.getTableData(params);
     },
     calcRibbonTotalLevel(row) {
+      let ribbonTotalLevel = "";
+      let unQualifiedReason = "";
       // 带材是否脆
       const isFragile = ["D", "E"].includes(row.ribbonToughnessLevel);
       let _width = row.realRibbonWidth - row.ribbonWidth;
@@ -1427,7 +1452,9 @@ export default {
 
       /** 叠片不合格 */
       if (row.laminationLevel === "不合格") {
-        return "不合格";
+        ribbonTotalLevel = "不合格";
+        unQualifiedReason = "叠片不合格";
+        return [ribbonTotalLevel, unQualifiedReason];
       }
 
       /**
@@ -1437,15 +1464,19 @@ export default {
        */
       if (row.ribbonTypeName == "1K107B") {
         if (row.ribbonThickness > 34) {
-          return "不合格";
+          ribbonTotalLevel = "不合格";
+          unQualifiedReason = "1K107B，厚度大于34μm，不合格";
+          return [ribbonTotalLevel, unQualifiedReason];
         }
-        if (row.laminationLevel == "8") {
-          return "不合格";
-        }
+        // if (row.laminationLevel == "8") {
+        //   return "不合格";
+        // }
 
         // 规格 为 32/35/42/，材质为 1K107B 的带材，如果韧性为D或E，则综合级别为不合格
         if ([32, 35, 42].includes(row.ribbonWidth) && isFragile) {
-          return "不合格";
+          ribbonTotalLevel = "不合格";
+          unQualifiedReason = "1K107B，规格为32/35/42，韧性为D/E，不合格";
+          return [ribbonTotalLevel, unQualifiedReason];
         }
       }
 
@@ -1455,40 +1486,44 @@ export default {
         row.ribbonWidth < 50 &&
         isFragile
       ) {
-        return "不合格";
+        ribbonTotalLevel = "不合格";
+        unQualifiedReason =
+          "规格<50mm，带材厚度偏差大于3，同时韧性为D/E，不合格";
+        return [ribbonTotalLevel, unQualifiedReason];
       }
 
       // 如果规格<50mm，带材韧性为D/E，同时带材宽度超出规格±0.2mm，此带材为不合格，否则加E，正偏差为+E,负偏差为-E
-      if (
-        row.ribbonWidth < 50 &&
-        isFragile &&
-        Math.abs(row.realRibbonWidth - row.ribbonWidth) > 0.2
-      ) {
-        return "不合格";
+      if (row.ribbonWidth < 50 && isFragile && Math.abs(_width) > 0.2) {
+        ribbonTotalLevel = "不合格";
+        unQualifiedReason =
+          "规格<50mm，带材宽度超出规格±0.2mm，同时韧性为D/E，不合格";
+        return [ribbonTotalLevel, unQualifiedReason];
       }
-      if (
-        row.ribbonWidth >= 50 &&
-        isFragile &&
-        Math.abs(row.realRibbonWidth - row.ribbonWidth) > 0.3
-      ) {
-        return "不合格";
+      if (row.ribbonWidth >= 50 && isFragile && Math.abs(_width) > 0.3) {
+        ribbonTotalLevel = "不合格";
+        unQualifiedReason =
+          "规格>=50mm，带材宽度超出规格±0.3mm，同时韧性为D/E，不合格";
+        return [ribbonTotalLevel, unQualifiedReason];
       }
 
       // AD25 ND25 的带材，宽度偏差>=0.1，或者 <= -0.2的带材，不合格
-      if (["AD25", "ND25"].includes(row.ribbonTypeName)) {
-        // let _width = row.realRibbonWidth - row.ribbonWidth;
-        // _width = _width.toFixed(1);
-        if (_width >= 0.1 || _width <= -0.2) {
-          return "不合格";
-        }
-      }
+      // if (["AD25", "ND25"].includes(row.ribbonTypeName)) {
+      //   // let _width = row.realRibbonWidth - row.ribbonWidth;
+      //   // _width = _width.toFixed(1);
+      //   if (_width >= 0.1 || _width <= -0.2) {
+      //     return "不合格";
+      //   }
+      // }
 
       // 针对成分为 AD25、ND25、1K107A、FN-300的直喷带材，任意规格, 叠片＜0.75，判定为不合格；
       if (
         ["AD25", "ND25", "1K107A", "FN-300"].includes(row.ribbonTypeName) &&
         row.laminationFactor < 0.75
       ) {
-        return "不合格";
+        ribbonTotalLevel = "不合格";
+        unQualifiedReason =
+          "成分为 AD25、ND25、1K107A、FN-300的直喷带材，任意规格, 叠片＜0.75，不合格";
+        return [ribbonTotalLevel, unQualifiedReason];
       }
 
       // 针对成分为 FN-200、FN-035的直喷带材，任意规格: 厚度>23μm或叠片＜0.78，判定为不合格；
@@ -1496,7 +1531,10 @@ export default {
         ["FN-200", "FN-035"].includes(row.ribbonTypeName) &&
         (row.ribbonThickness > 23 || row.laminationFactor < 0.78)
       ) {
-        return "不合格";
+        ribbonTotalLevel = "不合格";
+        unQualifiedReason =
+          "成分为 FN-200、FN-035的直喷带材，任意规格: 厚度>23μm或叠片＜0.78，不合格";
+        return [ribbonTotalLevel, unQualifiedReason];
       }
 
       // 针对成分为 1K107O的直喷带材，任意规格:
@@ -1506,22 +1544,35 @@ export default {
       // 3. 带偏>2μm直接判定为不合格；
       // 4. 带宽>0.3mm 或 带宽 <-0.3mm，判定不合格
       if (["1K107O"].includes(row.ribbonTypeName)) {
-        if (
-          row.ribbonThickness < 22 ||
-          row.ribbonThickness > 28 ||
-          row.laminationFactor < 0.78 ||
-          row.ribbonThicknessDeviation > 2
-        ) {
-          return "不合格";
+        if (row.ribbonThickness < 22 || row.ribbonThickness > 28) {
+          ribbonTotalLevel = "不合格";
+          unQualifiedReason =
+            "成分为1K107O的带材，带厚<22μm或者带厚>28μm，不合格";
+          return [ribbonTotalLevel, unQualifiedReason];
+        }
+        if (row.laminationFactor < 0.78) {
+          ribbonTotalLevel = "不合格";
+          unQualifiedReason = "成分为1K107O的带材，叠片系数<0.78，不合格";
+          return [ribbonTotalLevel, unQualifiedReason];
+        }
+        if (row.ribbonThicknessDeviation > 2) {
+          ribbonTotalLevel = "不合格";
+          unQualifiedReason = "成分为1K107O的带材，厚度偏差>2，不合格";
+          return [ribbonTotalLevel, unQualifiedReason];
         }
         if (_width > 0.3 || _width < -0.3) {
-          return "不合格";
+          ribbonTotalLevel = "不合格";
+          unQualifiedReason = "成分为1K107O的带材，宽度偏差＞0.3mm，不合格";
+          return [ribbonTotalLevel, unQualifiedReason];
         }
       }
 
       // 针对成分为 1K107BW/ 1K107E的直喷带材，任意规格: 带材韧性要求为A/B/C级，其他级别韧性判定为不合格
       if (["1K107BW", "1K107E"].includes(row.ribbonTypeName) && isFragile) {
-        return "不合格";
+        ribbonTotalLevel = "不合格";
+        unQualifiedReason =
+          "成分为1K107BW/1K107E的直喷带材，任意规格: 带材韧性为D/E，不合格";
+        return [ribbonTotalLevel, unQualifiedReason];
       }
 
       /* ~~~~~~~~~~~判定等级不全的情况~~~~~~~~~~~~~~ */
@@ -1535,7 +1586,7 @@ export default {
       }
 
       /* ~~~~~~~~~~~正式计算完整的等级~~~~~~~~~~~~~~ */
-      let ribbonTotalLevel =
+      ribbonTotalLevel =
         row.ribbonThicknessLevel +
         row.laminationLevel +
         row.ribbonToughnessLevel +
@@ -1598,7 +1649,7 @@ export default {
         }
       }
 
-      return ribbonTotalLevel;
+      return [ribbonTotalLevel, unQualifiedReason];
     },
     calcThinRibbonWeight(row) {
       if (row.ribbonThickness > 23) {
@@ -1865,7 +1916,7 @@ export default {
       const params = {
         castId: this.castId,
         startTime: this.searchForm.date[0],
-        endTime: this.searchForm.date[1],
+        endTime: this.searchForm.date[1]
         // caster: this.searchForm.caster,
         // furnace: this.searchForm.furnace,
         // ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
@@ -1882,7 +1933,7 @@ export default {
       if (!params.startTime || !params.endTime) {
         return this.$message({
           message: "请选择生产日期",
-          type: "error",
+          type: "error"
         });
       }
       const url = `${urlmap.exportMeasure}?${qs.stringify(params)}`;
@@ -1900,12 +1951,13 @@ export default {
       this.multipleSelection = val;
     },
     measureConfirm() {
+      // this.applyInStoreModalVisible = true;
       const selectionList = cloneDeep(this.multipleSelection);
       if (selectionList.length === 0) {
         return this.$alert("请选择要入库的带材", "提示", { type: "warning" });
       }
       if (
-        selectionList.some((item) => !item.clients || item.clients.length === 0)
+        selectionList.some(item => !item.clients || item.clients.length === 0)
       ) {
         return this.$alert(
           "申请入库的带材没有填写检测去向，请检查后再提交",
@@ -1913,23 +1965,23 @@ export default {
           { type: "warning" }
         );
       }
-      selectionList.forEach((row) => {
+      selectionList.forEach(row => {
         row.isMeasureConfirmed = 1; // 1-检测确认入库，0-还没有确认
         row.clients = row.clients.join();
         row.appearence = row.appearence.join();
       });
       // 发送请求，更新当前的数据
       this.$http("POST", urlmap.measureConfirm, {
-        dataJson: JSON.stringify(selectionList),
+        dataJson: JSON.stringify(selectionList)
       })
-        .then((data) => {
+        .then(data => {
           this.getTableData();
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
         });
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

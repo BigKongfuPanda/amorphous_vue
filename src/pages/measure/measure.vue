@@ -160,14 +160,18 @@
             >计算综合级别</el-button
           ></el-tooltip
         >
-        <el-button
-          type="primary"
-          icon="el-icon-download"
-          @click="exportExcel"
-          v-if="[1, 2, 3, 5].includes(userinfo.roleId)"
-          class="pull_right"
-          style="margin-left: 10px"
-          >导出</el-button
+        <el-tooltip
+          content="请先选择筛选条件中的生产日期后再导出"
+          placement="top-end"
+          ><el-button
+            type="primary"
+            icon="el-icon-download"
+            @click="exportExcel"
+            v-if="[1, 2, 3, 5].includes(userinfo.roleId)"
+            class="pull_right"
+            style="margin-left: 10px"
+            >导出</el-button
+          ></el-tooltip
         >
         <el-button
           type="primary"
@@ -1276,7 +1280,7 @@ export default {
       }
       // row.isEditing = true;
     },
-    customerNumer(value) {
+    formatToNumber(value) {
       return typeof value === "string" ? Number(value.trim()) : value;
     },
     calcRibbonTotalData(row) {
@@ -1312,15 +1316,15 @@ export default {
       // }, {})[row.appearence];
 
       // 计算厚度最大偏差、平均厚度、厚度级别
-      row.ribbonThickness1 = this.customerNumer(row.ribbonThickness1);
-      row.ribbonThickness2 = this.customerNumer(row.ribbonThickness2);
-      row.ribbonThickness3 = this.customerNumer(row.ribbonThickness3);
-      row.ribbonThickness4 = this.customerNumer(row.ribbonThickness4);
-      row.ribbonThickness5 = this.customerNumer(row.ribbonThickness5);
-      row.ribbonThickness6 = this.customerNumer(row.ribbonThickness6);
-      row.ribbonThickness7 = this.customerNumer(row.ribbonThickness7);
-      row.ribbonThickness8 = this.customerNumer(row.ribbonThickness8);
-      row.ribbonThickness9 = this.customerNumer(row.ribbonThickness9);
+      row.ribbonThickness1 = this.formatToNumber(row.ribbonThickness1);
+      row.ribbonThickness2 = this.formatToNumber(row.ribbonThickness2);
+      row.ribbonThickness3 = this.formatToNumber(row.ribbonThickness3);
+      row.ribbonThickness4 = this.formatToNumber(row.ribbonThickness4);
+      row.ribbonThickness5 = this.formatToNumber(row.ribbonThickness5);
+      row.ribbonThickness6 = this.formatToNumber(row.ribbonThickness6);
+      row.ribbonThickness7 = this.formatToNumber(row.ribbonThickness7);
+      row.ribbonThickness8 = this.formatToNumber(row.ribbonThickness8);
+      row.ribbonThickness9 = this.formatToNumber(row.ribbonThickness9);
 
       row.ribbonThicknessDeviation = this.calcMaxDeviation([
         row.ribbonThickness1,

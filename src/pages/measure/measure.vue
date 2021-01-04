@@ -1254,8 +1254,9 @@ export default {
                 ? item.appearence.split(",")
                 : [];
 
-              item.coilNetWeight =
-                item.coilWeight - this.calcLinerWeight(item.ribbonWidth);
+              item.coilNetWeight = (
+                item.coilWeight - this.calcLinerWeight(item.ribbonWidth)
+              ).toFixed(2);
               item.remainWeight = item.coilNetWeight;
             });
           this.tableData = data.list;

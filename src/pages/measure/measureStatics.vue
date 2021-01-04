@@ -70,6 +70,11 @@
           }}</span></el-col
         >
         <el-col :span="6"
+          >不合格重量合计(kg)：<span class="total_num">{{
+            totalWeight - totalQualifiedWeight
+          }}</span></el-col
+        >
+        <el-col :span="6"
           >合格率合计：<span class="total_num">{{
             totalQualifiedRatio
           }}</span></el-col
@@ -99,6 +104,11 @@
         <el-table-column
           prop="qualifiedWeight"
           label="合格重量(kg)"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="noQualifiedWeight"
+          label="不合格重量(kg)"
           align="center"
         ></el-table-column>
         <el-table-column
@@ -206,11 +216,13 @@ export default {
           data.list.forEach(item => {
             totalWeight += item.netWeight;
             totalQualifiedWeight += item.qualifiedWeight;
+            item.noQualifiedWeight = item.netWeight - item.qualifiedWeight;
           });
           this.totalWeight = totalWeight;
           this.totalQualifiedWeight = totalQualifiedWeight;
-          this.totalQualifiedRatio =
-            ((100 * totalQualifiedWeight) / totalWeight).toFixed(2) + "%";
+          this.totalQualifiedRatio = totalWeight
+            ? ((100 * totalQualifiedWeight) / totalWeight).toFixed(2) + "%"
+            : 0;
         })
         .catch(err => {
           console.log(err);

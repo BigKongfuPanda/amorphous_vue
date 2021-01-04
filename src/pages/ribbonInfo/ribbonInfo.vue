@@ -32,8 +32,8 @@
         :disabled="disabled"
         v-if="
           info.isMeasureConfirmed === 1 &&
-          info.isStorageConfirmed === 0 &&
-          info.isRollConfirmed === 1
+            info.isStorageConfirmed === 0 &&
+            info.isRollConfirmed === 1
         "
         >确认入库</mt-button
       >
@@ -66,7 +66,7 @@ export default {
       info: {},
       furnace: this.$route.query.f,
       coilNumber: this.$route.query.c,
-      disabled: false,
+      disabled: false
     };
   },
   computed: {
@@ -76,7 +76,7 @@ export default {
         isRollConfirmed,
         isMeasureConfirmed,
         isStorageConfirmed,
-        isStored,
+        isStored
       } = this.info;
       if (isRollConfirmed === 1) {
         text = "已送检";
@@ -99,16 +99,24 @@ export default {
         type = "计划外入库";
       }
       return type;
-    },
+    }
   },
   created() {
     const that = this;
-    const userinfo = JSON.parse(localStorage.getItem("userinfo")) || {};
+    let userinfo = {};
+    try {
+      userinfo = JSON.parse(window.localStorage.getItem("userinfo")) || {};
+    } catch (error) {
+      this.$message({
+        message: error.message || "JSON parse 错误",
+        type: "error"
+      });
+    }
     this.adminname = userinfo.adminname;
     this.roleId = userinfo.roleId;
     this.actions = [
       { name: `当前登录：${this.adminname}` },
-      { name: "退出登录", method: this.signout },
+      { name: "退出登录", method: this.signout }
     ];
     this.getData();
   },
@@ -119,12 +127,19 @@ export default {
     signout() {
       this.isDisabled = true;
       this.$http("POST", urlmap.signout, {})
-        .then((data) => {
-          localStorage.removeItem("userinfo");
+        .then(data => {
+          try {
+            window.localStorage.removeItem("userinfo");
+          } catch (error) {
+            this.$message({
+              message: error.message || "localStorage 错误",
+              type: "error"
+            });
+          }
           const returnUrl = encodeURIComponent(window.location.href);
           this.$router.push({ path: "/login", query: { returnUrl } });
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         })
         .finally(() => {
@@ -133,44 +148,44 @@ export default {
     },
     getData() {
       const furnace = this.furnace;
-      const coilNumber = this.coilNumber;
+      const coilNumber = parseInt(this.coilNumber);
       this.$http("GET", urlmap.queryRibbonInfo, { furnace, coilNumber })
-        .then((data) => {
-          const info = (Array.isArray(data.list) && data.list[0]) || {};
+        .then(data => {
+          const info = (data.list && data.list[0]) || {};
           this.info = info;
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
     },
     scanConfirm() {
       const params = {
         furnace: this.furnace,
-        coilNumber: this.coilNumber,
+        coilNumber: this.coilNumber
       };
       this.$http("POST", urlmap.scanConfirm, params)
-        .then((data) => {
+        .then(data => {
           data.status ? (this.disabled = false) : (this.disabled = true);
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.disabled = false;
         });
     },
     addStorage() {
       this.$http("POST", urlmap.addStorage, { data: this.info })
-        .then((data) => {
+        .then(data => {
           data.status ? (this.disabled = false) : (this.disabled = true);
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.disabled = false;
         });
     },
     handleFinish() {
       this.$router.push({ path: "/scanList" });
-    },
-  },
+    }
+  }
 };
 </script>
 

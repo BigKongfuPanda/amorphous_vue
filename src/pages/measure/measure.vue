@@ -16,6 +16,16 @@
             end-placeholder="结束日期"
           ></el-date-picker>
         </el-form-item>
+        <el-form-item label="检测日期：">
+          <el-date-picker
+            v-model="searchForm.measureDate"
+            type="daterange"
+            :default-time="['00:00:00', '23:59:59']"
+            :clearable="false"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+        </el-form-item>
         <el-form-item label="喷带手：">
           <el-input
             v-model="searchForm.caster"
@@ -889,6 +899,7 @@ export default {
         caster: "",
         furnace: "",
         date: [],
+        measureDate: [],
         ribbonTypeNames: [],
         ribbonWidths: [],
         ribbonThicknessLevels: [],
@@ -1192,6 +1203,7 @@ export default {
         caster: "",
         furnace: "",
         date: [],
+        measureDate: [],
         ribbonTypeNames: [],
         ribbonWidths: [],
         ribbonThicknessLevels: [],
@@ -1210,6 +1222,8 @@ export default {
         castId: this.castId,
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
+        startMeasureTime: this.searchForm.measureDate[0],
+        endMeasureTime: this.searchForm.measureDate[1],
         caster: this.searchForm.caster,
         furnace: this.searchForm.furnace,
         ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
@@ -1921,7 +1935,9 @@ export default {
       const params = {
         castId: this.castId,
         startTime: this.searchForm.date[0],
-        endTime: this.searchForm.date[1]
+        endTime: this.searchForm.date[1],
+        startMeasureTime: this.searchForm.measureDate[0],
+        endMeasureTime: this.searchForm.measureDate[1],
         // caster: this.searchForm.caster,
         // furnace: this.searchForm.furnace,
         // ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
@@ -1935,9 +1951,9 @@ export default {
         // ),
         // appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels)
       };
-      if (!params.startTime || !params.endTime) {
+      if (!params.startTime || !params.endTime || !params.startMeasureTime || !params.endMeasureTime) {
         return this.$message({
-          message: "请选择生产日期",
+          message: "请选择生产日期或者检测日期",
           type: "error"
         });
       }

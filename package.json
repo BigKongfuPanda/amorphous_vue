@@ -15,7 +15,7 @@
     "url": "https://github.com/BigKongfuPanda/amorphous_vue.git"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "element-ui": "^2.4.11",
     "es6-promise": "^4.2.5",
     "lodash": "^4.17.14",

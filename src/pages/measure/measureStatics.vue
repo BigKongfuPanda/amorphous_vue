@@ -5,6 +5,16 @@
     </el-breadcrumb>
     <Collapse>
       <el-form class="search_bar" :model="searchForm" :inline="true">
+        <el-form-item label="检测日期：">
+          <el-date-picker
+            v-model="searchForm.measureDate"
+            type="daterange"
+            :default-time="['00:00:00', '23:59:59']"
+            :clearable="false"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+        </el-form-item>
         <el-form-item label="生产日期：">
           <el-date-picker
             v-model="searchForm.date"
@@ -71,7 +81,7 @@
         >
         <el-col :span="6"
           >不合格重量合计(kg)：<span class="total_num">{{
-            totalWeight - totalQualifiedWeight
+            totalUnQualifiedWeight
           }}</span></el-col
         >
         <el-col :span="6"
@@ -141,10 +151,11 @@ export default {
       searchForm: {
         castId: 6,
         furnace: "",
-        date: [
+        measureDate: [
           new Date(Date.now()),
           new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
         ],
+        date: [],
         ribbonTypeNames: [],
         ribbonWidths: []
       },
@@ -154,6 +165,7 @@ export default {
       totalCount: 0,
       totalWeight: 0,
       totalQualifiedWeight: 0,
+      totalUnQualifiedWeight: 0,
       totalQualifiedRatio: ""
     };
   },
@@ -193,6 +205,7 @@ export default {
         caster: "",
         furnace: "",
         date: [],
+        measureDate: [],
         ribbonTypeNames: [],
         ribbonWidths: []
       };
@@ -203,6 +216,8 @@ export default {
         castId: this.searchForm.castId,
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
+        startMeasureTime: this.searchForm.measureDate[0],
+        endMeasureTime: this.searchForm.measureDate[1],
         furnace: this.searchForm.furnace,
         ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames)
       };
@@ -216,10 +231,15 @@ export default {
           data.list.forEach(item => {
             totalWeight += item.netWeight;
             totalQualifiedWeight += item.qualifiedWeight;
-            item.noQualifiedWeight = item.netWeight - item.qualifiedWeight;
+            item.noQualifiedWeight = (
+              item.netWeight - item.qualifiedWeight
+            ).toFixed(2);
           });
           this.totalWeight = totalWeight;
           this.totalQualifiedWeight = totalQualifiedWeight;
+          this.totalUnQualifiedWeight = (
+            this.totalWeight - this.totalQualifiedWeight
+          ).toFixed(2);
           this.totalQualifiedRatio = totalWeight
             ? ((100 * totalQualifiedWeight) / totalWeight).toFixed(2) + "%"
             : 0;

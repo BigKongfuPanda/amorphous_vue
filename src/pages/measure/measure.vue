@@ -171,7 +171,7 @@
           ></el-tooltip
         >
         <el-tooltip
-          content="请先选择筛选条件中的生产日期后再导出"
+          content="请先选择筛选条件中的生产日期或者检测日期后再导出"
           placement="top-end"
           ><el-button
             type="primary"
@@ -1937,7 +1937,7 @@ export default {
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
         startMeasureTime: this.searchForm.measureDate[0],
-        endMeasureTime: this.searchForm.measureDate[1],
+        endMeasureTime: this.searchForm.measureDate[1]
         // caster: this.searchForm.caster,
         // furnace: this.searchForm.furnace,
         // ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
@@ -1951,7 +1951,7 @@ export default {
         // ),
         // appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels)
       };
-      if (!params.startTime || !params.endTime || !params.startMeasureTime || !params.endMeasureTime) {
+      if (!params.startTime && !params.startMeasureTime) {
         return this.$message({
           message: "请选择生产日期或者检测日期",
           type: "error"
@@ -1987,7 +1987,7 @@ export default {
         );
       }
       selectionList.forEach(row => {
-        row.isMeasureConfirmed = 1; // 1-检测确认入库，0-还没有确认
+        row.isMeasureConfirmed = 1; // 1-检测确认申请入库，0-还没有确认
         row.clients = row.clients.join();
         row.appearence = row.appearence.join();
       });

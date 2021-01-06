@@ -19,8 +19,8 @@
         v-if="info.isStorageConfirmed === 1"
       ></mt-cell>
       <p class="text_danger tip" v-if="roleId === 6">
-        备注： 1. 如果要入库，则点击【确认入库】； 2.
-        如果要继续扫下一盘，则点击【下一盘】；
+        备注： 1. 在操作入库的流程时，要入库，则点击【确认入库】； 2.
+        在操作入仓位的流程时，要继续扫下一盘，则点击【下一盘】；
       </p>
     </div>
     <!-- 按钮 -->
@@ -101,26 +101,30 @@ export default {
       return type;
     }
   },
-  created() {
-    const that = this;
-    let userinfo = {};
-    try {
-      userinfo = JSON.parse(window.localStorage.getItem("userinfo")) || {};
-    } catch (error) {
-      this.$message({
-        message: error.message || "JSON parse 错误",
-        type: "error"
-      });
-    }
+  async created() {
+    this.getData();
+    let userinfo = await this.getUserInfo();
     this.adminname = userinfo.adminname;
     this.roleId = userinfo.roleId;
     this.actions = [
       { name: `当前登录：${this.adminname}` },
       { name: "退出登录", method: this.signout }
     ];
-    this.getData();
   },
   methods: {
+    async getUserInfo() {
+      const type = window.localStorage ? "ajax" : "ajax";
+      const fn = {
+        local: () => JSON.parse(window.localStorage.getItem("userinfo")) || {},
+        ajax: () =>
+          this.$http("get", urlmap.getUserInfo, {})
+            .then(data => data)
+            .catch(err => console.log(err))
+      }[type];
+      const userinfo = (await fn()) || {};
+      return userinfo;
+    },
+
     handleMore() {
       this.sheetVisible = true;
     },

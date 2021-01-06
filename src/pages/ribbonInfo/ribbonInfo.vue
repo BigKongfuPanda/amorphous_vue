@@ -216,11 +216,11 @@ export default {
 }
 .btn-wrapp {
   display: flex;
-  margin-top: 50px;
+  margin-top: 10px;
   justify-content: space-between;
 }
 .tip {
-  margin-top: 10px;
+  margin-top: 5px;
   line-height: 16px;
 }
 </style>

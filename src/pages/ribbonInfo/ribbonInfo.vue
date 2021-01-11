@@ -113,7 +113,7 @@ export default {
   },
   methods: {
     async getUserInfo() {
-      const type = window.localStorage ? "ajax" : "ajax";
+      const type = window.localStorage ? "local" : "ajax";
       const fn = {
         local: () => JSON.parse(window.localStorage.getItem("userinfo")) || {},
         ajax: () =>

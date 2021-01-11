@@ -1625,7 +1625,8 @@ export default {
         // d＞32μm，判定为不合格;
         if (row.ribbonThickness > 32) {
           ribbonTotalLevel = "不合格";
-          unQualifiedReason = "成分为 AD25、ND25、1K107A、FN-300的直喷带材，厚度大于32μm，不合格";
+          unQualifiedReason =
+            "成分为 AD25、ND25、1K107A、FN-300的直喷带材，厚度大于32μm，不合格";
           return [ribbonTotalLevel, unQualifiedReason];
         }
         if (row.laminationFactor < 0.75) {
@@ -1671,11 +1672,21 @@ export default {
        */
 
       // 厚度>23μm或叠片＜0.78或韧性为D/E，判定为不合格
-      if (["FN-035", "FN-080", "FN-100", "FN-200","FCNC-010","FCNC-020"].includes(row.ribbonTypeName)) {
+      if (
+        [
+          "FN-035",
+          "FN-080",
+          "FN-100",
+          "FN-200",
+          "FCNC-010",
+          "FCNC-020"
+        ].includes(row.ribbonTypeName)
+      ) {
         // d＞32μm，判定为不合格;
         if (row.ribbonThickness > 23) {
           ribbonTotalLevel = "不合格";
-          unQualifiedReason = "成分为FN-035/FN-080/FN-100/FN-200/FCNC-010/FCNC-020的直喷带材，厚度大于23μm，不合格";
+          unQualifiedReason =
+            "成分为FN-035/FN-080/FN-100/FN-200/FCNC-010/FCNC-020的直喷带材，厚度大于23μm，不合格";
           return [ribbonTotalLevel, unQualifiedReason];
         }
         // 叠片＜0.78
@@ -1688,7 +1699,8 @@ export default {
         // 韧性为D/E为不合格
         if (isFragile) {
           ribbonTotalLevel = "不合格";
-          unQualifiedReason = "成分为FN-035/FN-080/FN-100/FN-200/FCNC-010/FCNC-020的直喷带材，韧性为D/E级别，不合格";
+          unQualifiedReason =
+            "成分为FN-035/FN-080/FN-100/FN-200/FCNC-010/FCNC-020的直喷带材，韧性为D/E级别，不合格";
           return [ribbonTotalLevel, unQualifiedReason];
         }
       }
@@ -1778,10 +1790,11 @@ export default {
        * 针对1K107BW和1K107B：规格为20mm/25mm/30mm/40mm/50mm带材厚度为28μm≤d≤32μm，且叠片≥0.75的带材级别最后加“H”标识
        */
 
-      if (["1K107BW","1K107B"].includes(row.ribbonTypeName)) {
+      if (["1K107BW", "1K107B"].includes(row.ribbonTypeName)) {
         if (
           [20, 25, 30, 40, 50].includes(row.ribbonWidth) &&
-          row.ribbonThickness >= 28 && row.ribbonThickness <= 32 &&
+          row.ribbonThickness >= 28 &&
+          row.ribbonThickness <= 32 &&
           row.laminationFactor >= 0.75
         ) {
           ribbonTotalLevel = ribbonTotalLevel + "H";
@@ -1793,10 +1806,55 @@ export default {
        */
 
       if (["AD25", "ND25", "1K107A", "FN-300"].includes(row.ribbonTypeName)) {
-        if (
-          row.laminationFactor >= 0.75
-        ) {
+        if (row.laminationFactor >= 0.75) {
           ribbonTotalLevel = ribbonTotalLevel + "H";
+        }
+      }
+
+      /**
+       * 判定检测去向
+       * 1.德国: 1K107B, 30mm, 韧性 ABC，厚度 2/3 级别，带面等级 A/B，叠片系数>=0.78，带厚偏差<2，带宽偏差<0.2，盘径330-350
+       * 2.法国: 1K107B, <50mm, 韧性 ABC，
+       * 2.1 厚度 2/3 级别，带面等级 A/B，叠片系数>=0.78
+       * 2.2 厚度 4 级别，叠片系数>=0.78
+       * 3.信维：1K107B, >=55mm, 韧性 ABCD，厚度18-26, 叠片系数>=0.75，带面等级 A/B, C: 轻微鱼鳞纹、轻微凹心、小凹心、轻微荷叶边、轻微劈裂、粗糙的都可以给
+       */
+      if (["1K107B"].includes(row.ribbonTypeName)) {
+        // 德国
+        if (
+          [30].includes(row.ribbonWidth) &&
+          ["A", "B", "C"].includes(row.ribbonToughnessLevel) &&
+          [2, 3].includes(row.ribbonThicknessLevel) &&
+          row.laminationFactor >= 0.78 &&
+          !row.ribbonTotalLevel.includes("E") &&
+          !row.ribbonTotalLevel.includes("F") &&
+          row.diameter >= 330 &&
+          row.diameter <= 350
+        ) {
+          row.clients.push("D");
+        }
+        // 法国
+        if (
+          row.ribbonWidth < 50 &&
+          ["A", "B", "C"].includes(row.ribbonToughnessLevel) &&
+          row.laminationFactor >= 0.78 &&
+          (([2, 3].includes(row.ribbonThicknessLevel) &&
+            ["A", "B"].includes(row.appearenceLevel)) ||
+            [4].includes(row.ribbonThicknessLevel))
+        ) {
+          row.clients.push("F");
+        }
+        // 信维 信维：1K107B, >=55mm, 韧性 ABCD，厚度18-26, 叠片系数>=0.75，带面等级 A/B, C: 轻微鱼鳞纹、轻微凹心、小凹心、轻微荷叶边、轻微劈裂、粗糙的都可以给
+        if (
+          row.ribbonWidth >= 55 &&
+          ["A", "B", "C", "D"].includes(row.ribbonToughnessLevel) &&
+          [2, 3, 4].includes(row.ribbonThicknessLevel) &&
+          row.laminationFactor >= 0.75 &&
+          !row.ribbonTotalLevel.includes("E") &&
+          !row.ribbonTotalLevel.includes("F") &&
+          ["A", "B"].includes(row.appearenceLevel)
+        ) {
+          row.clients.push("XW");
         }
       }
 

@@ -108,7 +108,7 @@
             <i class="el-icon-tickets"></i> <span>库房记录</span>
           </template>
           <router-link to="/applyStore">
-            <el-menu-item index="/applyStore">申请入库</el-menu-item>
+            <el-menu-item index="/applyStore">申请入库列表</el-menu-item>
           </router-link>
           <router-link to="/scanList">
             <el-menu-item index="/scanList">扫码带材列表</el-menu-item>

@@ -1093,10 +1093,12 @@ export default {
       row.ribbonThicknessDeviation = this.calcMaxDeviation(ribbonThicknessList);
       row.ribbonThickness =
         ribbonThicknessList.length > 0
-          ? (
-              ribbonThicknessList.reduce((acc, cur) => acc + cur, 0) /
-              ribbonThicknessList.length
-            ).toFixed(2)
+          ? Number(
+              (
+                ribbonThicknessList.reduce((acc, cur) => acc + cur, 0) /
+                ribbonThicknessList.length
+              ).toFixed(2)
+            )
           : 0;
       row.ribbonThicknessLevel = this.calcribbonThicknessLevel(
         row.ribbonThickness
@@ -1268,9 +1270,10 @@ export default {
                 ? item.appearence.split(",")
                 : [];
 
-              item.coilNetWeight = (
+              const coilNetWeight = (
                 item.coilWeight - this.calcLinerWeight(item.ribbonWidth)
               ).toFixed(2);
+              item.coilNetWeight = Number(coilNetWeight);
               item.remainWeight = item.coilNetWeight;
             });
           this.tableData = data.list;
@@ -1302,7 +1305,7 @@ export default {
       // 计算叠片系数和叠片等级 realRibbonWidth diameter coilWeight
       // row.laminationFactor = ((row.coilWeight - 0.09)/(Math.PI * (row.diameter * row.diameter / 4 - 95 * 95 / 4) * 7.2) * Math.pow(10, 6) / row.realRibbonWidth).toFixed(2);
       row.laminationFactor = this.calcLaminationFactor(
-        row.coilWeight,
+        row.coilNetWeight,
         row.diameter,
         row.realRibbonWidth
       );
@@ -1352,7 +1355,7 @@ export default {
         row.ribbonThickness8,
         row.ribbonThickness9
       ]);
-      row.ribbonThickness = (
+      const ribbonThickness = (
         (row.ribbonThickness1 +
           row.ribbonThickness2 +
           row.ribbonThickness3 +
@@ -1364,6 +1367,7 @@ export default {
           row.ribbonThickness9) /
         9
       ).toFixed(2);
+      row.ribbonThickness = Number(ribbonThickness);
       row.ribbonThicknessLevel = this.calcribbonThicknessLevel(
         row.ribbonThickness
       );
@@ -1393,9 +1397,10 @@ export default {
         }
 
         // 总入库重量
-        row.totalStoredWeight = (
+        const totalStoredWeight = (
           row.inPlanStoredWeight + row.outPlanStoredWeight
         ).toFixed(2);
+        row.totalStoredWeight = Number(totalStoredWeight);
 
         // 计算各质量等级的重量
         this.calcQualityOfABCDE(row);
@@ -1464,7 +1469,7 @@ export default {
       // 带材是否脆
       const isFragile = ["D", "E"].includes(row.ribbonToughnessLevel);
       let _width = row.realRibbonWidth - row.ribbonWidth;
-      _width = _width.toFixed(1);
+      _width = Number(_width.toFixed(1));
 
       /* ~~~~~~~~~~~首先判定不合格的情况~~~~~~~~~~~~~~ */
 
@@ -1826,8 +1831,8 @@ export default {
           ["A", "B", "C"].includes(row.ribbonToughnessLevel) &&
           [2, 3].includes(row.ribbonThicknessLevel) &&
           row.laminationFactor >= 0.78 &&
-          !row.ribbonTotalLevel.includes("E") &&
-          !row.ribbonTotalLevel.includes("F") &&
+          !ribbonTotalLevel.includes("E") &&
+          !ribbonTotalLevel.includes("F") &&
           row.diameter >= 330 &&
           row.diameter <= 350
         ) {
@@ -1850,8 +1855,8 @@ export default {
           ["A", "B", "C", "D"].includes(row.ribbonToughnessLevel) &&
           [2, 3, 4].includes(row.ribbonThicknessLevel) &&
           row.laminationFactor >= 0.75 &&
-          !row.ribbonTotalLevel.includes("E") &&
-          !row.ribbonTotalLevel.includes("F") &&
+          !ribbonTotalLevel.includes("E") &&
+          !ribbonTotalLevel.includes("F") &&
           ["A", "B"].includes(row.appearenceLevel)
         ) {
           row.clients.push("XW");
@@ -1898,15 +1903,22 @@ export default {
         row.qualityOfE = row.coilNetWeight;
       }
     },
-    calcLaminationFactor(coilWeight, diameter, realRibbonWidth) {
-      return (
+    calcLaminationFactor(coilNetWeight, diameter, realRibbonWidth) {
+      // const res =
+      //   (
+      //     (((coilWeight - 0.09) /
+      //       (Math.PI * ((diameter * diameter) / 4 - (95 * 95) / 4) * 7.2)) *
+      //       Math.pow(10, 6)) /
+      //     realRibbonWidth
+      //   ).toFixed(2) || 0;
+      const res =
         (
-          (((coilWeight - 0.09) /
+          ((coilNetWeight /
             (Math.PI * ((diameter * diameter) / 4 - (95 * 95) / 4) * 7.2)) *
             Math.pow(10, 6)) /
           realRibbonWidth
-        ).toFixed(2) || 0
-      );
+        ).toFixed(2) || 0;
+      return Number(res);
     },
     calcLaminationLevel(factor) {
       if (!factor) return "";

@@ -102,8 +102,12 @@ export default {
     }
   },
   async created() {
+    this.$message({
+      message: "我刷新了",
+      type: "success"
+    });
     this.getData();
-    let userinfo = await this.getUserInfo();
+    let userinfo = (await this.getUserInfo()) || {};
     this.adminname = userinfo.adminname;
     this.roleId = userinfo.roleId;
     this.actions = [
@@ -113,7 +117,7 @@ export default {
   },
   methods: {
     async getUserInfo() {
-      const type = window.localStorage ? "ajax" : "ajax";
+      const type = window && window.localStorage ? "local" : "ajax";
       const fn = {
         local: () => JSON.parse(window.localStorage.getItem("userinfo")) || {},
         ajax: () =>
@@ -159,7 +163,10 @@ export default {
           this.info = info;
         })
         .catch(err => {
-          console.log(err);
+          this.$message({
+            message: error.message || "数据请求错误",
+            type: "error"
+          });
         });
     },
     scanConfirm() {
@@ -172,7 +179,10 @@ export default {
           data.status ? (this.disabled = false) : (this.disabled = true);
         })
         .catch(err => {
-          console.log(err);
+          this.$message({
+            message: error.message || "下一盘确认失败",
+            type: "error"
+          });
           this.disabled = false;
         });
     },
@@ -182,7 +192,10 @@ export default {
           data.status ? (this.disabled = false) : (this.disabled = true);
         })
         .catch(err => {
-          console.log(err);
+          this.$message({
+            message: error.message || "确认入库失败",
+            type: "error"
+          });
           this.disabled = false;
         });
     },

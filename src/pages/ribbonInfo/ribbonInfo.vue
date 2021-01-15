@@ -101,12 +101,24 @@ export default {
       return type;
     }
   },
+  watch: {
+    $route: {
+      // 亲测有效,我是用来监听query参数变化
+      handler() {
+        (this.furnace = this.$route.query.f),
+          (this.coilNumber = this.$route.query.c),
+          this.$message({
+            message: "我刷新了",
+            type: "success"
+          });
+        this.getData();
+      },
+      deep: true,
+      immediate: true
+    }
+  },
   async created() {
-    this.$message({
-      message: "我刷新了",
-      type: "success"
-    });
-    this.getData();
+    // this.getData();
     let userinfo = (await this.getUserInfo()) || {};
     this.adminname = userinfo.adminname;
     this.roleId = userinfo.roleId;

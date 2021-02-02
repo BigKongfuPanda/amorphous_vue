@@ -24,6 +24,7 @@
             :clearable="false"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
+            value-format="yyyy-MM-dd HH:mm:ss"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="喷带手：">
@@ -1240,6 +1241,7 @@ export default {
         appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels),
         thicknessDivation: this.searchForm.thicknessDivation
       };
+      console.log(params)
       Object.assign(params, _params);
       this.$http("get", urlmap.queryMeasure, params)
         .then(data => {
@@ -1477,6 +1479,14 @@ export default {
       if (row.laminationLevel === "不合格") {
         ribbonTotalLevel = "不合格";
         unQualifiedReason = "叠片不合格";
+        return [ribbonTotalLevel, unQualifiedReason];
+      }
+
+      /** 带面不合格 */
+
+      if (row.appearenceLevel === "不合格") {
+        ribbonTotalLevel = "不合格";
+        unQualifiedReason = "外观不合格";
         return [ribbonTotalLevel, unQualifiedReason];
       }
 
@@ -1824,11 +1834,13 @@ export default {
        * 2.2 厚度 4 级别，叠片系数>=0.78
        * 3.信维：1K107B, >=55mm, 韧性 ABCD，厚度18-26, 叠片系数>=0.75，带面等级 A/B, C: 轻微鱼鳞纹、轻微凹心、小凹心、轻微荷叶边、轻微劈裂、粗糙的都可以给
        */
+      row.clients = [];
       if (["1K107B"].includes(row.ribbonTypeName)) {
         // 德国
         if (
           [30].includes(row.ribbonWidth) &&
           ["A", "B", "C"].includes(row.ribbonToughnessLevel) &&
+          ["A", "B"].includes(row.appearenceLevel) &&
           [2, 3].includes(row.ribbonThicknessLevel) &&
           row.laminationFactor >= 0.78 &&
           !ribbonTotalLevel.includes("E") &&
@@ -1845,7 +1857,8 @@ export default {
           row.laminationFactor >= 0.78 &&
           (([2, 3].includes(row.ribbonThicknessLevel) &&
             ["A", "B"].includes(row.appearenceLevel)) ||
-            [4].includes(row.ribbonThicknessLevel))
+            ([4].includes(row.ribbonThicknessLevel) &&
+              ["A", "B", "C"].includes(row.appearenceLevel)))
         ) {
           row.clients.push("F");
         }
@@ -1945,7 +1958,7 @@ export default {
         return a - b;
       });
       const _len = arr.length;
-      return arr[_len - 1] - arr[0];
+      return Number((arr[_len - 1] - arr[0]).toFixed(2));
     },
     calcribbonThicknessLevel(thickness) {
       if (!thickness) {

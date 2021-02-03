@@ -13,6 +13,7 @@
             :clearable="false"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
+            value-format="yyyy-MM-dd HH:mm:ss"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="生产日期：">
@@ -117,7 +118,7 @@
           align="center"
         ></el-table-column>
         <el-table-column
-          prop="noQualifiedWeight"
+          prop="unQualifiedWeight"
           label="不合格重量(kg)"
           align="center"
         ></el-table-column>
@@ -132,16 +133,13 @@
 </template>
 
 <script>
-import qs from "qs";
-import { cloneDeep } from "lodash";
-import { Message } from "element-ui";
 import urlmap from "@/utils/urlmap";
 import { dateFormat, dateTimeFormat, debounce } from "@/utils/common";
 import { mapState, mapActions } from "vuex";
 import Collapse from "@/components/collapse.vue";
 
 export default {
-  name: "melt",
+  name: "measureStatics",
   components: {
     Collapse
   },
@@ -172,14 +170,7 @@ export default {
   computed: {
     ...mapState(["ribbonTypeList"])
   },
-  // 动态路由匹配
-  beforeRouteUpdate(to, from, next) {
-    this.castId = to.params.castId;
-    this.getTableData();
-    next();
-  },
   async created() {
-    this.castId = this.$route.params.castId;
     this.userinfo = JSON.parse(localStorage.getItem("userinfo"));
     await this.getRibbonTypeList();
     this.getTableData();
@@ -228,18 +219,15 @@ export default {
           this.totalCount = data.list.length;
           let totalWeight = 0;
           let totalQualifiedWeight = 0;
+          let totalUnQualifiedWeight = 0;
           data.list.forEach(item => {
             totalWeight += item.netWeight;
             totalQualifiedWeight += item.qualifiedWeight;
-            item.noQualifiedWeight = (
-              item.netWeight - item.qualifiedWeight
-            ).toFixed(2);
+            totalUnQualifiedWeight += item.unQualifiedWeight;
           });
           this.totalWeight = totalWeight;
           this.totalQualifiedWeight = totalQualifiedWeight;
-          this.totalUnQualifiedWeight = (
-            this.totalWeight - this.totalQualifiedWeight
-          ).toFixed(2);
+          this.totalUnQualifiedWeight = totalUnQualifiedWeight;
           this.totalQualifiedRatio = totalWeight
             ? ((100 * totalQualifiedWeight) / totalWeight).toFixed(2) + "%"
             : 0;

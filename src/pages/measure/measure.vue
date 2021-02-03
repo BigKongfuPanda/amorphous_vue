@@ -1876,6 +1876,10 @@ export default {
         }
       }
 
+      if(row.clients.length === 0) {
+        row.clients.push('GN')
+      }
+
       return [ribbonTotalLevel, unQualifiedReason];
     },
     calcThinRibbonWeight(row) {

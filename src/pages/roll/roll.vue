@@ -468,12 +468,30 @@ export default {
       if (selectionList.length === 0) {
         return this.$alert("请选择带材", "提示", { type: "warning" });
       }
+      const obj = {};
+      selectionList.forEach(item => {
+        const { furnace, coilNumber } = item;
+        if (obj.hasOwnProperty(furnace) && Array.isArray(obj[furnace])) {
+          if (obj[furnace].includes(coilNumber)) {
+            return this.$alert(
+              `炉号${furnace}，盘号${coilNumber} 存在重复盘号，请检查并手动修改数据，同时更新标签`
+            );
+          } else {
+            obj[furnace].push(coilNumber);
+          }
+        } else {
+          obj[furnace] = [coilNumber];
+        }
+      });
       // 发送请求，更新当前的数据
       this.$http("POST", urlmap.rollConfirm, {
         rollDataJson: JSON.stringify(selectionList)
       })
         .then(data => {
-          this.getTableData();
+          if (data.status === 0) {
+            this.pageConfig.current = 1;
+            this.getTableData();
+          }
         })
         .catch(error => {
           console.log(error);

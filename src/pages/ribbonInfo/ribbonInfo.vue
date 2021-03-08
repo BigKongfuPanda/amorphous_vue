@@ -29,7 +29,7 @@
       <mt-button
         type="primary"
         @click="addStorage"
-        :disabled="disabled"
+        :disabled="addDisabled"
         v-if="
           info.isMeasureConfirmed === 1 &&
             info.isStorageConfirmed === 0 &&
@@ -40,7 +40,7 @@
       <mt-button
         type="primary"
         @click="scanConfirm"
-        :disabled="disabled"
+        :disabled="scanDisabled"
         v-if="info.isStorageConfirmed === 1 && !info.place"
         >下一盘</mt-button
       >
@@ -66,7 +66,8 @@ export default {
       info: {},
       furnace: this.$route.query.f,
       coilNumber: this.$route.query.c,
-      disabled: false
+      addDisabled: false,
+      scanDisabled: false
     };
   },
   computed: {
@@ -186,30 +187,36 @@ export default {
         furnace: this.furnace,
         coilNumber: this.coilNumber
       };
+      this.scanDisabled = true;
       this.$http("POST", urlmap.scanConfirm, params)
         .then(data => {
-          data.status ? (this.disabled = false) : (this.disabled = true);
+          window.location.reload();
         })
         .catch(err => {
           this.$message({
             message: error.message || "下一盘确认失败",
             type: "error"
           });
-          this.disabled = false;
-        });
+        })
+        .finally(() => (this.scanDisabled = false));
     },
     addStorage() {
+      this.$message({
+        message: "点击了",
+        type: "success"
+      });
+      this.addDisabled = true;
       this.$http("POST", urlmap.addStorage, { data: this.info })
         .then(data => {
-          data.status ? (this.disabled = false) : (this.disabled = true);
+          window.location.reload();
         })
         .catch(err => {
           this.$message({
             message: error.message || "确认入库失败",
             type: "error"
           });
-          this.disabled = false;
-        });
+        })
+        .finally(() => (this.addDisabled = false));
     },
     handleFinish() {
       this.$router.push({ path: "/scanList" });
@@ -232,6 +239,9 @@ export default {
 /deep/ .mint-button--default.is-plain {
   border: 1px solid #26a2ff;
   color: #26a2ff;
+}
+/deep/ .mint-cell {
+  min-height: 40px;
 }
 .container {
   padding: 0 5px;

@@ -1958,11 +1958,38 @@ export default {
       }
     },
     calcMaxDeviation(arr) {
-      arr.sort((a, b) => {
+      const _len = arr.length;
+      if(_len < 9) {
+        return null;
+      }
+      const _arr = arr.map(item => Number(item))
+      const a1 = [_arr[0], _arr[1], _arr[2]];
+      const a2 = [_arr[3], _arr[4], _arr[5]];
+      const a3 = [_arr[6], _arr[7], _arr[8]];
+      a1.sort((a, b) => {
         return a - b;
       });
-      const _len = arr.length;
-      return Number((arr[_len - 1] - arr[0]).toFixed(2));
+      a2.sort((a, b) => {
+        return a - b;
+      });
+      a3.sort((a, b) => {
+        return a - b;
+      });
+
+      const d1 = Number((a1[2] - a1[0]).toFixed(2));
+      const d2 = Number((a2[2] - a2[0]).toFixed(2));
+      const d3 = Number((a3[2] - a3[0]).toFixed(2));
+
+      const dArr = [d1, d2, d3];
+      dArr.sort((a, b) => {
+        return a - b;
+      });
+      console.log({
+        a1,a2,a3,
+        d1,d2,d3,
+        dArr
+      })
+      return Number((dArr[2] - dArr[0]).toFixed(2));
     },
     calcribbonThicknessLevel(thickness) {
       if (!thickness) {

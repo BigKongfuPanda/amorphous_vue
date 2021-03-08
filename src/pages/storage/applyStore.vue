@@ -178,7 +178,7 @@ export default {
     return {
       roleId: 0,
       searchForm: {
-        castIds: [],
+        castIds: [6],
         furnaces: [],
       },
       loading: false,

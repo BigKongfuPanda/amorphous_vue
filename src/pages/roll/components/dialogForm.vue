@@ -86,7 +86,7 @@ import {
   ltNumber,
   checkFurnace,
   number,
-  decimalFormat,
+  decimalFormat
 } from "@/utils/validate";
 import urlmap from "@/utils/urlmap";
 
@@ -98,7 +98,7 @@ const formConfig = {
   furnace: "", // 制带炉号  06-20181120-01/01
   coilNumber: "", // 盘号
   diameter: "", //外径,mm
-  coilWeight: "", //重量,kg
+  coilWeight: "" //重量,kg
 };
 
 export default {
@@ -115,60 +115,61 @@ export default {
         furnace: "", // 制带炉号  06-20181120-01/01
         coilNumber: "", // 盘号
         diameter: "", //外径,mm
-        coilWeight: "", //重量,kg
+        coilWeight: "" //重量,kg
       },
       rules: {
         roller: [
-          { required: true, message: "请选择重卷人员", trigger: "blur" },
+          { required: true, message: "请选择重卷人员", trigger: "blur" }
         ],
         rollMachine: [
-          { required: true, message: "请选择重卷机编号", trigger: "blur" },
+          { required: true, message: "请选择重卷机编号", trigger: "blur" }
         ],
         furnace: [
           { required: true, message: "请填写炉号", trigger: "blur" },
           { max: 20, message: "最多20位字符", trigger: "blur" },
-          { validator: checkFurnace, trigger: "blur" },
+          { validator: checkFurnace, trigger: "blur" }
         ],
         coilNumber: [
           { required: true, message: "请填写盘号", trigger: "blur" },
           { validator: positiveInteger, trigger: "blur" },
-          { validator: ltNumber(99999), trigger: "blur" },
+          { validator: ltNumber(99999), trigger: "blur" }
         ],
         diameter: [
           { required: true, message: "请填写外径", trigger: "blur" },
-          { validator: number, trigger: "blur" },
-          { validator: ltNumber(99999), trigger: "blur" },
+          { validator: decimalFormat, trigger: "blur" },
+          { validator: ltNumber(99999), trigger: "blur" }
         ],
         coilWeight: [
           { required: true, message: "请填写重量", trigger: "blur" },
           { validator: decimalFormat, trigger: "blur" },
-          { validator: ltNumber(99999), trigger: "blur" },
+          { validator: ltNumber(99999), trigger: "blur" }
         ],
-        isFlat: [
-          { required: true, message: "请选择是否平整", trigger: "blur" },
-        ],
-      },
+        isFlat: [{ required: true, message: "请选择是否平整", trigger: "blur" }]
+      }
     };
   },
   props: {
     dialogData: {
       type: Object,
-      required: true,
+      required: true
     },
     rollerList: {
       type: Array,
-      required: true,
-    },
+      required: true
+    }
   },
   created() {
     this.userinfo = JSON.parse(localStorage.getItem("userinfo"));
     if (this.dialogData.formType === "add") {
       this.formData = Object.assign({}, formConfig, {
-        castId: Number(this.$route.params.castId),
+        castId: Number(this.$route.params.castId)
         // roller: this.userinfo.adminname
       });
     } else {
       this.formData = Object.assign(this.formData, this.dialogData.rowData);
+      this.formData.diameter = this.formData.diameter
+        ? Number(this.formData.diameter.toFixed(2))
+        : "";
     }
   },
   mounted() {},
@@ -177,13 +178,13 @@ export default {
       this.$emit("close");
     },
     submitForm() {
-      this.$refs.form.validate((valid) => {
+      this.$refs.form.validate(valid => {
         if (valid) {
           this.loading = true;
 
           const params = {
             ...this.formData,
-            roleId: this.userinfo.roleId,
+            roleId: this.userinfo.roleId
           };
 
           // 发送提交的请求
@@ -193,13 +194,13 @@ export default {
               : { method: "PUT", url: urlmap.updateRoll };
 
           // 过滤掉值为 null 或者 undefined 的参数，以免存入数据库的时候，发生错误
-          Object.keys(params).forEach((key) => {
+          Object.keys(params).forEach(key => {
             if (params[key] == null) {
               delete params[key];
             }
           });
           this.$http(method, url, params)
-            .then((data) => {
+            .then(data => {
               if (data.status !== -1) {
                 this.formData.coilNumber++;
                 this.formData.coilWeight = null;
@@ -207,7 +208,7 @@ export default {
                 this.$emit("submit");
               }
             })
-            .catch((error) => {
+            .catch(error => {
               console.log(error);
             })
             .finally(() => {
@@ -217,7 +218,7 @@ export default {
           return false;
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>

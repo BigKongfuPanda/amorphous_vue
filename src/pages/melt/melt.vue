@@ -64,7 +64,6 @@
         <el-table-column prop="Cu" label="铜(g)" align="center" width="40px"></el-table-column>
         <el-table-column prop="BFe" label="硼铁(g)" align="center" width="50px"></el-table-column>
         <el-table-column prop="NbFe" label="铌铁(g)" align="center" width="50px"></el-table-column>
-        <el-table-column prop="NbFe" label="铌铁(g)" align="center" width="50px"></el-table-column>
         <el-table-column prop="addMeltNumber1" label="续钢1炉号" align="center" width="130px"></el-table-column>
         <el-table-column prop="addMeltWeight1" label="续钢1重量(kg)" align="center" width="90px"></el-table-column>
         <el-table-column prop="addMeltNumber2" label="续钢2炉号" align="center" width="130px"></el-table-column>

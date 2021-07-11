@@ -528,6 +528,7 @@ export default {
         ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths)
       };
       Object.assign(params, _params);
+      this.loading = true;
       this.$http("get", urlmap.queryCast, params)
         .then(data => {
           this.pageConfig.total = data.count;

@@ -21,7 +21,7 @@
 
 <script>
 import urlmap from '@/utils/urlmap';
-import { positiveInteger } from '@/utils/validate';
+import { decimalFormat } from '@/utils/validate';
 
 const formConfig = {
   ribbonWidthId: '',
@@ -44,7 +44,7 @@ export default {
       rules: {
         ribbonWidth: [
           { required: true, message: '请填写带材规格', trigger: 'blur' },
-          { validator: positiveInteger, trigger: 'blur' }
+          { validator: decimalFormat, trigger: 'blur' }
         ]
       },
       loading: false

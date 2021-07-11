@@ -212,6 +212,7 @@ export default {
         oldAlloyNumber: this.searchForm.oldAlloyNumber
       };
       Object.assign(params, _params);
+      this.loading = true;
       this.$http('get', urlmap.queryMelt, params).then(data => {
         this.pageConfig.total = data.count;
         this.pageConfig.pageSize = data.limit;

@@ -211,12 +211,15 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import moment from "moment";
 import urlmap from "@/utils/urlmap";
 import { dateFormat, debounce, dateTimeFormat } from "@/utils/common";
 import dialogForm from "./components/dialogForm.vue";
 import Collapse from "@/components/collapse.vue";
 import qs from "qs";
 import { cloneDeep } from "lodash";
+
+const defaultDateRange = [moment().subtract(6, 'days').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')];
 
 export default {
   name: "melt",
@@ -234,7 +237,7 @@ export default {
         caster: "",
         furnace: "",
         roller: "",
-        date: []
+        date: [...defaultDateRange]
       },
       loading: false,
       tableData: [],
@@ -305,7 +308,7 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { caster: "", furnace: "", roller: "", date: [] };
+      this.searchForm = { caster: "", furnace: "", roller: "", date: [...defaultDateRange] };
       const params = {
         current: 1
       };
@@ -322,6 +325,7 @@ export default {
         roller: this.searchForm.roller
       };
       Object.assign(params, _params);
+      this.loading = true;
       this.$http("get", urlmap.queryRollData, params)
         .then(data => {
           this.pageConfig.total = data.count;

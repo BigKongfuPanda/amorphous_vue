@@ -141,6 +141,15 @@
             <el-option label="<=5" :value="5"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="排序方式：">
+          <el-select
+            v-model="searchForm.orderBy"
+            placeholder="请选择"
+          >
+            <el-option label="按更新时间" :value="1"></el-option>
+            <el-option label="按炉号和盘号" :value="2"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="clickSearch"
             >搜索</el-button
@@ -161,13 +170,14 @@
           >{{ autoQueryConfig.text }}</el-button
         >
         <el-tooltip
-          content="点击后会计算下表中带材的综合级别"
+          content="1.必须关闭自动更新，才能点击；2.点击后会计算下表中带材的综合级别"
           placement="top-end"
           ><el-button
             type="primary"
             icon="el-icon-info"
             @click="batchCalcRibbonTotalData"
             v-if="[1, 2, 3, 5].includes(userinfo.roleId)"
+            :disabled="isAutoQuerying"
             >计算综合级别</el-button
           ></el-tooltip
         >
@@ -880,11 +890,14 @@
 import qs from "qs";
 import { cloneDeep } from "lodash";
 import { Message } from "element-ui";
+import moment  from "moment";
 import urlmap from "@/utils/urlmap";
 import { dateFormat, dateTimeFormat, debounce } from "@/utils/common";
 import { mapState, mapActions } from "vuex";
 import Collapse from "@/components/collapse.vue";
 import ApplyInStoreModal from "./components/ApplyInStoreModal.vue";
+
+const defaultDateRange = [moment().subtract(6, 'days').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')];
 
 export default {
   name: "melt",
@@ -899,7 +912,7 @@ export default {
       searchForm: {
         caster: "",
         furnace: "",
-        date: [],
+        date: [...defaultDateRange],
         measureDate: [],
         ribbonTypeNames: [],
         ribbonWidths: [],
@@ -907,7 +920,8 @@ export default {
         laminationLevels: [],
         ribbonToughnessLevels: [],
         appearenceLevels: [],
-        thicknessDivation: ""
+        thicknessDivation: "",
+        orderBy: 1
       },
       loading: false,
       tableData: [],
@@ -1205,14 +1219,16 @@ export default {
       this.searchForm = {
         caster: "",
         furnace: "",
-        date: [],
+        date: [...defaultDateRange],
         measureDate: [],
         ribbonTypeNames: [],
         ribbonWidths: [],
         ribbonThicknessLevels: [],
         laminationLevels: [],
         ribbonToughnessLevels: [],
-        appearenceLevels: []
+        appearenceLevels: [],
+        thicknessDivation: '',
+        orderBy: 1
       };
       const params = {
         current: 1
@@ -1239,10 +1255,12 @@ export default {
           this.searchForm.ribbonToughnessLevels
         ),
         appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels),
-        thicknessDivation: this.searchForm.thicknessDivation
+        thicknessDivation: this.searchForm.thicknessDivation,
+        orderBy: this.searchForm.orderBy
       };
       console.log(params)
       Object.assign(params, _params);
+      this.loading = true;
       this.$http("get", urlmap.queryMeasure, params)
         .then(data => {
           this.pageConfig.total = data.count;

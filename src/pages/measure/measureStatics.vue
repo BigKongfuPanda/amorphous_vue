@@ -225,9 +225,9 @@ export default {
             totalQualifiedWeight += item.qualifiedWeight;
             totalUnQualifiedWeight += item.unQualifiedWeight;
           });
-          this.totalWeight = totalWeight;
-          this.totalQualifiedWeight = totalQualifiedWeight;
-          this.totalUnQualifiedWeight = totalUnQualifiedWeight;
+          this.totalWeight = totalWeight.toFixed(2);
+          this.totalQualifiedWeight = totalQualifiedWeight.toFixed(2);
+          this.totalUnQualifiedWeight = totalUnQualifiedWeight.toFixed(2);
           this.totalQualifiedRatio = totalWeight
             ? ((100 * totalQualifiedWeight) / totalWeight).toFixed(2) + "%"
             : 0;

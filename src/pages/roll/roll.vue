@@ -11,6 +11,7 @@
             v-model="searchForm.date"
             type="daterange"
             :default-time="['00:00:00', '23:59:59']"
+            value-format="yyyy-MM-dd HH:mm:ss"
             :clearable="false"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
@@ -219,7 +220,12 @@ import Collapse from "@/components/collapse.vue";
 import qs from "qs";
 import { cloneDeep } from "lodash";
 
-const defaultDateRange = [moment().subtract(6, 'days').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')];
+const defaultDateRange = [
+  moment()
+    .subtract(6, "days")
+    .format("YYYY-MM-DD"),
+  moment().format("YYYY-MM-DD")
+];
 
 export default {
   name: "melt",
@@ -308,7 +314,12 @@ export default {
       this.getTableData(params);
     },
     reset() {
-      this.searchForm = { caster: "", furnace: "", roller: "", date: [...defaultDateRange] };
+      this.searchForm = {
+        caster: "",
+        furnace: "",
+        roller: "",
+        date: [...defaultDateRange]
+      };
       const params = {
         current: 1
       };

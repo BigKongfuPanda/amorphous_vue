@@ -11,6 +11,7 @@
             v-model="searchForm.date"
             type="daterange"
             :default-time="['00:00:00', '23:59:59']"
+            value-format="yyyy-MM-dd HH:mm:ss"
             :clearable="false"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
@@ -142,10 +143,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="排序方式：">
-          <el-select
-            v-model="searchForm.orderBy"
-            placeholder="请选择"
-          >
+          <el-select v-model="searchForm.orderBy" placeholder="请选择">
             <el-option label="按更新时间" :value="1"></el-option>
             <el-option label="按炉号和盘号" :value="2"></el-option>
           </el-select>
@@ -890,14 +888,19 @@
 import qs from "qs";
 import { cloneDeep } from "lodash";
 import { Message } from "element-ui";
-import moment  from "moment";
+import moment from "moment";
 import urlmap from "@/utils/urlmap";
 import { dateFormat, dateTimeFormat, debounce } from "@/utils/common";
 import { mapState, mapActions } from "vuex";
 import Collapse from "@/components/collapse.vue";
 import ApplyInStoreModal from "./components/ApplyInStoreModal.vue";
 
-const defaultDateRange = [moment().subtract(6, 'days').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')];
+const defaultDateRange = [
+  moment()
+    .subtract(6, "days")
+    .format("YYYY-MM-DD"),
+  moment().format("YYYY-MM-DD")
+];
 
 export default {
   name: "melt",
@@ -1227,7 +1230,7 @@ export default {
         laminationLevels: [],
         ribbonToughnessLevels: [],
         appearenceLevels: [],
-        thicknessDivation: '',
+        thicknessDivation: "",
         orderBy: 1
       };
       const params = {
@@ -1258,7 +1261,7 @@ export default {
         thicknessDivation: this.searchForm.thicknessDivation,
         orderBy: this.searchForm.orderBy
       };
-      console.log(params)
+      console.log(params);
       Object.assign(params, _params);
       this.loading = true;
       this.$http("get", urlmap.queryMeasure, params)
@@ -1894,8 +1897,8 @@ export default {
         }
       }
 
-      if(row.clients.length === 0) {
-        row.clients.push('GN')
+      if (row.clients.length === 0) {
+        row.clients.push("GN");
       }
 
       return [ribbonTotalLevel, unQualifiedReason];
@@ -1977,10 +1980,10 @@ export default {
     },
     calcMaxDeviation(arr) {
       const _len = arr.length;
-      if(_len < 9) {
+      if (_len < 9) {
         return null;
       }
-      const _arr = arr.map(item => Number(item))
+      const _arr = arr.map(item => Number(item));
       const a1 = [_arr[0], _arr[1], _arr[2]];
       const a2 = [_arr[3], _arr[4], _arr[5]];
       const a3 = [_arr[6], _arr[7], _arr[8]];
@@ -2003,10 +2006,14 @@ export default {
         return a - b;
       });
       console.log({
-        a1,a2,a3,
-        d1,d2,d3,
+        a1,
+        a2,
+        a3,
+        d1,
+        d2,
+        d3,
         dArr
-      })
+      });
       return Number((dArr[2] - dArr[0]).toFixed(2));
     },
     calcribbonThicknessLevel(thickness) {

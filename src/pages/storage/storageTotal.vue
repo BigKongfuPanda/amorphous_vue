@@ -19,6 +19,7 @@
             v-model="searchForm.date"
             type="daterange"
             :default-time="['00:00:00', '23:59:59']"
+            value-format="yyyy-MM-dd HH:mm:ss"
             :clearable="false"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
@@ -30,6 +31,7 @@
             v-model="searchForm.outDate"
             type="daterange"
             :default-time="['00:00:00', '23:59:59']"
+            value-format="yyyy-MM-dd HH:mm:ss"
             :clearable="false"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
@@ -46,7 +48,7 @@
             remote
             collapse-tags
             :loading="selectLoading"
-            :remote-method="(query) => remoteMethod(query, 'furnace')"
+            :remote-method="query => remoteMethod(query, 'furnace')"
           >
             <el-option
               v-for="furnace in furnaceList"
@@ -129,7 +131,7 @@
             remote
             collapse-tags
             :loading="selectLoading"
-            :remote-method="(query) => remoteMethod(query, 'ribbonTotalLevel')"
+            :remote-method="query => remoteMethod(query, 'ribbonTotalLevel')"
           >
             <el-option
               v-for="ribbonTotalLevel in ribbonTotalLevelList"
@@ -256,7 +258,9 @@
           <template slot-scope="scope">
             <el-popover placement="right" trigger="hover">
               <Qrcode
-                :value="`${domain}/#/ribbonInfo?f=${scope.row.furnace}&c=${scope.row.coilNumber}`"
+                :value="
+                  `${domain}/#/ribbonInfo?f=${scope.row.furnace}&c=${scope.row.coilNumber}`
+                "
               ></Qrcode>
               <el-button slot="reference">{{ scope.row.coilNumber }}</el-button>
             </el-popover>
@@ -563,7 +567,7 @@ export default {
         laminationLevels: [],
         takebys: [],
         place: "",
-        isRemain: 1,
+        isRemain: 1
       },
       loading: false,
       selectLoading: false,
@@ -575,7 +579,7 @@ export default {
       pageConfig: {
         total: 1,
         current: 1,
-        pageSize: 10,
+        pageSize: 10
       },
       isExportable: false,
       isEditable: false,
@@ -587,7 +591,7 @@ export default {
         loading: false,
         visible: false,
         place: "",
-        takeBy: "",
+        takeBy: ""
       },
       allOutStoreFormRules: {
         place: [
@@ -595,31 +599,27 @@ export default {
           {
             pattern: /^1-[0-9]{1,2}-[0-9]{1,2}$/,
             message: "格式错误",
-            trigger: "blur",
-          },
+            trigger: "blur"
+          }
         ],
-        takeBy: [
-          { required: true, message: "请填写实际去向", trigger: "blur" },
-        ],
+        takeBy: [{ required: true, message: "请填写实际去向", trigger: "blur" }]
       },
       batchOutStoreForm: {
         loading: false,
         visible: false,
-        takeBy: "",
+        takeBy: ""
       },
       batchOutStoreFormRules: {
-        takeBy: [
-          { required: true, message: "请填写实际去向", trigger: "blur" },
-        ],
+        takeBy: [{ required: true, message: "请填写实际去向", trigger: "blur" }]
       },
       uploadExcelForm: {
         loading: false,
         visible: false,
         url: urlmap.uploadStorage,
         // url: 'http://localhost:8080/api/storage/uploadstorage',
-        fileList: [],
+        fileList: []
       },
-      domain: "",
+      domain: ""
     };
   },
   computed: {
@@ -627,8 +627,8 @@ export default {
       "ribbonTypeList",
       "ribbonWidthList",
       "ribbonThicknessLevelList",
-      "laminationLevelList",
-    ]),
+      "laminationLevelList"
+    ])
   },
   // 动态路由匹配
   beforeRouteUpdate(to, from, next) {
@@ -667,7 +667,7 @@ export default {
       "getRibbonTypeList",
       "getRibbonWidthList",
       "getRibbonThicknessLevelList",
-      "getLaminationLevelList",
+      "getLaminationLevelList"
     ]),
     inStoreDateFormat(row, column) {
       return row.inStoreDate ? dateFormat(row.inStoreDate) : "";
@@ -711,7 +711,7 @@ export default {
     clickSearch() {
       // 重置当前页码为1
       const params = {
-        current: 1,
+        current: 1
       };
       this.pageConfig.current = 1;
       this.getTableData(params);
@@ -729,10 +729,10 @@ export default {
         ribbonThicknessLevels: [],
         laminationLevels: [],
         place: "",
-        isRemain: 1,
+        isRemain: 1
       };
       const params = {
-        current: 1,
+        current: 1
       };
       this.pageConfig.current = 1;
       this.getTableData(params);
@@ -755,22 +755,22 @@ export default {
         ribbonTotalLevelJson: JSON.stringify(this.searchForm.ribbonTotalLevels),
         takebyJson: JSON.stringify(this.searchForm.takebys),
         place: this.searchForm.place,
-        isRemain: this.searchForm.isRemain,
+        isRemain: this.searchForm.isRemain
       };
       Object.assign(params, _params);
       this.$http("get", urlmap.queryStorage, params)
-        .then((data) => {
+        .then(data => {
           this.pageConfig.total = data.count;
           this.pageConfig.pageSize = data.limit;
           data.list &&
-            data.list.forEach((item) => {
+            data.list.forEach(item => {
               item.isEditing = false;
             });
           this.totalCoilNum = data.totalCoilNum;
           this.totalWeight = data.totalWeight;
           this.tableData = data.list;
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         })
         .finally(() => {
@@ -785,18 +785,18 @@ export default {
       this.$confirm(`确定退库 ${furnace} 的第 ${coilNumber} 盘吗？`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       })
         .then(() => {
           this.$http("delete", urlmap.delStorage, {
             storageId,
             furnace,
-            coilNumber,
+            coilNumber
           })
-            .then((data) => {
+            .then(data => {
               this.getTableData();
             })
-            .catch((error) => {
+            .catch(error => {
               console.log(error);
             });
         })
@@ -819,21 +819,21 @@ export default {
         takeBy: row.takeBy,
         remainWeight: row.remainWeight,
         place: row.place,
-        shipRemark: row.shipRemark,
+        shipRemark: row.shipRemark
       };
 
       // 发送请求，更新当前的数据
       this.$http("PUT", urlmap.updateStorage, params)
-        .then((data) => {
+        .then(data => {
           this.getTableData();
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
         });
     },
     handleCurrentChange(val) {
       const params = {
-        current: val,
+        current: val
       };
       this.getTableData(params);
     },
@@ -855,7 +855,7 @@ export default {
         ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
         takebyJson: JSON.stringify(this.searchForm.takebys),
         place: this.searchForm.place,
-        isRemain: this.searchForm.isRemain,
+        isRemain: this.searchForm.isRemain
       };
       const url = `${urlmap.exportStorage}?${qs.stringify(params)}`;
       window.open(url);
@@ -878,23 +878,23 @@ export default {
       this.allOutStoreForm.visible = false;
     },
     submitAllOutForm() {
-      this.$refs.allOutStoreForm.validate((valid) => {
+      this.$refs.allOutStoreForm.validate(valid => {
         if (valid) {
           this.allOutStoreForm.loading = true;
           let formData = {
             place: this.allOutStoreForm.place,
             takeBy: this.allOutStoreForm.takeBy,
-            type: "all",
+            type: "all"
           };
           this.$http("PUT", urlmap.updateStorage, formData)
-            .then((data) => {
+            .then(data => {
               const params = {
-                current: 1,
+                current: 1
               };
               this.pageConfig.current = 1;
               this.getTableData(params);
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err);
             })
             .finally(() => {
@@ -918,7 +918,7 @@ export default {
       this.batchOutStoreForm.visible = false;
     },
     submitBatchOutForm() {
-      this.$refs.batchOutStoreForm.validate((valid) => {
+      this.$refs.batchOutStoreForm.validate(valid => {
         if (valid) {
           this.batchOutStoreForm.loading = true;
           // this.multipleSelection && this.multipleSelection.forEach(item => {
@@ -944,23 +944,23 @@ export default {
           let ids = [];
           ids =
             this.multipleSelection &&
-            this.multipleSelection.map((item) => {
+            this.multipleSelection.map(item => {
               return item.storageId;
             });
           const formData = {
             ids: ids.join(),
             takeBy: this.batchOutStoreForm.takeBy,
-            type: "batch",
+            type: "batch"
           };
           this.$http("PUT", urlmap.updateStorage, formData)
-            .then((data) => {
+            .then(data => {
               const params = {
-                current: 1,
+                current: 1
               };
               this.pageConfig.current = 1;
               this.getTableData(params);
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err);
             })
             .finally(() => {
@@ -983,7 +983,7 @@ export default {
       this.$refs.upload.submit();
       this.uploadExcelForm.visible = false;
       const params = {
-        current: 1,
+        current: 1
       };
       this.pageConfig.current = 1;
       this.getTableData(params);
@@ -991,27 +991,27 @@ export default {
     uploadErrorHanler(error, file, fileList) {
       this.$message({
         message: `上传失败：${error.message}`,
-        type: "error",
+        type: "error"
       });
     },
     uploadSuccessHanler(res, file, fileList) {
       if (res.status === 0) {
         this.$message({
           message: res.message,
-          type: "success",
+          type: "success"
         });
       } else {
         let html = "";
-        res.data.forEach((item) => {
+        res.data.forEach(item => {
           html += `<p>炉号：${item.furnace}，盘号：${item.coilNumber}</p>`;
         });
         this.$alert(html, "以下带材添加仓位失败：", {
           dangerouslyUseHTMLString: true,
-          type: "warning",
+          type: "warning"
         });
       }
       const params = {
-        current: 1,
+        current: 1
       };
       this.pageConfig.current = 1;
       this.getTableData(params);
@@ -1020,20 +1020,20 @@ export default {
       const { url, key } = {
         furnace: {
           url: urlmap.queryFurnaceList,
-          key: "furnaceList",
+          key: "furnaceList"
         },
         ribbonTotalLevel: {
           url: urlmap.queryRibbonTotalLevelList,
-          key: "ribbonTotalLevelList",
-        },
+          key: "ribbonTotalLevelList"
+        }
       }[type];
       if (query !== "") {
         this.selectLoading = true;
         this.$http("GET", url, { query })
-          .then((data) => {
+          .then(data => {
             this[key] = data.list;
           })
-          .catch((err) => {
+          .catch(err => {
             console.log(err);
           })
           .finally(() => {
@@ -1043,8 +1043,8 @@ export default {
         this[key] = [];
       }
     },
-    showQrCode(furnace, coilNumber) {},
-  },
+    showQrCode(furnace, coilNumber) {}
+  }
 };
 </script>
 <style lang="scss" scoped>

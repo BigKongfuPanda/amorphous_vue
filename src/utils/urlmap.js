@@ -31,16 +31,17 @@ export default {
   updateRoll: "/measure/updateRoll",
   delRoll: "/measure/delRoll",
   exportRoll: "/measure/exportroll",
-  queryRollStatics: "measure/queryRollStatics",
+  queryRollStatics: "/measure/queryRollStatics",
   // 检测
   queryMeasure: "/measure/queryMeasureData",
   measureConfirm: "/measure/measureConfirm",
   updateMeasure: "/measure/updateMeasure",
   updateMeasureByBatch: "/measure/updateMeasureByBatch",
   exportMeasure: "/measure/exportmeasure",
-  queryRibbonInfo: "measure/queryRibbonInfo",
-  queryApplyStorageByFurnace: "measure/queryApplyStorageByFurnace",
-  queryMeasureStatics: "measure/queryMeasureStatics",
+  queryRibbonInfo: "/measure/queryRibbonInfo",
+  queryApplyStorageByFurnace: "/measure/queryApplyStorageByFurnace",
+  queryMeasureStatics: "/measure/queryMeasureStatics",
+  uploadMeasure: "/measure/uploadMeasure",
 
   // 库房
   queryFurnaceList: "/storage/furnace",

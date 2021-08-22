@@ -194,6 +194,14 @@
         >
         <el-button
           type="primary"
+          icon="el-icon-upload"
+          @click="uploadExcelHandler"
+          class="pull_right"
+          v-if="[1, 2, 3, 5].includes(userinfo.roleId)"
+          >导入</el-button
+        >
+        <el-button
+          type="primary"
           icon="el-icon-check"
           @click="measureConfirm"
           class="pull_right"
@@ -880,6 +888,43 @@
         @close="() => (this.applyInStoreModalVisible = false)"
         @submit="() => (this.applyInStoreModalVisible = false)"
       />
+      <!-- 批量添加仓位弹出框 -->
+      <el-dialog
+        title="上传检测数据"
+        :visible.sync="uploadExcelForm.visible"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+        @close="closeUploadDialog"
+        :center="true"
+        width="40%"
+        v-loading="loading"
+        element-loading-text="拼命加载中"
+      >
+        <el-upload
+          class="upload"
+          ref="upload"
+          :action="uploadExcelForm.url"
+          :file-list="uploadExcelForm.fileList"
+          :multiple="false"
+          :limit="1"
+          accept=".xlsx"
+          :on-error="uploadErrorHanler"
+          :on-success="uploadSuccessHanler"
+          :auto-upload="false"
+        >
+          <el-button slot="trigger" size="small" type="primary"
+            >选取文件</el-button
+          >
+          <div slot="tip" class="el-upload__tip">
+            只能上传xlsx文件，且不超过500kb
+          </div>
+        </el-upload>
+        <div slot="footer">
+          <el-button type="primary" @click="submitUploadForm"
+            >上传提交</el-button
+          >
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -942,7 +987,14 @@ export default {
       isAutoQuerying: false,
       pollTimer: null,
       // uniqueAppearenceLevelList: []
-      applyInStoreModalVisible: false
+      applyInStoreModalVisible: false,
+      uploadExcelForm: {
+        loading: false,
+        visible: false,
+        url: urlmap.uploadMeasure,
+        // url: "http://192.168.1.8:8080/api/measure/uploadMeasure",
+        fileList: []
+      }
     };
   },
   computed: {
@@ -2274,6 +2326,56 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    uploadExcelHandler() {
+      this.uploadExcelForm.visible = true;
+      this.uploadExcelForm.fileList = [];
+    },
+    closeUploadDialog() {
+      this.uploadExcelForm.visible = false;
+    },
+    submitUploadForm() {
+      // if (this.uploadExcelForm.fileList.length === 0) {
+      //   return this.$message({
+      //   message: '请选择excel表格',
+      //   type: "warning"
+      // });
+      // }
+      this.$refs.upload.submit();
+      this.uploadExcelForm.visible = false;
+      const params = {
+        current: 1
+      };
+      this.pageConfig.current = 1;
+      this.getTableData(params);
+    },
+    uploadErrorHanler(error, file, fileList) {
+      this.$message({
+        message: `上传失败：${error.message}`,
+        type: "error"
+      });
+    },
+    uploadSuccessHanler(res, file, fileList) {
+      if (res.status === 0) {
+        this.$message({
+          message: res.message,
+          type: "success"
+        });
+      } else {
+        let html = "";
+        res.data.forEach(item => {
+          html += `<p>炉号：${item.furnace}，盘号：${item.coilNumber}</p>`;
+        });
+        this.$alert(html, "以下带材更新检测数据失败：", {
+          dangerouslyUseHTMLString: true,
+          type: "warning"
+        });
+      }
+      const params = {
+        current: 1
+      };
+      this.pageConfig.current = 1;
+      this.getTableData(params);
     }
   }
 };
@@ -2288,5 +2390,8 @@ export default {
   td {
     padding: 5px 8px;
   }
+}
+.upload {
+  height: 100px;
 }
 </style>

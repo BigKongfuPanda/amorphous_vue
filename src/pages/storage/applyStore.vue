@@ -160,6 +160,14 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        background
+        layout="total,prev,pager,next"
+        :total="pageConfig.total"
+        :current-page.sync="pageConfig.current"
+        :page-size="pageConfig.pageSize"
+        @current-change="handleCurrentChange"
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -179,7 +187,12 @@ export default {
       roleId: 0,
       searchForm: {
         castIds: [6],
-        furnaces: [],
+        furnaces: []
+      },
+      pageConfig: {
+        total: 1,
+        current: 1,
+        pageSize: 10
       },
       loading: false,
       selectLoading: false,
@@ -188,7 +201,7 @@ export default {
       totalWeight: null,
       tableData: [],
       tableHeight: 200,
-      multipleSelection: [],
+      multipleSelection: []
     };
   },
 
@@ -215,30 +228,38 @@ export default {
         : "";
     },
     clickSearch() {
-      this.getTableData();
+      // 重置当前页码为1
+      const params = {
+        current: 1
+      };
+      this.pageConfig.current = 1;
+      this.getTableData(params);
     },
     reset() {
       this.searchForm = {
         castIds: [],
-        furnaces: [],
+        furnaces: []
       };
-      this.getTableData();
-    },
-    getTableData() {
       const params = {
-        castIds: JSON.stringify(this.searchForm.castIds),
-        furnaceJson: JSON.stringify(this.searchForm.furnaces),
+        current: 1
       };
+      this.pageConfig.current = 1;
+      this.getTableData(params);
+    },
+    getTableData(params = {}) {
+      const _params = {
+        castIds: JSON.stringify(this.searchForm.castIds),
+        furnaceJson: JSON.stringify(this.searchForm.furnaces)
+      };
+      Object.assign(params, _params);
+      this.loading = true;
       this.$http("get", urlmap.queryApplyStorage, params)
-        .then(({ list }) => {
-          // this.totalCoilNum = list.length;
-          // this.totalWeight = list.reduce((acc, cur) => {
-          //   const sum = acc + cur.coilNetWeight;
-          //   return sum;
-          // }, 0);
-          this.tableData = list;
+        .then(data => {
+          this.tableData = data.list;
+          this.pageConfig.total = data.count;
+          this.pageConfig.pageSize = data.limit;
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         })
         .finally(() => {
@@ -253,14 +274,14 @@ export default {
       this.$confirm(`确定驳回 ${furnace} 的第 ${coilNumber} 盘吗？`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       })
         .then(() => {
           this.$http("post", urlmap.rejectApplyStorage, { measureId })
-            .then((data) => {
+            .then(data => {
               this.getTableData();
             })
-            .catch((error) => {
+            .catch(error => {
               console.log(error);
             });
         })
@@ -278,8 +299,8 @@ export default {
 
       // 发送请求，更新当前的数据
       this.$http("PUT", urlmap.updateStorage, row)
-        .then((data) => {})
-        .catch((error) => {
+        .then(data => {})
+        .catch(error => {
           console.log(error);
         });
     },
@@ -298,10 +319,10 @@ export default {
       if (query !== "") {
         this.selectLoading = true;
         this.$http("GET", urlmap.queryFurnaceList, { query })
-          .then((data) => {
+          .then(data => {
             this.furnaceList = data.list;
           })
-          .catch((err) => {
+          .catch(err => {
             console.log(err);
           })
           .finally(() => {
@@ -318,16 +339,22 @@ export default {
       }
       // 发送请求，更新当前的数据
       this.$http("POST", urlmap.batchAddStorage, {
-        dataJson: JSON.stringify(selectionList),
+        dataJson: JSON.stringify(selectionList)
       })
-        .then((data) => {
+        .then(data => {
           this.getTableData();
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
         });
     },
-  },
+    handleCurrentChange(val) {
+      const params = {
+        current: val
+      };
+      this.getTableData(params);
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

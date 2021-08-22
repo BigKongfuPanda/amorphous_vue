@@ -202,6 +202,10 @@ export default {
         ribbonTypeNames: [],
         ribbonWidths: []
       };
+      const params = {
+        current: 1
+      };
+      this.pageConfig.current = 1;
       this.getTableData(params);
     },
     getTableData(params = {}) {

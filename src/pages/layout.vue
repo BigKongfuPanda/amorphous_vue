@@ -82,6 +82,9 @@
           <router-link to="/roll/9">
             <el-menu-item index="/roll/9">9号机组</el-menu-item>
           </router-link>
+          <router-link to="/rollStatics">
+            <el-menu-item index="/rollStatics">重卷重量汇总</el-menu-item>
+          </router-link>
         </el-submenu>
         <el-submenu index="5">
           <template slot="title">

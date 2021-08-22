@@ -47,6 +47,9 @@ const User = () =>
 const Roll = () =>
   import(/* webpackChunkName: "roll" */ "@/pages/roll/roll.vue");
 
+const RollStatics = () =>
+  import(/* webpackChunkName: "rollStatics" */ "@/pages/roll/rollStatics.vue");
+
 const Measure = () =>
   import(/* webpackChunkName: "measure" */ "@/pages/measure/measure.vue");
 
@@ -209,6 +212,12 @@ export default new Router({
           name: "roll",
           component: Roll,
           meta: { title: "重卷记录表", icon: "roll" }
+        },
+        {
+          path: "rollStatics",
+          name: "rollStatics",
+          component: RollStatics,
+          meta: { title: "重卷重量汇总", icon: "rollStatics" }
         },
         {
           path: "measure/:castId",

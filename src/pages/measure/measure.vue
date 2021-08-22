@@ -916,7 +916,7 @@
             >选取文件</el-button
           >
           <div slot="tip" class="el-upload__tip">
-            只能上传xlsx文件，且不超过500kb
+            只能上传xlsx文件，且不超过2M
           </div>
         </el-upload>
         <div slot="footer">

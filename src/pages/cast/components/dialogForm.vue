@@ -333,7 +333,7 @@ export default {
         ribbonTypeName: [{ required: true, message: '请选择材质', trigger: 'blur' }],
         ribbonWidth: [
           { required: true, message: '请填写带宽', trigger: 'blur' },
-          { validator: positiveInteger, trigger: 'blur' },
+          // { validator: positiveInteger, trigger: 'blur' },
           { validator: ltNumber(99999), trigger: 'blur' }
         ],
         furnace: [

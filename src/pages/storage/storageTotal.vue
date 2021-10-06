@@ -170,6 +170,13 @@
             <el-option :value="1" label=">0"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="低端带材：">
+          <el-select v-model="searchForm.isLowQualified" placeholder="">
+            <el-option value="" label="全部"></el-option>
+            <el-option :value="1" label="是"></el-option>
+            <el-option :value="0" label="否"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="clickSearch"
             >搜索</el-button
@@ -255,7 +262,7 @@
           fixed
         >
           <!-- <template slot-scope="scope"><div @click="() => showQrCode(row.furnace, row.coilNumber)">{{scope.row.coilNumber}}</div></template> -->
-          <template slot-scope="scope">
+          <!-- <template slot-scope="scope">
             <el-popover placement="right" trigger="hover">
               <Qrcode
                 :value="
@@ -264,7 +271,7 @@
               ></Qrcode>
               <el-button slot="reference">{{ scope.row.coilNumber }}</el-button>
             </el-popover>
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column
           prop="ribbonTypeName"
@@ -317,6 +324,34 @@
             >
           </template>
         </el-table-column>
+
+        <el-table-column
+          prop="isLowQualified"
+          label="低端带材"
+          align="center"
+          width="100px"
+        >
+          <template slot-scope="scope">
+            <div v-if="scope.row.isEditing === false">
+              <span v-if="scope.row.isLowQualified == 1" class="text_warn"
+                >是</span
+              >
+              <span v-if="scope.row.isLowQualified == 0">否</span>
+            </div>
+            <div v-else>
+              <el-select
+                v-model="scope.row.isLowQualified"
+                placeholder=""
+                size="mini"
+              >
+                <el-option label="不选择" value=""></el-option>
+                <el-option label="是" :value="1"></el-option>
+                <el-option label="否" :value="0"></el-option>
+              </el-select>
+            </div>
+          </template>
+        </el-table-column>
+
         <el-table-column
           prop="outStoreDate"
           label="出库日期"
@@ -567,7 +602,8 @@ export default {
         laminationLevels: [],
         takebys: [],
         place: "",
-        isRemain: 1
+        isRemain: 1,
+        isLowQualified: ""
       },
       loading: false,
       selectLoading: false,
@@ -729,7 +765,8 @@ export default {
         ribbonThicknessLevels: [],
         laminationLevels: [],
         place: "",
-        isRemain: 1
+        isRemain: 1,
+        isLowQualified: ""
       };
       const params = {
         current: 1
@@ -755,7 +792,8 @@ export default {
         ribbonTotalLevelJson: JSON.stringify(this.searchForm.ribbonTotalLevels),
         takebyJson: JSON.stringify(this.searchForm.takebys),
         place: this.searchForm.place,
-        isRemain: this.searchForm.isRemain
+        isRemain: this.searchForm.isRemain,
+        isLowQualified: this.searchForm.isLowQualified
       };
       Object.assign(params, _params);
       this.$http("get", urlmap.queryStorage, params)
@@ -819,7 +857,8 @@ export default {
         takeBy: row.takeBy,
         remainWeight: row.remainWeight,
         place: row.place,
-        shipRemark: row.shipRemark
+        shipRemark: row.shipRemark,
+        isLowQualified: row.isLowQualified
       };
 
       // 发送请求，更新当前的数据
@@ -855,7 +894,8 @@ export default {
         ribbonTotalLevels: this.searchForm.ribbonTotalLevels,
         takebyJson: JSON.stringify(this.searchForm.takebys),
         place: this.searchForm.place,
-        isRemain: this.searchForm.isRemain
+        isRemain: this.searchForm.isRemain,
+        isLowQualified: this.searchForm.isLowQualified
       };
       const url = `${urlmap.exportStorage}?${qs.stringify(params)}`;
       window.open(url);

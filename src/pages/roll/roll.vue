@@ -71,7 +71,7 @@
           icon="el-icon-download"
           @click="exportExcel"
           class="pull_right"
-          v-if="[1, 2, 3, 4, 15].includes(userinfo.roleId)"
+          v-if="[1, 2, 3, 4, 5, 15].includes(userinfo.roleId)"
           >导出</el-button
         >
       </el-col>

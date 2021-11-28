@@ -1894,7 +1894,10 @@ export default {
        */
 
       if (["AD25", "ND25", "1K107A", "FN-300"].includes(row.ribbonTypeName)) {
-        if (row.laminationFactor >= 0.75) {
+        if ([20, 25, 30, 40, 50].includes(row.ribbonWidth) &&
+          row.ribbonThickness >= 28 &&
+          row.ribbonThickness <= 32 &&
+          row.laminationFactor >= 0.75) {
           ribbonTotalLevel = ribbonTotalLevel + "H";
         }
       }

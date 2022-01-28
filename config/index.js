@@ -4,20 +4,24 @@
 
 const path = require("path");
 
-const os = require('os')
+const os = require("os");
 
 const getIp = () => {
   var interfaces = os.networkInterfaces();
-    for (var devName in interfaces) {
-        var iface = interfaces[devName];
-        for (var i = 0; i < iface.length; i++) {
-            var alias = iface[i];
-            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
-                return alias.address;
-            }
-        }
+  for (var devName in interfaces) {
+    var iface = interfaces[devName];
+    for (var i = 0; i < iface.length; i++) {
+      var alias = iface[i];
+      if (
+        alias.family === "IPv4" &&
+        alias.address !== "127.0.0.1" &&
+        !alias.internal
+      ) {
+        return alias.address;
+      }
     }
-}
+  }
+};
 
 module.exports = {
   dev: {
@@ -34,7 +38,8 @@ module.exports = {
     },
 
     // Various Dev Server settings
-    host: getIp(), // can be overwritten by process.env.HOST
+    // host: getIp(), // can be overwritten by process.env.HOST
+    host: "localhost",
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,

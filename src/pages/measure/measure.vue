@@ -35,10 +35,26 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="炉号：">
-          <el-input
+          <!-- <el-input
             v-model="searchForm.furnace"
             placeholder="请输入炉号"
-          ></el-input>
+          ></el-input> -->
+          <el-select
+            v-model="searchForm.furnaces"
+            placeholder="请输入炉号关键字"
+            multiple
+            filterable
+            remote
+            :loading="selectLoading"
+            :remote-method="remoteQueryFinance"
+          >
+            <el-option
+              v-for="furnace in furnaceList"
+              :key="furnace"
+              :label="furnace"
+              :value="furnace"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="材质：">
           <el-select
@@ -959,7 +975,8 @@ export default {
       castId: 6,
       searchForm: {
         caster: "",
-        furnace: "",
+        // furnace: "",
+        furnaces: [],
         date: [...defaultDateRange],
         measureDate: [],
         ribbonTypeNames: [],
@@ -971,6 +988,8 @@ export default {
         thicknessDivation: "",
         orderBy: 1
       },
+      selectLoading: false,
+      furnaceList: [],
       loading: false,
       tableData: [],
       pageConfig: {
@@ -1069,6 +1088,29 @@ export default {
     this.pollTimer = null;
   },
   methods: {
+    remoteQueryFinance(query) {
+      if (query !== "") {
+        this.selectLoading = true;
+        const params = {
+          castId: this.castId,
+          startTime: this.searchForm.date[0],
+          endTime: this.searchForm.date[1],
+          query
+        };
+        this.$http("GET", urlmap.queryMeasureFurnaceList, { ...params })
+          .then(data => {
+            this.furnaceList = data.list;
+          })
+          .catch(err => {
+            console.log(err);
+          })
+          .finally(() => {
+            this.selectLoading = false;
+          });
+      } else {
+        this.furnaceList = [];
+      }
+    },
     handleAutoQuery() {
       const curStatus = this.isAutoQuerying;
       this.isAutoQuerying = !curStatus;
@@ -1273,7 +1315,8 @@ export default {
     reset() {
       this.searchForm = {
         caster: "",
-        furnace: "",
+        // furnace: "",
+        furnaces: [],
         date: [...defaultDateRange],
         measureDate: [],
         ribbonTypeNames: [],
@@ -1299,7 +1342,8 @@ export default {
         startMeasureTime: this.searchForm.measureDate[0],
         endMeasureTime: this.searchForm.measureDate[1],
         caster: this.searchForm.caster,
-        furnace: this.searchForm.furnace,
+        // furnace: this.searchForm.furnace,
+        furnaceJson: JSON.stringify(this.searchForm.furnaces),
         ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
         ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths),
         ribbonThicknessLevelJson: JSON.stringify(
@@ -1894,10 +1938,12 @@ export default {
        */
 
       if (["AD25", "ND25", "1K107A", "FN-300"].includes(row.ribbonTypeName)) {
-        if ([20, 25, 30, 40, 50].includes(row.ribbonWidth) &&
+        if (
+          [20, 25, 30, 40, 50].includes(row.ribbonWidth) &&
           row.ribbonThickness >= 28 &&
           row.ribbonThickness <= 32 &&
-          row.laminationFactor >= 0.75) {
+          row.laminationFactor >= 0.75
+        ) {
           ribbonTotalLevel = ribbonTotalLevel + "H";
         }
       }
@@ -2265,7 +2311,8 @@ export default {
         startTime: this.searchForm.date[0],
         endTime: this.searchForm.date[1],
         startMeasureTime: this.searchForm.measureDate[0],
-        endMeasureTime: this.searchForm.measureDate[1]
+        endMeasureTime: this.searchForm.measureDate[1],
+        furnaceJson: JSON.stringify(this.searchForm.furnaces)
         // caster: this.searchForm.caster,
         // furnace: this.searchForm.furnace,
         // ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),

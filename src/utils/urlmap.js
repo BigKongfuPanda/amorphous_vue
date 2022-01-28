@@ -42,6 +42,7 @@ export default {
   queryApplyStorageByFurnace: "/measure/queryApplyStorageByFurnace",
   queryMeasureStatics: "/measure/queryMeasureStatics",
   uploadMeasure: "/measure/uploadMeasure",
+  queryMeasureFurnaceList: "/measure/queryMeasureFurnaceList",
 
   // 库房
   queryFurnaceList: "/storage/furnace",

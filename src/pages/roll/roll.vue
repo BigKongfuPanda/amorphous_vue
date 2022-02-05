@@ -40,6 +40,12 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="排序方式：">
+          <el-select v-model="searchForm.orderBy" placeholder="请选择">
+            <el-option label="按炉号降序和盘号升序" :value="2"></el-option>
+            <el-option label="按更新时间" :value="1"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="clickSearch"
             >搜索</el-button
@@ -243,6 +249,7 @@ export default {
         caster: "",
         furnace: "",
         roller: "",
+        orderBy: 2, // 默认按照炉号和盘号的顺序
         date: [...defaultDateRange]
       },
       loading: false,
@@ -318,6 +325,7 @@ export default {
         caster: "",
         furnace: "",
         roller: "",
+         orderBy: 2,
         date: [...defaultDateRange]
       };
       const params = {
@@ -333,7 +341,8 @@ export default {
         endTime: this.searchForm.date[1],
         caster: this.searchForm.caster,
         furnace: this.searchForm.furnace,
-        roller: this.searchForm.roller
+        roller: this.searchForm.roller,
+        orderBy: this.searchForm.orderBy,
       };
       Object.assign(params, _params);
       this.loading = true;

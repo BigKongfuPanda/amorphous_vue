@@ -194,6 +194,13 @@
     <div class="main_bd">
       <el-col class="table_hd">
         <el-button
+          :type="autoQueryConfig.type"
+          :icon="autoQueryConfig.icon"
+          @click="handleAutoQuery"
+          v-if="isExportable"
+          >{{ autoQueryConfig.text }}</el-button
+        >
+        <el-button
           type="primary"
           icon="el-icon-download"
           @click="exportExcel"
@@ -655,10 +662,20 @@ export default {
         // url: 'http://localhost:8080/api/storage/uploadstorage',
         fileList: []
       },
-      domain: ""
+      domain: "",
+      isAutoQuerying: false // 是否自动查询主表数据
     };
   },
   computed: {
+    autoQueryConfig() {
+      return {
+        icon: this.isAutoQuerying
+          ? "el-icon-video-pause"
+          : "el-icon-video-play",
+        text: this.isAutoQuerying ? "停止自动更新" : "启动自动更新",
+        type: this.isAutoQuerying ? "danger" : "primary"
+      };
+    },
     ...mapState([
       "ribbonTypeList",
       "ribbonWidthList",
@@ -773,6 +790,19 @@ export default {
       };
       this.pageConfig.current = 1;
       this.getTableData(params);
+    },
+    handleAutoQuery() {
+      const curStatus = this.isAutoQuerying;
+      this.isAutoQuerying = !curStatus;
+      if (!this.isAutoQuerying) {
+        this.pollTimer && clearInterval(this.pollTimer);
+      } else {
+        clearInterval(this.pollTimer);
+        this.getTableData();
+        this.pollTimer = setInterval(() => {
+          this.getTableData();
+        }, 5000);
+      }
     },
     getTableData(params = {}) {
       const _params = {

@@ -39,6 +39,17 @@
       >
       <mt-button
         type="primary"
+        @click="rejectApplyStorage"
+        :disabled="rejectDisabled"
+        v-if="
+          info.isMeasureConfirmed === 1 &&
+            info.isStorageConfirmed === 0 &&
+            info.isRollConfirmed === 1
+        "
+        >驳回</mt-button
+      >
+      <mt-button
+        type="primary"
         @click="scanConfirm"
         :disabled="scanDisabled"
         v-if="info.isStorageConfirmed === 1 && !info.place"
@@ -53,6 +64,7 @@
 
 <script>
 import urlmap from "@/utils/urlmap";
+import { MessageBox } from "mint-ui";
 export default {
   name: "ribbonInfo",
   data() {
@@ -67,7 +79,8 @@ export default {
       furnace: this.$route.query.f,
       coilNumber: this.$route.query.c,
       addDisabled: false,
-      scanDisabled: false
+      scanDisabled: false,
+      rejectDisabled: false
     };
   },
   computed: {
@@ -218,6 +231,27 @@ export default {
         })
         .finally(() => (this.addDisabled = false));
     },
+    rejectApplyStorage() {
+      const { measureId, furnace, coilNumber } = this.info;
+      MessageBox.prompt("请输入驳回原因")
+        .then(({ value, action }) => {
+          console.log("输入的值", value);
+          console.log("action", action);
+          this.rejectDisabled = true;
+          this.$http("post", urlmap.rejectApplyStorage, {
+            measureId,
+            rejectReason: value
+          })
+            .then(data => {
+              window.location.reload();
+            })
+            .catch(error => {
+              console.log(error);
+            })
+            .finally(() => (this.rejectDisabled = false));
+        })
+        .catch(() => {});
+    },
     handleFinish() {
       this.$router.push({ path: "/scanList" });
     }
@@ -253,6 +287,11 @@ export default {
   display: flex;
   margin-top: 10px;
   justify-content: space-between;
+  .mint-button {
+    &:nth-child(2) {
+      margin-left: 5px;
+    }
+  }
 }
 .tip {
   margin-top: 5px;

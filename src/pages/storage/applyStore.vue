@@ -271,13 +271,24 @@ export default {
     },
     del(row) {
       const { measureId, furnace, coilNumber } = row;
-      this.$confirm(`确定驳回 ${furnace} 的第 ${coilNumber} 盘吗？`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.$http("post", urlmap.rejectApplyStorage, { measureId })
+      this.$prompt(
+        `确定驳回 ${furnace} 的第 ${coilNumber} 盘吗？`,
+        "请输入驳回原因",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          inputValidator(value) {
+            if (!value) {
+              return "驳回原因不能为空";
+            }
+          }
+        }
+      )
+        .then(({ value }) => {
+          this.$http("post", urlmap.rejectApplyStorage, {
+            measureId,
+            rejectReason: value
+          })
             .then(data => {
               this.getTableData();
             })

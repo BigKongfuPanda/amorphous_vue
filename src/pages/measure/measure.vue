@@ -870,6 +870,13 @@
           :show-overflow-tooltip="true"
         ></el-table-column>
         <el-table-column
+          prop="rejectReason"
+          label="驳回原因"
+          align="center"
+          width="100px"
+          :show-overflow-tooltip="true"
+        ></el-table-column>
+        <el-table-column
           label="操作"
           align="center"
           v-if="userinfo.roleId == 5 || userinfo.roleId == 1"

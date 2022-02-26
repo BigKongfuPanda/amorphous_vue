@@ -200,12 +200,16 @@
           v-if="isExportable"
           >{{ autoQueryConfig.text }}</el-button
         >
-        <el-button
-          type="primary"
-          icon="el-icon-download"
-          @click="exportExcel"
-          v-if="isExportable"
-          >导出</el-button
+         <el-tooltip
+          content="必须关闭自动更新，才能操作批量编辑"
+          placement="top-end"
+          ><el-button
+          :type="batchEditConfig.type"
+          :icon="batchEditConfig.icon"
+          @click="batchEditHandler"
+          :disabled="isAutoQuerying"
+          >{{ batchEditConfig.text }}</el-button
+        ></el-tooltip
         >
         <!-- <el-button
           type="primary"
@@ -214,6 +218,14 @@
           v-if="userinfo.roleId == 6"
           >批量入仓</el-button
         > -->
+        <el-button
+          type="primary"
+          icon="el-icon-download"
+          @click="exportExcel"
+          v-if="isExportable"
+          class="pull_right"
+          >导出</el-button
+        >
         <el-button
           type="primary"
           icon="el-icon-menu"
@@ -663,7 +675,8 @@ export default {
         fileList: []
       },
       domain: "",
-      isAutoQuerying: false // 是否自动查询主表数据
+      isAutoQuerying: false, // 是否自动查询主表数据
+      isBatchEditing: false // 是否处于批量编辑中
     };
   },
   computed: {
@@ -674,6 +687,13 @@ export default {
           : "el-icon-video-play",
         text: this.isAutoQuerying ? "停止自动更新" : "启动自动更新",
         type: this.isAutoQuerying ? "danger" : "primary"
+      };
+    },
+    batchEditConfig() {
+      return {
+        icon: this.isBatchEditing ? "el-icon-finished" : "el-icon-edit-outline",
+        text: this.isBatchEditing ? "批量保存" : "批量编辑",
+        type: this.isBatchEditing ? "success" : "primary"
       };
     },
     ...mapState([
@@ -802,6 +822,43 @@ export default {
         this.pollTimer = setInterval(() => {
           this.getTableData();
         }, 5000);
+      }
+    },
+    batchEditHandler() {
+      const curEditStatus = this.isBatchEditing;
+      this.isBatchEditing = !curEditStatus;
+      // 开启编辑状态
+      if (this.isBatchEditing) {
+        this.tableData = this.tableData.map(item => ({
+          ...item,
+          isEditing: true
+        }));
+      } else {
+        // 批量保存
+        const promises =  this.tableData.map(row => {
+          row.isEditing = false;
+          // 计算结存：当实际去向确定的时候，结余为 0
+          if (row.takeBy) {
+            row.remainWeight = 0;
+          } else {
+            row.remainWeight = row.coilNetWeight;
+          }
+
+          const params = {
+            storageId: row.storageId,
+            takeBy: row.takeBy,
+            remainWeight: row.remainWeight,
+            place: row.place,
+            shipRemark: row.shipRemark,
+            isLowQualified: row.isLowQualified
+          };
+
+          // 发送请求，更新当前的数据
+          return this.$http("PUT", urlmap.updateStorage, params)
+        });
+        Promise.all(promises).then(values => {
+          this.getTableData()
+        }).catch(err => console.log(err))
       }
     },
     getTableData(params = {}) {

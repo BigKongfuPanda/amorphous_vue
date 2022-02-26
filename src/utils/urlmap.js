@@ -32,6 +32,8 @@ export default {
   delRoll: "/measure/delRoll",
   exportRoll: "/measure/exportroll",
   queryRollStatics: "/measure/queryRollStatics",
+  uploadRoll: "/measure/uploadRoll",
+
   // 检测
   queryMeasure: "/measure/queryMeasureData",
   measureConfirm: "/measure/measureConfirm",

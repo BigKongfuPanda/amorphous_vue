@@ -911,7 +911,7 @@
         @close="() => (this.applyInStoreModalVisible = false)"
         @submit="() => (this.applyInStoreModalVisible = false)"
       />
-      <!-- 批量添加仓位弹出框 -->
+      <!-- 上传检测excel弹出框 -->
       <el-dialog
         title="上传检测数据"
         :visible.sync="uploadExcelForm.visible"

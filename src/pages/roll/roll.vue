@@ -80,6 +80,14 @@
           v-if="[1, 2, 3, 4, 5, 15].includes(userinfo.roleId)"
           >导出</el-button
         >
+        <el-button
+          type="primary"
+          icon="el-icon-upload"
+          @click="uploadExcelHandler"
+          class="pull_right"
+          v-if="[1, 2, 3, 5].includes(userinfo.roleId)"
+          >导入</el-button
+        >
       </el-col>
       <el-table
         :data="tableData"
@@ -213,6 +221,41 @@
       @close="closeHandler"
       @submit="submitHandler"
     ></dialog-form>
+    <!-- 上传重卷excel弹出框 -->
+    <el-dialog
+      title="上传重卷数据"
+      :visible.sync="uploadExcelForm.visible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="closeUploadDialog"
+      :center="true"
+      width="40%"
+      v-loading="loading"
+      element-loading-text="拼命加载中"
+    >
+      <el-upload
+        class="upload"
+        ref="upload"
+        :action="uploadExcelForm.url"
+        :file-list="uploadExcelForm.fileList"
+        :multiple="false"
+        :limit="1"
+        accept=".xlsx"
+        :on-error="uploadErrorHanler"
+        :on-success="uploadSuccessHanler"
+        :auto-upload="false"
+      >
+        <el-button slot="trigger" size="small" type="primary"
+          >选取文件</el-button
+        >
+        <div slot="tip" class="el-upload__tip">
+          只能上传xlsx文件，且不超过2M
+        </div>
+      </el-upload>
+      <div slot="footer">
+        <el-button type="primary" @click="submitUploadForm">上传提交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -263,7 +306,14 @@ export default {
         pageSize: 10
       },
       tableHeight: 200,
-      multipleSelection: []
+      multipleSelection: [],
+      uploadExcelForm: {
+        loading: false,
+        visible: false,
+        url: urlmap.uploadRoll,
+        // url: "http://192.168.1.8:8080/api/measure/uploadRoll",
+        fileList: []
+      }
     };
   },
   // 动态路由匹配
@@ -325,7 +375,7 @@ export default {
         caster: "",
         furnace: "",
         roller: "",
-         orderBy: 2,
+        orderBy: 2,
         date: [...defaultDateRange]
       };
       const params = {
@@ -342,7 +392,7 @@ export default {
         caster: this.searchForm.caster,
         furnace: this.searchForm.furnace,
         roller: this.searchForm.roller,
-        orderBy: this.searchForm.orderBy,
+        orderBy: this.searchForm.orderBy
       };
       Object.assign(params, _params);
       this.loading = true;
@@ -520,6 +570,56 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    uploadExcelHandler() {
+      this.uploadExcelForm.visible = true;
+      this.uploadExcelForm.fileList = [];
+    },
+    closeUploadDialog() {
+      this.uploadExcelForm.visible = false;
+    },
+    submitUploadForm() {
+      // if (this.uploadExcelForm.fileList.length === 0) {
+      //   return this.$message({
+      //   message: '请选择excel表格',
+      //   type: "warning"
+      // });
+      // }
+      this.$refs.upload.submit();
+      this.uploadExcelForm.visible = false;
+      const params = {
+        current: 1
+      };
+      this.pageConfig.current = 1;
+      this.getTableData(params);
+    },
+    uploadErrorHanler(error, file, fileList) {
+      this.$message({
+        message: `上传失败：${error.message}`,
+        type: "error"
+      });
+    },
+    uploadSuccessHanler(res, file, fileList) {
+      if (res.status === 0) {
+        this.$message({
+          message: res.message,
+          type: "success"
+        });
+      } else {
+        let html = "";
+        res.data.forEach(item => {
+          html += `<p>炉号：${item.furnace}，盘号：${item.coilNumber}</p>`;
+        });
+        this.$alert(html, "以下带材更新数据失败，请检查炉号是否正确：", {
+          dangerouslyUseHTMLString: true,
+          type: "warning"
+        });
+      }
+      const params = {
+        current: 1
+      };
+      this.pageConfig.current = 1;
+      this.getTableData(params);
     }
   }
 };

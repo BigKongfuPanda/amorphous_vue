@@ -356,6 +356,7 @@
               :disabled="
                 userinfo.roleId !== 1 &&
                   userinfo.roleId !== 3 &&
+                  userinfo.roleId !== 16 &&
                   userinfo.adminname !== scope.row.caster
               "
               >修改</el-button
@@ -476,13 +477,8 @@ export default {
       return dateTimeFormat(row.updatedAt);
     },
     setIsAddAble() {
-      // 7：6#机组喷带手，9：7#机组喷带手，11：8#机组喷带手，13：9#机组喷带手
-      if (
-        this.userinfo.roleId == 7 ||
-        this.userinfo.roleId == 9 ||
-        this.userinfo.roleId == 11 ||
-        this.userinfo.roleId == 13
-      ) {
+      // 7：6#机组喷带手，9：7#机组喷带手，11：8#机组喷带手，13：9#机组喷带手，16：喷带组长
+      if ([7, 9, 11, 13, 16].includes(this.userinfo.roleId)) {
         return true;
       } else {
         // 其他

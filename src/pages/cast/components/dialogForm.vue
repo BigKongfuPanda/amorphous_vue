@@ -229,7 +229,7 @@
 </template>
 
 <script>
-import { integer, positiveInteger, ltNumber, checkFurnace, number } from '@/utils/validate';
+import { integer, positiveInteger, ltNumber, checkFurnace, number,decimalFormat } from '@/utils/validate';
 import urlmap from '@/utils/urlmap';
 import { mapState, mapActions } from 'vuex';
 import { cloneDeep } from 'lodash';
@@ -333,7 +333,7 @@ export default {
         ribbonTypeName: [{ required: true, message: '请选择材质', trigger: 'blur' }],
         ribbonWidth: [
           { required: true, message: '请填写带宽', trigger: 'blur' },
-          // { validator: positiveInteger, trigger: 'blur' },
+          { validator: decimalFormat, trigger: 'blur' },
           { validator: ltNumber(99999), trigger: 'blur' }
         ],
         furnace: [

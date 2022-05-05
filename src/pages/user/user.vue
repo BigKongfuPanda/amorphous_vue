@@ -5,18 +5,41 @@
     </el-breadcrumb>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button type="primary" icon="el-icon-plus" @click="createUser">新增用户</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="createUser"
+          >新增用户</el-button
+        >
       </el-col>
-      <el-table :data="tableData" stripe border style="width:100%" v-loading="loading">
-        <el-table-column type="index" label="序号" align="center" width="100"></el-table-column>
-        <el-table-column prop="username" label="账号" align="center"></el-table-column>
-        <el-table-column prop="password" label="密码" align="center"></el-table-column>
+      <el-table
+        :data="tableData"
+        stripe
+        border
+        style="width:100%"
+        v-loading="loading"
+      >
+        <el-table-column
+          type="index"
+          label="序号"
+          align="center"
+          width="100"
+        ></el-table-column>
+        <el-table-column
+          prop="username"
+          label="账号"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="password"
+          label="密码"
+          align="center"
+        ></el-table-column>
         <el-table-column prop="roleId" label="角色" align="center">
           <template slot-scope="scope">
-            <span v-if="scope.row.roleId === 1">厂长</span>
+            <span v-if="scope.row.roleId === 1">超级管理员</span>
             <span v-if="scope.row.roleId === 2">生产计划</span>
             <span v-if="scope.row.roleId === 3">普通管理员</span>
             <span v-if="scope.row.roleId === 15">重卷组长</span>
+            <span v-if="scope.row.roleId === 16">喷带组长</span>
+            <span v-if="scope.row.roleId === 17">化钢组长</span>
             <span v-if="scope.row.roleId === 4">重卷</span>
             <span v-if="scope.row.roleId === 5">检测</span>
             <span v-if="scope.row.roleId === 6">库房</span>
@@ -30,19 +53,35 @@
             <span v-if="scope.row.roleId === 14">9号机组-化钢</span>
           </template>
         </el-table-column>
-        <el-table-column prop="adminname" label="姓名" align="center"></el-table-column>
-        <el-table-column prop="createTime" label="注册时间" align="center" width="170px"></el-table-column>
-        <el-table-column prop="loginTime" label="最后登录时间" align="center" width="170px"></el-table-column>
+        <el-table-column
+          prop="adminname"
+          label="姓名"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="createTime"
+          label="注册时间"
+          align="center"
+          width="170px"
+        ></el-table-column>
+        <el-table-column
+          prop="loginTime"
+          label="最后登录时间"
+          align="center"
+          width="170px"
+        ></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" type="danger" @click="delUser(scope.row)">删除账户</el-button>
+            <el-button size="mini" type="danger" @click="delUser(scope.row)"
+              >删除账户</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
     </div>
     <dialog-form
       v-if="dialogVisible"
-      :dialogData="{ formType, dialogVisible, rowData}"
+      :dialogData="{ formType, dialogVisible, rowData }"
       @close="closeHandler"
       @submit="submitHandler"
     ></dialog-form>
@@ -89,11 +128,15 @@ export default {
     },
     delUser(row) {
       const { username, adminname } = row;
-      this.$confirm(`删除后数据无法恢复，确定要删除 ${adminname}-${username} 吗？`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
+      this.$confirm(
+        `删除后数据无法恢复，确定要删除 ${adminname}-${username} 吗？`,
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
         .then(() => {
           this.$http("delete", urlmap.delUser, { username })
             .then(data => {
@@ -116,7 +159,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
-
-
+<style lang="scss" scoped></style>

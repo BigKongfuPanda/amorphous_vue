@@ -330,6 +330,7 @@ import { positiveInteger, ltNumber } from "@/utils/validate";
 import urlmap from "@/utils/urlmap";
 import { mapState, mapActions } from "vuex";
 import { cloneDeep } from "lodash";
+import { decimalFormat } from "@/utils/validate";
 
 const formConfig = {
   date: "",
@@ -428,7 +429,7 @@ export default {
         ],
         ribbonWidth: [
           { required: true, message: "请填写带宽", trigger: "blur" },
-          { validator: positiveInteger, trigger: "blur" },
+          { validator: decimalFormat, trigger: "blur" },
           { validator: ltNumber(99999), trigger: "blur" }
         ],
         client: [{ max: 50, message: "最多50位字符", trigger: "blur" }],

@@ -56,6 +56,15 @@
       </el-form>
     </Collapse>
     <div class="main_bd">
+      <el-col class="table_hd">
+        <el-button
+          type="primary"
+          icon="el-icon-success"
+          v-if="[1, 2, 3, 4, 15].includes(userinfo.roleId)"
+          @click="handleConfirm"
+          >确认送检</el-button
+        >
+      </el-col>
       <el-table
         :data="tableData"
         ref="table"
@@ -65,7 +74,13 @@
         style="width: 100%"
         :height="tableHeight"
         v-loading="loading"
+        @selection-change="handleSelectionChange"
       >
+        <el-table-column
+          type="selection"
+          width="20"
+          :selectable="setSelectable"
+        ></el-table-column>
         <el-table-column
           prop="furnace"
           label="炉号"
@@ -98,18 +113,23 @@
           align="center"
         ></el-table-column>
         <el-table-column
-          prop="rawWeight"
-          label="大盘毛重/kg"
-          align="center"
-        ></el-table-column>
-        <el-table-column
           prop="coilCount"
           label="盘数"
           align="center"
         ></el-table-column>
         <el-table-column
+          prop="rawWeight"
+          label="大盘毛重/kg"
+          align="center"
+        ></el-table-column>
+        <el-table-column
           prop="totalCoilWeight"
-          label="重卷总重/kg"
+          label="重卷净重/kg"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="balanceWeight"
+          label="毛重-净重/kg"
           align="center"
         ></el-table-column>
       </el-table>
@@ -165,11 +185,12 @@ export default {
     };
   },
   computed: {
-    ...mapState(["ribbonTypeList"])
+    ...mapState(["ribbonTypeList", "linerWeightList"])
   },
   async created() {
     this.userinfo = JSON.parse(localStorage.getItem("userinfo"));
     await this.getRibbonTypeList();
+    await this.getLinerWeightList();
     this.getTableData();
   },
   mounted() {
@@ -182,7 +203,18 @@ export default {
     }, 1000);
   },
   methods: {
-    ...mapActions(["getRibbonTypeList"]),
+    ...mapActions(["getRibbonTypeList", "getLinerWeightList"]),
+    setSelectable(row, index) {
+      // 未被确认，则可选
+      if (row.isAllRollConfirmed === 1) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
     dateFormat(row, column) {
       return dateFormat(row.createTime);
     },
@@ -221,12 +253,19 @@ export default {
 
       this.$http("get", urlmap.queryRollStatics, params)
         .then(data => {
-          this.tableData =
-            data.list &&
-            data.list.map(item => ({
-              ...item,
-              totalCoilWeight: item.totalCoilWeight.toFixed(2)
-            }));
+          Array.isArray(data.list) &&
+            data.list.forEach(item => {
+              // 计算净重
+              item.totalCoilWeight = (
+                item.totalCoilWeight -
+                this.calcLinerWeight(item.ribbonWidth) * item.coilCount
+              ).toFixed(2);
+              // 计算大盘毛重和净重的差值
+              item.balanceWeight = (
+                item.rawWeight - item.totalCoilWeight
+              ).toFixed(2);
+            });
+          this.tableData = data.list || [];
           this.pageConfig.total = data.count;
           this.pageConfig.pageSize = data.limit;
         })
@@ -235,6 +274,60 @@ export default {
         })
         .finally(() => {
           this.loading = false;
+        });
+    },
+    // 计算内衬的重量
+    calcLinerWeight(ribbonWidth) {
+      /**
+       * 计算单盘净重，不同规格的内衬重量不同
+       * 内衬的规格和重量对应表
+       */
+      ribbonWidth = Number(ribbonWidth);
+      const { linerWeight } =
+        this.linerWeightList.find(item => item.ribbonWidth === ribbonWidth) ||
+        {};
+
+      if (!linerWeight) {
+        Message({
+          message: `带材宽度${ribbonWidth}没有配置所用内衬重量，请联系管理员进行配置！`,
+          type: "error"
+        });
+        return 0;
+      }
+      return linerWeight;
+    },
+    handleConfirm() {
+      const selectionList = cloneDeep(this.multipleSelection);
+      if (selectionList.length === 0) {
+        return this.$alert("请选择带材", "提示", { type: "warning" });
+      }
+      const obj = {};
+      selectionList.forEach(item => {
+        const { furnace, coilNumber } = item;
+        if (obj.hasOwnProperty(furnace) && Array.isArray(obj[furnace])) {
+          if (obj[furnace].includes(coilNumber)) {
+            return this.$alert(
+              `炉号${furnace}，盘号${coilNumber} 存在重复盘号，请检查并手动修改数据，同时更新标签`
+            );
+          } else {
+            obj[furnace].push(coilNumber);
+          }
+        } else {
+          obj[furnace] = [coilNumber];
+        }
+      });
+      // 发送请求，更新当前的数据
+      this.$http("POST", urlmap.rollConfirm, {
+        rollDataJson: JSON.stringify(selectionList)
+      })
+        .then(data => {
+          if (data.status === 0) {
+            this.pageConfig.current = 1;
+            this.getTableData();
+          }
+        })
+        .catch(error => {
+          console.log(error);
         });
     },
     handleCurrentChange(val) {

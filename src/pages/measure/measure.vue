@@ -195,6 +195,16 @@
             >计算综合级别</el-button
           ></el-tooltip
         >
+        <el-tooltip content="必须关闭自动更新，才能点击" placement="top-end"
+          ><el-button
+            type="primary"
+            icon="el-icon-document-checked"
+            @click="batchSave"
+            v-if="[1, 2, 3, 5].includes(userinfo.roleId)"
+            :disabled="isAutoQuerying"
+            >批量保存</el-button
+          ></el-tooltip
+        >
         <el-tooltip
           content="请先选择筛选条件中的生产日期或者检测日期后再导出"
           placement="top-end"
@@ -1570,6 +1580,12 @@ export default {
         }
       });
       return clone;
+    },
+    batchSave() {
+      const shouldSaveList = this.tableData.filter(
+        item => item.isMeasureConfirmed !== 1
+      );
+      shouldSaveList.forEach(row => this.save(row));
     },
     save(row) {
       // row.isEditing = false;

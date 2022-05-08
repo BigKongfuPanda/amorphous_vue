@@ -29,7 +29,11 @@
             prop="ribbonTypeName"
             class="dialog_field"
           >
-            <el-select v-model="formData.ribbonTypeName" placeholder="请选择">
+            <el-select
+              v-model="formData.ribbonTypeName"
+              placeholder="请选择"
+              @change="handleRibbonTypeChange"
+            >
               <el-option
                 v-for="item in dialogData.ribbonTypeList"
                 :key="item.ribbonTypeName"
@@ -40,13 +44,29 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="制带炉号:" prop="furnace" class="dialog_field">
-            <el-input v-model="formData.furnace" @blur="setBucket"></el-input>
+          <el-form-item label="制带炉号:" prop="planFurnace" class="dialog_field">
+            <el-input v-model="formData.furnace" v-if="dialogData.formType === 'edit'"></el-input>
+            <el-select
+              v-model="formData.planFurnace"
+              filterable
+              allow-create
+              placeholder="请选择"
+              v-else
+            >
+              <el-option
+                v-for="item in planFurnaceList"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="桶号:" prop="bucket" class="dialog_field">
-            <span>{{ formData.bucket }}</span>
+            <!-- <span>{{ formData.bucket }}</span> -->
+            <el-input v-model="formData.bucket"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -306,6 +326,7 @@ import {
   positiveInteger,
   ltNumber,
   checkFurnace,
+  checkFurnaceWithoutBucket,
   number
 } from "@/utils/validate";
 import urlmap from "@/utils/urlmap";
@@ -313,7 +334,7 @@ import urlmap from "@/utils/urlmap";
 const formConfig = {
   date: "", //冶炼日期
   castId: 6, // 机组编号
-  furnace: "", // 制带炉号  06-20181120-01/01
+  planFurnace: "", // 制带炉号  06-20181120-01/01
   ribbonTypeName: "", //材质名称
   bucket: "", // 配料桶号
   melter: "", // 熔炼人
@@ -364,10 +385,11 @@ export default {
       userinfo: {},
       visible: false,
       loading: false,
+      planFurnaceList: [], // 生产计划的炉号
       formData: {
         date: "", //冶炼日期
         castId: 6, // 机组编号
-        furnace: "", // 制带炉号  06-20181120-01/01
+        planFurnace: "", // 制带炉号  06-20181120-01/01
         ribbonTypeName: "", //材质名称
         bucket: "", // 配料桶号
         melter: "", // 熔炼人
@@ -404,14 +426,21 @@ export default {
         ribbonTypeName: [
           { required: true, message: "请选择材质", trigger: "blur" }
         ],
-        furnace: [
+        planFurnace: [
           { required: true, message: "请填写炉号", trigger: "blur" },
-          { max: 20, message: "最多20位字符", trigger: "blur" },
-          { validator: checkFurnace, trigger: "blur" }
+          { max: 14, message: "最多14位字符", trigger: "blur" },
+          { validator: checkFurnaceWithoutBucket, trigger: "change" }
         ],
         bucket: [
           { required: true, message: "请填写桶号", trigger: "blur" },
-          { max: 2, message: "最多2位字符", trigger: "blur" }
+          // { max: 2, message: "最多2位字符", trigger: "blur" }
+          {
+            pattern: /^[0-9]{1}[0-9]{1}$/,
+            message: "格式为 01,02,...,09,10,11,...,99",
+            trigger: "blur"
+          }
+          // { validator: integer, trigger: "blur" },
+          // { validator: ltNumber(99999), trigger: "blur" }
         ],
         melter: [
           { required: true, message: "请填写熔炼人姓名", trigger: "blur" },
@@ -512,13 +541,28 @@ export default {
     }
   },
   methods: {
-    setBucket(e) {
-      // 根据炉号自动填充母合金桶号
-      const furnace = e.target.value;
-      if (furnace) {
-        this.formData.bucket = e.target.value.split("/")[1];
-      }
+    handleRibbonTypeChange(val) {
+      const params = {
+        castId: this.formData.castId,
+        ribbonTypeName: val,
+        dateJson: JSON.stringify(["2021-07-04", "2021-07-05"])
+      };
+      this.$http("get", urlmap.queryPlanDataByMelt, params)
+        .then(data => {
+          this.planFurnaceList = data.list.map(f => f.furnace);
+        })
+        .catch(error => {
+          console.log(error);
+          this.planFurnaceList = [];
+        });
     },
+    // setBucket(e) {
+    //   // 根据炉号自动填充母合金桶号
+    //   const furnace = e.target.value;
+    //   if (furnace) {
+    //     this.formData.bucket = e.target.value.split("/")[1];
+    //   }
+    // },
     closeDialog() {
       this.$emit("close");
     },
@@ -547,6 +591,7 @@ export default {
 
           this.formData.roleId = this.userinfo.roleId;
           this.formData.adminname = this.userinfo.adminname;
+          this.formData.furnace = `${this.formData.planFurnace}/${this.formData.bucket}`;
 
           const { method, url } =
             this.dialogData.formType === "create"

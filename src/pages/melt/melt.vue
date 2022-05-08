@@ -335,6 +335,7 @@ import dialogForm from "./components/dialogForm.vue";
 import Collapse from "@/components/collapse.vue";
 import { mapState, mapActions } from "vuex";
 import qs from "qs";
+import moment from "moment";
 
 export default {
   name: "melt",
@@ -469,7 +470,11 @@ export default {
       this.formType = "create";
     },
     edit(row) {
-      this.rowData = row;
+      this.rowData = {
+        ...row,
+        planFurnace: row.furnace.substr(0, 14),
+        bucket: row.furnace.substr(15)
+      };
       this.dialogVisible = true;
       this.formType = "edit";
     },

@@ -85,6 +85,7 @@ export const Range = (min = 0, max = 99999999) => {
   };
 };
 
+// 校对标准的炉号，包含桶号 07-20220907-01/01
 export const checkFurnace = (rule, value, callback) => {
   if (!value) {
     return callback(new Error("炉号不能为空"));
@@ -95,5 +96,19 @@ export const checkFurnace = (rule, value, callback) => {
     callback();
   } else {
     callback(new Error("炉号格式错误"));
+  }
+};
+
+// 校对生产计划的炉号，不含桶号 07-20220907-01
+export const checkFurnaceWithoutBucket = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error("炉号不能为空"));
+  }
+
+  const reg = /^0[1-9]-[0-9]{8}-[0-9]{2}$/;
+  if (reg.test(value)) {
+    callback();
+  } else {
+    callback(new Error("正确格式为06-20210801-01"));
   }
 };

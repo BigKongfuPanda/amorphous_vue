@@ -58,13 +58,13 @@
     </Collapse>
     <div class="main_bd">
       <el-col class="table_hd">
-        <el-button
+        <!-- <el-button
           type="primary"
           icon="el-icon-success"
           v-if="isAddable"
           @click="handleConfirm"
           >确认送检</el-button
-        >
+        > -->
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -98,13 +98,13 @@
         v-loading="loading"
         ref="table"
         :height="tableHeight"
-        @selection-change="handleSelectionChange"
       >
-        <el-table-column
+        <!-- @selection-change="handleSelectionChange" -->
+        <!-- <el-table-column
           type="selection"
           width="20"
           :selectable="setSelectable"
-        ></el-table-column>
+        ></el-table-column> -->
         <el-table-column
           prop="furnace"
           label="炉号"

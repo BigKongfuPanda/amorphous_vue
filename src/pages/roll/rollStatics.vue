@@ -151,6 +151,7 @@ import moment from "moment";
 import { dateFormat, dateTimeFormat, debounce } from "@/utils/common";
 import { mapState, mapActions } from "vuex";
 import Collapse from "@/components/collapse.vue";
+import { cloneDeep } from "lodash";
 
 const defaultDateRange = [
   `${moment()
@@ -298,22 +299,30 @@ export default {
     },
     handleConfirm() {
       const selectionList = cloneDeep(this.multipleSelection);
+
       if (selectionList.length === 0) {
         return this.$alert("请选择带材", "提示", { type: "warning" });
       }
-      const obj = {};
+
       selectionList.forEach(item => {
-        const { furnace, coilNumber } = item;
-        if (obj.hasOwnProperty(furnace) && Array.isArray(obj[furnace])) {
-          if (obj[furnace].includes(coilNumber)) {
+        const { furnace, coilNumberList, totalCoilWeight, rawWeight } = item;
+        // 查找存在盘号重复的异常情况，及时提醒
+        const temp = [];
+        coilNumberList.forEach(coilNumber => {
+          if (!temp.includes(coilNumber)) {
+            temp.push(coilNumber);
+          } else {
             return this.$alert(
               `炉号${furnace}，盘号${coilNumber} 存在重复盘号，请检查并手动修改数据，同时更新标签`
             );
-          } else {
-            obj[furnace].push(coilNumber);
           }
-        } else {
-          obj[furnace] = [coilNumber];
+        });
+
+        // 当前重卷后的净重不能超过大盘毛重的15kg
+        if (totalCoilWeight - rawWeight > 15) {
+          return this.$alert(
+            `炉号 ${furnace} 重卷总重不能大于当前炉次的大盘毛重`
+          );
         }
       });
       // 发送请求，更新当前的数据
@@ -321,10 +330,8 @@ export default {
         rollDataJson: JSON.stringify(selectionList)
       })
         .then(data => {
-          if (data.status === 0) {
-            this.pageConfig.current = 1;
-            this.getTableData();
-          }
+          this.pageConfig.current = 1;
+          this.getTableData();
         })
         .catch(error => {
           console.log(error);

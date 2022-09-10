@@ -545,7 +545,7 @@ export default {
       const params = {
         castId: this.formData.castId,
         ribbonTypeName: val,
-        dateJson: JSON.stringify(["2021-07-04", "2021-07-05"])
+        // dateJson: JSON.stringify(["2021-07-04", "2021-07-05"])
       };
       this.$http("get", urlmap.queryPlanDataByMelt, params)
         .then(data => {

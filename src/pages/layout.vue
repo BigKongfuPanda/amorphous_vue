@@ -150,7 +150,10 @@
           <template slot="title">
             <i class="el-icon-tickets"></i> <span>数据统计</span>
           </template>
-          <router-link to="/statisticsOfRatio">
+          <router-link to="/statisitcsInputOutput">
+            <el-menu-item index="/statisitcsInputOutput">投入产出监控</el-menu-item>
+          </router-link>
+          <!-- <router-link to="/statisticsOfRatio">
             <el-menu-item index="/statisticsOfRatio">直通率统计表</el-menu-item>
           </router-link>
           <router-link to="/statisticsQuality">
@@ -158,7 +161,7 @@
           </router-link>
           <router-link to="/statisticsOder">
             <el-menu-item index="/statisticsOder">订单统计表</el-menu-item>
-          </router-link>
+          </router-link> -->
         </el-submenu>
         <el-submenu index="9" v-if="[1, 2, 3, 5].includes(roleId)">
           <template slot="title">

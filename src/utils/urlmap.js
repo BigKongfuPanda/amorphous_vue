@@ -103,9 +103,7 @@ export default {
   addAppearenceLevel: "/appearenceLevel",
   updateAppearenceLevel: "/appearenceLevel",
   delAppearenceLevel: "/appearenceLevel",
-  // 带材数据统计
-  queryStatisticsQuality: "/statistics/quality",
-  queryStatisticsRatio: "/statistics/ratio",
+
   // 重卷人员姓名和PLC数据映射
   queryRoller: "/roller",
   addRoller: "/roller",
@@ -115,5 +113,9 @@ export default {
   queryLinerWeight: "/linerWeight",
   addLinerWeight: "/linerWeight",
   updateLinerWeight: "/linerWeight",
-  delLinerWeight: "/linerWeight"
+  delLinerWeight: "/linerWeight",
+  // 数据统计
+  queryStatisticsInputOuput: "/statistics/inputOuput",
+  queryStatisticsQuality: "/statistics/quality",
+  queryStatisticsRatio: "/statistics/ratio"
 };

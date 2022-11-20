@@ -161,14 +161,11 @@
           width="70px"
         ></el-table-column>
         <el-table-column
-          prop="roller"
+          prop="rollerName"
           label="重卷人员"
           align="center"
           width="70px"
         >
-          <template slot-scope="scope">
-            <span>{{ scope.row.rollerName }}</span>
-          </template>
         </el-table-column>
         <el-table-column
           prop="createdAt"

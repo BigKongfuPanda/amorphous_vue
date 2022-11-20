@@ -47,7 +47,7 @@
     </el-form>
   </Collapse>
   <div class="main_bd">
-      <el-table :data="tableData" stripe border style="width:100%;height: 100%;" v-loading="loading">
+      <el-table :data="tableData" :height="tableHeight" stripe border style="width:100%" v-loading="loading">
         <el-table-column prop="castId" label="机组" align="center" width="50px"></el-table-column>
         <el-table-column prop="furnace" label="炉号" align="center" width="120px"></el-table-column>
         <el-table-column prop="ribbonTypeName" label="材质" align="center" width="80px">

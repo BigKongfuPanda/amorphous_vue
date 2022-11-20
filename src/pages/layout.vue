@@ -153,6 +153,9 @@
           <router-link to="/statisitcsInputOutput">
             <el-menu-item index="/statisitcsInputOutput">投入产出监控</el-menu-item>
           </router-link>
+          <router-link to="/statisticsRollWeight">
+            <el-menu-item index="/statisticsRollWeight">重卷产量</el-menu-item>
+          </router-link>
           <!-- <router-link to="/statisticsOfRatio">
             <el-menu-item index="/statisticsOfRatio">直通率统计表</el-menu-item>
           </router-link>

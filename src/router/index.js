@@ -55,6 +55,9 @@ const StorageTotal = () =>
 const StatisitcsInputOutput = () =>
   import(/* webpackChunkName: "statisitcsInputOutput" */ "@/pages/statistics/statisitcsInputOutput.vue");
 
+const StatisticsRollWeight = () =>
+  import(/* webpackChunkName: "statisticsRollWeight" */ "@/pages/statistics/statisticsRollWeight.vue");
+
 const StatisticsOfRatio = () =>
   import(/* webpackChunkName: "statisticsOfRatio" */ "@/pages/statistics/statisticsOfRatio.vue");
 
@@ -229,6 +232,12 @@ export default new Router({
           name: "statisitcsInputOutput",
           component: StatisitcsInputOutput,
           meta: { title: "投入产出监控", icon: "statisitcsInputOutput" }
+        },
+        {
+          path: "statisticsRollWeight",
+          name: "statisticsRollWeight",
+          component: StatisticsRollWeight,
+          meta: { title: "重卷产量", icon: "statisticsRollWeight" }
         },
         {
           path: "statisticsOfRatio",

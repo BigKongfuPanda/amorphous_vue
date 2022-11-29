@@ -86,16 +86,11 @@ import Collapse from "@/components/collapse.vue";
 import moment from "moment";
 import { debounce } from "@/utils/common";
 
-// const defaultDateRange = [
-//   `${moment()
-//     .subtract(6, "days")
-//     .format("YYYY-MM-DD")} 00:00:00`,
-//   `${moment().format("YYYY-MM-DD")} 23:59:59`
-// ];
-
 const defaultDateRange = [
-  `2021-06-06 00:00:00`,
-  `2021-06-07 23:59:59`
+  `${moment()
+    .subtract(6, "days")
+    .format("YYYY-MM-DD")} 00:00:00`,
+  `${moment().format("YYYY-MM-DD")} 23:59:59`
 ];
 
 export default {

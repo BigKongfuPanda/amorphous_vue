@@ -21,9 +21,9 @@
           <el-button type="primary" icon="el-icon-search" @click="clickSearch"
             >搜索</el-button
           >
-          <el-button type="primary" icon="el-icon-refresh" @click="reset"
+          <!-- <el-button type="primary" icon="el-icon-refresh" @click="reset"
             >重置</el-button
-          >
+          > -->
         </el-form-item>
       </el-form>
     </Collapse>
@@ -33,12 +33,12 @@
         type="border-card"
         @tab-click="handleTabClick"
       >
-        <el-tab-pane label="重卷人员" name="roller">
+        <el-tab-pane label="重卷净重统计" name="roller">
           <el-table
             :data="rollerTableData"
-            :height="tableHeight"
             stripe
             border
+            show-summary
             style="width:100%"
             v-loading="loading"
           >
@@ -54,12 +54,12 @@
             ></el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="机组" name="caster">
+        <el-tab-pane label="大盘毛重统计" name="caster">
           <el-table
             :data="castTableData"
-            :height="tableHeight"
             stripe
             border
+            show-summary
             style="width:100%"
             v-loading="loading"
           >
@@ -71,6 +71,27 @@
             <el-table-column
               prop="totalCoilNetWeight"
               label="大盘毛重/kg"
+              align="center"
+            ></el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="母合金统计" name="alloy">
+          <el-table
+            :data="alloyTableData"
+            stripe
+            border
+            show-summary
+            style="width:100%"
+            v-loading="loading"
+          >
+            <el-table-column
+              prop="castId"
+              label="机组"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="totalAlloyWeight"
+              label="母合金/kg"
               align="center"
             ></el-table-column>
           </el-table>
@@ -106,49 +127,40 @@ export default {
       loading: false,
       rollerTableData: [],
       castTableData: [],
-      activeName: "roller",
-      tableHeight: 200
+      alloyTableData: [],
+      activeName: "roller"
     };
   },
   watch: {
     activeName: {
       handler(val) {
-        if (val === "roller") {
-          this.getRollerTableData();
-        } else {
-          this.getCastTableData();
+        switch (val) {
+          case "roller":
+            this.getRollerTableData();
+            break;
+          case "caster":
+            this.getCastTableData();
+            break;
+          case "alloy":
+            this.getAlloyableData();
+            break;
         }
       },
       immediate: true
     }
   },
-  mounted() {
-    const self = this;
-    self.$nextTick(() => {
-      // self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
-      self.tableHeight = window.innerHeight - 80;
-    });
-    window.onresize = debounce(() => {
-      // self.tableHeight = window.innerHeight - self.$refs.table.$el.getBoundingClientRect().top;
-      self.tableHeight = window.innerHeight - 80;
-    }, 1000);
-  },
   methods: {
     clickSearch() {
-      if (this.activeName === "roller") {
-        this.getRollerTableData();
-      } else {
-        this.getCastTableData();
-      }
-    },
-    reset() {
-      this.searchForm = {
-        date: [...defaultDateRange]
-      };
-      if (this.activeName === "roller") {
-        this.getRollerTableData();
-      } else {
-        this.getCastTableData();
+      switch (this.activeName) {
+        case "roller":
+          this.getRollerTableData();
+          break;
+        case "castId":
+          this.getCastTableData();
+          break;
+        case "alloy":
+          this.getAlloyableData();
+          break;
       }
     },
     handleTabClick(tab) {
@@ -184,6 +196,24 @@ export default {
       this.$http("get", urlmap.queryStatisticsRollWeightByCastId, params)
         .then(data => {
           this.castTableData = data.list;
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    getAlloyableData(params = {}) {
+      const _params = {
+        startTime: this.searchForm.date[0],
+        endTime: this.searchForm.date[1]
+      };
+      Object.assign(params, _params);
+      this.loading = true;
+      this.$http("get", urlmap.queryStatisticsAlloyWeight, params)
+        .then(data => {
+          this.alloyTableData = data.list;
         })
         .catch(err => {
           console.log(err);

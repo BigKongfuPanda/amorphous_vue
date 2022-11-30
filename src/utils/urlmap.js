@@ -118,6 +118,7 @@ export default {
   queryStatisticsInputOuput: "/statistics/inputOuput",
   queryStatisticsRollWeightByRoller: "/statistics/rollWeightByRoller",
   queryStatisticsRollWeightByCastId: "/statistics/rollWeightByCastId",
+  queryStatisticsAlloyWeight: "/statistics/alloyWeight",
   queryStatisticsQuality: "/statistics/quality",
   queryStatisticsRatio: "/statistics/ratio"
 };

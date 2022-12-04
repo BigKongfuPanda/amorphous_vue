@@ -966,19 +966,12 @@
 import qs from "qs";
 import { cloneDeep } from "lodash";
 import { Message } from "element-ui";
-import moment from "moment";
 import urlmap from "@/utils/urlmap";
 import { dateFormat, dateTimeFormat, debounce } from "@/utils/common";
 import { mapState, mapActions } from "vuex";
 import Collapse from "@/components/collapse.vue";
 import ApplyInStoreModal from "./components/ApplyInStoreModal.vue";
-
-const defaultDateRange = [
-  `${moment()
-    .subtract(6, "days")
-    .format("YYYY-MM-DD")} 00:00:00`,
-  `${moment().format("YYYY-MM-DD")} 23:59:59`
-];
+import { defaultDateRange } from "@/utils/const";
 
 export default {
   name: "melt",
@@ -1283,7 +1276,7 @@ export default {
     },
     // 计算内衬的重量
     calcLinerWeight(ribbonWidth) {
-      /** 
+      /**
        * 计算单盘净重，不同规格的内衬重量不同
        * 内衬的规格和重量对应表
        * 20.5: 0.05,

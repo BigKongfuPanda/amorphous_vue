@@ -147,18 +147,11 @@
 
 <script>
 import urlmap from "@/utils/urlmap";
-import moment from "moment";
 import { dateFormat, dateTimeFormat, debounce } from "@/utils/common";
 import { mapState, mapActions } from "vuex";
 import Collapse from "@/components/collapse.vue";
 import { cloneDeep } from "lodash";
-
-const defaultDateRange = [
-  `${moment()
-    .subtract(6, "days")
-    .format("YYYY-MM-DD")} 00:00:00`,
-  `${moment().format("YYYY-MM-DD")} 23:59:59`
-];
+import { defaultDateRange } from "@/utils/const";
 
 export default {
   name: "measureStatics",

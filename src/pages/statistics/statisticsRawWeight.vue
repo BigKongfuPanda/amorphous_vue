@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right" class="crumb">
       <el-breadcrumb-item>数据统计</el-breadcrumb-item>
-      <el-breadcrumb-item>重卷产量</el-breadcrumb-item>
+      <el-breadcrumb-item>机组和重卷产量统计</el-breadcrumb-item>
     </el-breadcrumb>
     <Collapse>
       <el-form class="search_bar" :model="searchForm" :inline="true">
@@ -33,7 +33,38 @@
         type="border-card"
         @tab-click="handleTabClick"
       >
-        <el-tab-pane label="重卷净重统计" name="roller">
+        <el-tab-pane label="各机组炉数/母合金/大盘毛重统计" name="caster">
+          <el-table
+            :data="castTableData"
+            stripe
+            border
+            show-summary
+            style="width:100%"
+            v-loading="loading"
+          >
+            <el-table-column
+              prop="castId"
+              label="机组"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="furnaceCount"
+              label="炉数"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              label="母合金消耗/kg"
+              prop="totalAlloyWeight"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="totalRawWeight"
+              label="大盘毛重/kg"
+              align="center"
+            ></el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="重卷人员产量统计" name="roller">
           <el-table
             :data="rollerTableData"
             stripe
@@ -54,48 +85,6 @@
             ></el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="大盘毛重统计" name="caster">
-          <el-table
-            :data="castTableData"
-            stripe
-            border
-            show-summary
-            style="width:100%"
-            v-loading="loading"
-          >
-            <el-table-column
-              prop="castId"
-              label="机组"
-              align="center"
-            ></el-table-column>
-            <el-table-column
-              prop="totalCoilNetWeight"
-              label="大盘毛重/kg"
-              align="center"
-            ></el-table-column>
-          </el-table>
-        </el-tab-pane>
-        <el-tab-pane label="母合金统计" name="alloy">
-          <el-table
-            :data="alloyTableData"
-            stripe
-            border
-            show-summary
-            style="width:100%"
-            v-loading="loading"
-          >
-            <el-table-column
-              prop="castId"
-              label="机组"
-              align="center"
-            ></el-table-column>
-            <el-table-column
-              prop="totalAlloyWeight"
-              label="母合金/kg"
-              align="center"
-            ></el-table-column>
-          </el-table>
-        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -104,18 +93,10 @@
 <script>
 import urlmap from "@/utils/urlmap";
 import Collapse from "@/components/collapse.vue";
-import moment from "moment";
-import { debounce } from "@/utils/common";
-
-const defaultDateRange = [
-  `${moment()
-    .subtract(6, "days")
-    .format("YYYY-MM-DD")} 00:00:00`,
-  `${moment().format("YYYY-MM-DD")} 23:59:59`
-];
+import { defaultDateRange } from "@/utils/const";
 
 export default {
-  name: "statisticsRollWeight",
+  name: "statisticsRawWeight",
   components: {
     Collapse
   },
@@ -127,8 +108,7 @@ export default {
       loading: false,
       rollerTableData: [],
       castTableData: [],
-      alloyTableData: [],
-      activeName: "roller"
+      activeName: "caster"
     };
   },
   watch: {
@@ -141,9 +121,6 @@ export default {
           case "caster":
             this.getCastTableData();
             break;
-          case "alloy":
-            this.getAlloyableData();
-            break;
         }
       },
       immediate: true
@@ -155,11 +132,8 @@ export default {
         case "roller":
           this.getRollerTableData();
           break;
-        case "castId":
+        case "caster":
           this.getCastTableData();
-          break;
-        case "alloy":
-          this.getAlloyableData();
           break;
       }
     },
@@ -193,27 +167,9 @@ export default {
       };
       Object.assign(params, _params);
       this.loading = true;
-      this.$http("get", urlmap.queryStatisticsRollWeightByCastId, params)
+      this.$http("get", urlmap.queryStatisticsRawWeightByCastId, params)
         .then(data => {
           this.castTableData = data.list;
-        })
-        .catch(err => {
-          console.log(err);
-        })
-        .finally(() => {
-          this.loading = false;
-        });
-    },
-    getAlloyableData(params = {}) {
-      const _params = {
-        startTime: this.searchForm.date[0],
-        endTime: this.searchForm.date[1]
-      };
-      Object.assign(params, _params);
-      this.loading = true;
-      this.$http("get", urlmap.queryStatisticsAlloyWeight, params)
-        .then(data => {
-          this.alloyTableData = data.list;
         })
         .catch(err => {
           console.log(err);

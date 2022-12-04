@@ -116,9 +116,8 @@ export default {
   delLinerWeight: "/linerWeight",
   // 数据统计
   queryStatisticsInputOuput: "/statistics/inputOuput",
-  queryStatisticsRollWeightByRoller: "/statistics/rollWeightByRoller",
-  queryStatisticsRollWeightByCastId: "/statistics/rollWeightByCastId",
-  queryStatisticsAlloyWeight: "/statistics/alloyWeight",
+  querystatisticsRawWeightByRoller: "/statistics/rollWeightByRoller",
+  queryStatisticsRawWeightByCastId: "/statistics/rawWeightByCastId",
   queryStatisticsQuality: "/statistics/quality",
   queryStatisticsRatio: "/statistics/ratio"
 };

@@ -258,20 +258,13 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import moment from "moment";
 import urlmap from "@/utils/urlmap";
 import { dateFormat, debounce, dateTimeFormat } from "@/utils/common";
 import dialogForm from "./components/dialogForm.vue";
 import Collapse from "@/components/collapse.vue";
 import qs from "qs";
 import { cloneDeep } from "lodash";
-
-const defaultDateRange = [
-  `${moment()
-    .subtract(6, "days")
-    .format("YYYY-MM-DD")} 00:00:00`,
-  `${moment().format("YYYY-MM-DD")} 23:59:59`
-];
+import { defaultDateRange } from "@/utils/const";
 
 export default {
   name: "melt",

@@ -151,18 +151,22 @@
             <i class="el-icon-tickets"></i> <span>数据统计</span>
           </template>
           <router-link to="/statisitcsInputOutput">
-            <el-menu-item index="/statisitcsInputOutput">投入产出监控</el-menu-item>
+            <el-menu-item index="/statisitcsInputOutput"
+              >投入产出监控</el-menu-item
+            >
           </router-link>
-          <router-link to="/statisticsRollWeight">
-            <el-menu-item index="/statisticsRollWeight">重卷产量</el-menu-item>
+          <router-link to="/statisticsRawWeight">
+            <el-menu-item index="/statisticsRawWeight"
+              >机组和重卷产量统计</el-menu-item
+            >
           </router-link>
-          <!-- <router-link to="/statisticsOfRatio">
+          <router-link to="/statisticsOfRatio">
             <el-menu-item index="/statisticsOfRatio">直通率统计表</el-menu-item>
           </router-link>
-          <router-link to="/statisticsQuality">
+          <!-- <router-link to="/statisticsQuality">
             <el-menu-item index="/statisticsQuality">带材质量统计</el-menu-item>
-          </router-link>
-          <router-link to="/statisticsOder">
+          </router-link> -->
+          <!-- <router-link to="/statisticsOder">
             <el-menu-item index="/statisticsOder">订单统计表</el-menu-item>
           </router-link> -->
         </el-submenu>

@@ -506,6 +506,10 @@ export default {
         endTime: this.searchForm.date[1]
       };
       Object.assign(params, _params);
+      if (this.loading) {
+        return;
+      }
+      this.loading = true;
       if (this.searchForm.ratioType === "byCaster") {
         this.$http("get", urlmap.queryStatisticsRatio, params)
           .then(data => {

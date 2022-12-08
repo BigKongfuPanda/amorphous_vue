@@ -16,6 +16,96 @@
         >
         </el-date-picker>
       </el-form-item>
+      <el-form-item label="材质：">
+        <el-select
+          v-model="searchForm.ribbonTypeNames"
+          placeholder="请选择"
+          multiple
+          collapse-tags
+        >
+          <el-option
+            v-for="item in ribbonTypeList"
+            :key="item.ribbonTypeId"
+            :value="item.ribbonTypeName"
+            :label="item.ribbonTypeName"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="规格：">
+        <el-select
+          v-model="searchForm.ribbonWidths"
+          placeholder="请选择"
+          multiple
+          collapse-tags
+        >
+          <el-option
+            v-for="item in ribbonWidthList"
+            :key="item.ribbonWidthId"
+            :label="item.ribbonWidth"
+            :value="item.ribbonWidth"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <!-- <el-form-item label="厚度级别：">
+        <el-select
+          v-model="searchForm.ribbonThicknessLevels"
+          placeholder="请选择"
+          multiple
+          collapse-tags
+        >
+          <el-option
+            v-for="item in ribbonThicknessLevelList"
+            :key="item.ribbonThicknessLevelId"
+            :label="item.ribbonThicknessLevel"
+            :value="item.ribbonThicknessLevel"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="叠片级别：">
+        <el-select
+          v-model="searchForm.laminationLevels"
+          placeholder="请选择"
+          multiple
+          collapse-tags
+        >
+          <el-option
+            v-for="item in laminationLevelList"
+            :key="item.laminationLevelId"
+            :label="item.laminationLevel"
+            :value="item.laminationLevel"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="韧性级别：">
+        <el-select
+          v-model="searchForm.ribbonToughnessLevels"
+          placeholder="请选择"
+          multiple
+          collapse-tags
+        >
+          <el-option
+            v-for="item in ribbonToughnessLevelList"
+            :key="item.ribbonToughnessLevelId"
+            :label="item.ribbonToughnessLevel"
+            :value="item.ribbonToughnessLevel"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="外观级别：">
+        <el-select
+          v-model="searchForm.appearenceLevels"
+          placeholder="请选择"
+          multiple
+          collapse-tags
+        >
+          <el-option
+            v-for="(appearenceLevel, index) in uniqueAppearenceLevelList"
+            :key="index"
+            :label="appearenceLevel"
+            :value="appearenceLevel"
+          ></el-option>
+        </el-select>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="clickSearch"
           >搜索</el-button
@@ -474,13 +564,17 @@
 <script>
 import urlmap from "@/utils/urlmap";
 import { defaultDateRange } from "@/utils/const";
+import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
     return {
       searchForm: {
         ratioType: "byCaster",
-        date: [...defaultDateRange]
+        date: [...defaultDateRange],
+        ribbonTypeNames: [],
+        ribbonWidths: [],
+        ribbonThicknessLevels: []
       },
       loading: false,
       tableDataByCaster: [],
@@ -488,22 +582,73 @@ export default {
       tableDataByCastId: []
     };
   },
-  created() {
+  computed: {
+    ...mapState([
+      "ribbonToughnessLevelList",
+      "ribbonTypeList",
+      "ribbonWidthList",
+      "ribbonThicknessLevelList",
+      "laminationLevelList",
+      "appearenceList"
+    ]),
+    uniqueAppearenceLevelList() {
+      return this.appearenceList.reduce((acc, cur) => {
+        if (!acc.includes(cur.appearenceLevel)) {
+          acc.push(cur.appearenceLevel);
+        }
+        return acc;
+      }, []);
+    }
+  },
+  async created() {
+    await this.getRibbonToughnessLevelList();
+    await this.getRibbonTypeList();
+    await this.getRibbonWidthList();
+    await this.getRibbonThicknessLevelList();
+    await this.getLaminationLevelList();
+    await this.getAppearenceLevelList();
     this.getTableData();
   },
   methods: {
+    ...mapActions([
+      "getRibbonToughnessLevelList",
+      "getRibbonTypeList",
+      "getRibbonWidthList",
+      "getRibbonThicknessLevelList",
+      "getLaminationLevelList",
+      "getAppearenceLevelList"
+    ]),
     clickSearch() {
       this.getTableData();
     },
     reset() {
-      this.searchForm = { ratioType: this.searchForm.ratioType, date: [] };
+      this.searchForm = {
+        ratioType: this.searchForm.ratioType,
+        date: [...defaultDateRange],
+        ribbonTypeNames: [],
+        ribbonWidths: []
+        // ribbonThicknessLevels: [],
+        // laminationLevels: [],
+        // ribbonToughnessLevels: [],
+        // appearenceLevels: []
+      };
       this.getTableData();
     },
     getTableData(params = {}) {
       const _params = {
         ratioType: this.searchForm.ratioType,
         startTime: this.searchForm.date[0],
-        endTime: this.searchForm.date[1]
+        endTime: this.searchForm.date[1],
+        ribbonTypeNameJson: JSON.stringify(this.searchForm.ribbonTypeNames),
+        ribbonWidthJson: JSON.stringify(this.searchForm.ribbonWidths)
+        // ribbonThicknessLevelJson: JSON.stringify(
+        //   this.searchForm.ribbonThicknessLevels
+        // ),
+        // laminationLevelJson: JSON.stringify(this.searchForm.laminationLevels),
+        // ribbonToughnessLevelJson: JSON.stringify(
+        //   this.searchForm.ribbonToughnessLevels
+        // ),
+        // appearenceLevelJson: JSON.stringify(this.searchForm.appearenceLevels)
       };
       Object.assign(params, _params);
       if (this.loading) {

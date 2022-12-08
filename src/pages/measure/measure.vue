@@ -1367,8 +1367,10 @@ export default {
         thicknessDivation: this.searchForm.thicknessDivation,
         orderBy: this.searchForm.orderBy
       };
-      console.log(params);
       Object.assign(params, _params);
+      if (this.loading) {
+        return;
+      }
       this.loading = true;
       this.$http("get", urlmap.queryMeasure, params)
         .then(data => {
@@ -1636,9 +1638,13 @@ export default {
         }
 
         // 规格 为 32，材质为 1K107B 的带材，如果韧性为D或E，则综合级别为不合格
-        if ([32,33,35,38,42,43,45].includes(row.ribbonWidth) && isFragile) {
+        if (
+          [32, 33, 35, 38, 42, 43, 45].includes(row.ribbonWidth) &&
+          isFragile
+        ) {
           ribbonTotalLevel = "不合格";
-          unQualifiedReason = "1K107B，规格为32/33/35/38/42/43/45mm，韧性为D/E，不合格";
+          unQualifiedReason =
+            "1K107B，规格为32/33/35/38/42/43/45mm，韧性为D/E，不合格";
           return [ribbonTotalLevel, unQualifiedReason];
         }
 
@@ -1665,9 +1671,11 @@ export default {
         }
 
         // 针对规格为55m/60mm/65mm，韧性为E级别的带材，判定为不合格
-        if([55, 60, 65].includes(row.ribbonWidth) &&
-          ["E"].includes(row.ribbonToughnessLevel)) {
-            ribbonTotalLevel = "不合格";
+        if (
+          [55, 60, 65].includes(row.ribbonWidth) &&
+          ["E"].includes(row.ribbonToughnessLevel)
+        ) {
+          ribbonTotalLevel = "不合格";
           unQualifiedReason =
             "1K107B，规格为55mm/60mm/65mm、韧性为E级别，不合格";
           return [ribbonTotalLevel, unQualifiedReason];

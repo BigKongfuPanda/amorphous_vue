@@ -61,6 +61,9 @@ const StatisticsRawWeight = () =>
 const StatisticsOfRatio = () =>
   import(/* webpackChunkName: "statisticsOfRatio" */ "@/pages/statistics/statisticsOfRatio.vue");
 
+const StatisticsOfCastYield = () =>
+  import(/* webpackChunkName: "statisticsOfCastYield" */ "@/pages/statistics/statisticsOfCastYield.vue");
+
 const StatisticsQuality = () =>
   import(/* webpackChunkName: "statisticsQuality" */ "@/pages/statistics/statisticsQuality.vue");
 
@@ -243,7 +246,13 @@ export default new Router({
           path: "statisticsOfRatio",
           name: "statisticsOfRatio",
           component: StatisticsOfRatio,
-          meta: { title: "喷带手生产统计表", icon: "statisticsOfRatio" }
+          meta: { title: "直通率统计表", icon: "statisticsOfRatio" }
+        },
+        {
+          path: "statisticsOfCastYield",
+          name: "statisticsOfCastYield",
+          component: StatisticsOfCastYield,
+          meta: { title: "机组产量统计", icon: "statisticsOfCastYield" }
         },
         {
           path: "statisticsQuality",

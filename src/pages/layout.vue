@@ -163,6 +163,11 @@
           <router-link to="/statisticsOfRatio">
             <el-menu-item index="/statisticsOfRatio">直通率统计表</el-menu-item>
           </router-link>
+          <router-link to="/statisticsOfCastYield">
+            <el-menu-item index="/statisticsOfCastYield"
+              >机组产量统计表</el-menu-item
+            >
+          </router-link>
           <!-- <router-link to="/statisticsQuality">
             <el-menu-item index="/statisticsQuality">带材质量统计</el-menu-item>
           </router-link> -->

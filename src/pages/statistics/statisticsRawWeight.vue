@@ -33,6 +33,27 @@
         type="border-card"
         @tab-click="handleTabClick"
       >
+        <el-tab-pane label="重卷人员产量统计" name="roller">
+          <el-table
+            :data="rollerTableData"
+            stripe
+            border
+            show-summary
+            style="width:100%"
+            v-loading="loading"
+          >
+            <el-table-column
+              prop="rollerName"
+              label="重卷人员"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="totalCoilNetWeight"
+              label="倒卷净重/kg"
+              align="center"
+            ></el-table-column>
+          </el-table>
+        </el-tab-pane>
         <el-tab-pane label="各机组炉数/母合金/大盘毛重统计" name="caster">
           <el-table
             :data="castTableData"
@@ -64,27 +85,6 @@
             ></el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="重卷人员产量统计" name="roller">
-          <el-table
-            :data="rollerTableData"
-            stripe
-            border
-            show-summary
-            style="width:100%"
-            v-loading="loading"
-          >
-            <el-table-column
-              prop="rollerName"
-              label="重卷人员"
-              align="center"
-            ></el-table-column>
-            <el-table-column
-              prop="totalCoilNetWeight"
-              label="倒卷净重/kg"
-              align="center"
-            ></el-table-column>
-          </el-table>
-        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -108,7 +108,7 @@ export default {
       loading: false,
       rollerTableData: [],
       castTableData: [],
-      activeName: "caster"
+      activeName: "roller"
     };
   },
   watch: {

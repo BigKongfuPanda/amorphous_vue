@@ -157,7 +157,7 @@
           </router-link>
           <router-link to="/statisticsRawWeight">
             <el-menu-item index="/statisticsRawWeight"
-              >机组和重卷产量统计</el-menu-item
+              >重卷产量统计</el-menu-item
             >
           </router-link>
           <router-link to="/statisticsOfRatio">

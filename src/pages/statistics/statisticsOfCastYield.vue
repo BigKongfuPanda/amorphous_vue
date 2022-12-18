@@ -152,8 +152,8 @@
             v-loading="loading"
           >
             <el-table-column
-              prop="caster"
-              label="喷带手"
+              prop="castId"
+              label="机组"
               align="center"
               width="70px"
             ></el-table-column>
@@ -285,7 +285,7 @@ export default {
       }
       this.loading = true;
       if (this.searchForm.queryType === "byCaster") {
-        this.$http("get", urlmap.queryStatisticsRatio, params)
+        this.$http("get", urlmap.queryStatisticsCastYield, params)
           .then(data => {
             this.tableDataByCaster = data.list;
           })
@@ -296,7 +296,7 @@ export default {
             this.loading = false;
           });
       } else if (this.searchForm.queryType === "byCastId") {
-        this.$http("get", urlmap.queryStatisticsRatio, params)
+        this.$http("get", urlmap.queryStatisticsCastYield, params)
           .then(data => {
             this.tableDataByCastId = data.list;
           })

@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right" class="crumb">
       <el-breadcrumb-item>数据统计</el-breadcrumb-item>
-      <el-breadcrumb-item>机组和重卷产量统计</el-breadcrumb-item>
+      <el-breadcrumb-item>重卷产量统计</el-breadcrumb-item>
     </el-breadcrumb>
     <Collapse>
       <el-form class="search_bar" :model="searchForm" :inline="true">

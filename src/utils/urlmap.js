@@ -119,5 +119,6 @@ export default {
   queryStatisticsRollWeightByRoller: "/statistics/rollWeightByRoller",
   queryStatisticsRawWeightByCastId: "/statistics/rawWeightByCastId",
   queryStatisticsQuality: "/statistics/quality",
-  queryStatisticsRatio: "/statistics/ratio"
+  queryStatisticsRatio: "/statistics/ratio",
+  queryStatisticsCastYield: "/statistics/castYield"
 };
